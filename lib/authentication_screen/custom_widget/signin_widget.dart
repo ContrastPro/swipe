@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/authentication_screen/switch_auth_widget.dart';
+import 'package:swipe/authentication_screen/custom_widget/switch_auth_widget.dart';
+import 'package:swipe/custom_app_widget/app_logo_widget.dart';
+import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/custom_widget/one_time_password_widget.dart';
 
 class SignInWidget extends StatefulWidget {
   @override
@@ -81,6 +82,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
+              fontSize: 16.0,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -122,6 +124,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           ),
           child: Center(
             child: TextField(
+              keyboardType: TextInputType.phone,
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
@@ -176,20 +179,27 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: PageView(
-        controller: _pageController,
-        //physics: NeverScrollableScrollPhysics(),
-        onPageChanged: (int index) {
-          setState(() => _pageIndex = index);
-        },
-        children: <Widget>[
-          _firstPage(),
-          _secondPage(),
-          _thirdPage(),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppLogo(width: 70.0, height: 45.0, fontSize: 55.0),
+        Container(
+          height: 300,
+          child: PageView(
+            controller: _pageController,
+            //physics: NeverScrollableScrollPhysics(),
+            onPageChanged: (int index) {
+              setState(() => _pageIndex = index);
+            },
+            children: <Widget>[
+              _firstPage(),
+              _secondPage(),
+              _thirdPage(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
