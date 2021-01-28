@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/global/colors.dart';
+import 'package:swipe/global/app_colors.dart';
 
 class AppLogo extends StatelessWidget {
+  final double width;
+  final double height;
+  final double fontSize;
+
+  const AppLogo({
+    Key key,
+    @required this.width,
+    @required this.height,
+    @required this.fontSize,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -10,8 +21,8 @@ class AppLogo extends StatelessWidget {
         Stack(
           children: [
             Container(
-              width: 70,
-              height: 45,
+              width: width ?? 70.0,
+              height: height ?? 45.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(90),
                 gradient: LinearGradient(
@@ -25,8 +36,8 @@ class AppLogo extends StatelessWidget {
               ),
             ),
             Container(
-              width: 45,
-              height: 45,
+              width: height ?? 45.0,
+              height: height ?? 45.0,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: AppColors.buttonGradient,
@@ -39,7 +50,7 @@ class AppLogo extends StatelessWidget {
           "свайп",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 55,
+            fontSize: fontSize ?? 55.0,
             fontWeight: FontWeight.w900,
           ),
         ),

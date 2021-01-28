@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe/global/colors.dart';
+import 'package:swipe/global/app_colors.dart';
 
 class AppTheme {
   static ThemeData light() {

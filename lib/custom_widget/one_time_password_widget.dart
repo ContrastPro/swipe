@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/global/colors.dart';
+import 'package:swipe/global/app_colors.dart';
 
 enum FieldStyle { underline, box }
 
-class PinCodeField extends StatefulWidget {
-  /// Number of the PinCode Fields
+class OTPField extends StatefulWidget {
+  /// Number of the OTP Fields
   final int length;
 
-  /// Total Width of the PinCode Text Field
+  /// Total Width of the OTP Text Field
   final double width;
 
-  /// Width of the single PinCode Field
+  /// Width of the single OTP Field
   final double fieldWidth;
 
   /// Manage the type of keyboard that shows up
@@ -36,7 +36,7 @@ class PinCodeField extends StatefulWidget {
   /// Callback function, called when pin is completed.
   final ValueChanged<String> onCompleted;
 
-  PinCodeField({
+  OTPField({
     Key key,
     this.length = 4,
     this.width = 10,
@@ -51,10 +51,10 @@ class PinCodeField extends StatefulWidget {
   }) : assert(length > 1);
 
   @override
-  _PinCodeFieldState createState() => _PinCodeFieldState();
+  _OTPFieldState createState() => _OTPFieldState();
 }
 
-class _PinCodeFieldState extends State<PinCodeField> {
+class _OTPFieldState extends State<OTPField> {
   List<FocusNode> _focusNodes;
   List<TextEditingController> _textControllers;
 
@@ -63,7 +63,6 @@ class _PinCodeFieldState extends State<PinCodeField> {
 
   @override
   void initState() {
-    super.initState();
     _focusNodes = List<FocusNode>(widget.length);
     _textControllers = List<TextEditingController>(widget.length);
 
@@ -83,6 +82,7 @@ class _PinCodeFieldState extends State<PinCodeField> {
 
       return textField;
     });
+    super.initState();
   }
 
   @override

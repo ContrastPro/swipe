@@ -24,11 +24,11 @@ class AppColors {
   );
 
   static const LinearGradient textFieldGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
     colors: [
-      Color(0xFF27AE63),
-      Color(0xFF27AE9E),
+      Color(0x2227AE63),
+      Color(0x2227AE9E),
     ],
   );
 }
