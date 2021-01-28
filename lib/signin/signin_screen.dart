@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/custom_widget/app_logo.dart';
+import 'package:swipe/custom_widget/pin_code_field.dart';
 import 'package:swipe/global/colors.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _buildTextInfo({String title}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 60.0),
+      padding: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 20.0),
       child: Text(
         title,
         textAlign: TextAlign.center,
@@ -120,7 +121,21 @@ class _SignInScreenState extends State<SignInScreen> {
           title: "Введите код, который мы отправили "
               "на указанный вами номер телефона",
         ),
-        SizedBox(height: 20.0),
+        PinCodeField(
+          length: 4,
+          width: 250.0,
+          fieldWidth: 45.0,
+          style: TextStyle(
+            fontSize: 40.0,
+            color: Colors.white,
+          ),
+          textFieldAlignment: MainAxisAlignment.spaceAround,
+          fieldStyle: FieldStyle.underline,
+          onCompleted: (pin) {
+            print("Completed: " + pin);
+          },
+        ),
+        SizedBox(height: 40.0),
         _buildButton(title: "Войти"),
       ],
     );
@@ -142,8 +157,8 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppLogo(),
-              _firstPage(),
+              AppLogo(width: 70.0, height: 45.0, fontSize: 55.0),
+              _thirdPage(),
             ],
           ),
         ),
