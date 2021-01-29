@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/authentication_screen/authentication_provider.dart';
+import 'package:swipe/authentication_screen/provider/authentication_provider.dart';
 
 class SwitchAuthWidget extends StatelessWidget {
   @override

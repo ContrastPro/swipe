@@ -71,9 +71,9 @@ class _OTPFieldState extends State<OTPField> {
     });
     _textFields = List.generate(widget.length, (int i) {
       Widget textField;
-      if (i == 1) {
+      if (i % 2 == 0 && i != 0) {
         textField = Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(left: 20),
           child: buildTextField(context, i),
         );
       } else {
