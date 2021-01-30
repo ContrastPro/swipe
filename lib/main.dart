@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_style.dart';
-import 'file:///D:/AndrioidStudio/pDart/DART/swipe/lib/authentication_screen/provider/authentication_provider.dart';
-
+import 'package:swipe/authentication_screen/provider/authentication_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/authentication_screen/authentication_screen.dart';
+import 'package:swipe/home_screen/home_screen.dart';
 
 void main() {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   return runApp(
     MultiProvider(
       providers: [
@@ -16,48 +17,50 @@ void main() {
           create: (context) => AuthNotifier(),
         ),
       ],
-      child: MyApp(),
+      child: SwipeApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class SwipeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent,
+    ));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Swipe',
       theme: AppTheme.light(),
-      home: CheckConnection(),
-    );
-  }
-}
-
-class CheckConnection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        // Initialize FlutterFire:
+      home: FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
-          // Check for errors
           if (snapshot.hasError) {
-            return Center(
-              child: Text("${snapshot.error}"),
+            return Scaffold(
+              body: Center(
+                child: Text("${snapshot.error}"),
+              ),
             );
           }
 
-          // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return AuthenticationScreen();
+            return StreamBuilder<User>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (BuildContext context, AsyncSnapshot<User> user) {
+                if (user.hasData) {
+                  return HomeScreen();
+                }
+
+                if (user.connectionState == ConnectionState.waiting) {
+                  return Scaffold();
+                }
+                return AuthenticationScreen();
+              },
+            );
           }
 
-          // Otherwise, show something whilst waiting for initialization to complete
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Scaffold();
         },
       ),
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:swipe/authentication_screen/api/authentication_api.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/custom_app_widget/notification_dialog.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/custom_app_widget/app_logo_widget.dart';
 import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
@@ -12,13 +15,17 @@ class SignInWidget extends StatefulWidget {
 
 class _SignInWidgetState extends State<SignInWidget> {
   int _pageIndex = 0;
+  String _smsPin;
+  bool _startLoading = false;
   PageController _pageController;
   TextEditingController _phoneController;
+  AuthenticationAPI _authenticationAPI;
 
   @override
   void initState() {
     _pageController = PageController(initialPage: 0, keepPage: true);
     _phoneController = TextEditingController();
+    _authenticationAPI = AuthenticationAPI();
     super.initState();
   }
 
@@ -116,10 +123,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           minHeight: 50.0,
           borderRadius: 10.0,
           onTap: () {
-            String phone = _phoneController.text.trim();
-            if (phone != null && phone != "") {
-              _changePage();
-            }
+            _sendPhone(_phoneController.text.trim());
           },
         ),
       ],
@@ -147,6 +151,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           fieldStyle: FieldStyle.underline,
           onCompleted: (pin) {
             print("Completed: " + pin);
+            setState(() => _smsPin = pin);
           },
         ),
         SizedBox(height: 40.0),
@@ -155,34 +160,85 @@ class _SignInWidgetState extends State<SignInWidget> {
           maxWidth: 280.0,
           minHeight: 50.0,
           borderRadius: 10.0,
-          onTap: () {},
+          onTap: () => _signIn(),
         ),
       ],
     );
   }
 
+  Future<void> _sendPhone(String phone) async {
+    //phone: "+44 7123 123456"
+    FocusScope.of(context).unfocus();
+    if (phone != null && phone != "") {
+      setState(() => _startLoading = true);
+      await _authenticationAPI.verifyPhoneNumber(phone: phone);
+      /*if (_authenticationAPI.errorCode != "") {
+        setState(() => _startLoading = false);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return NotificationDialog(
+              title: 'Упс...',
+              content: 'Похоже вы номер неверного формата',
+            );
+          },
+        );
+      } else {
+        setState(() => _startLoading = false);
+        _changePage();
+      }*/
+    }
+  }
+
+  Future<void> _signIn() async {
+    if (_smsPin.length == 6) {
+      setState(() => _startLoading = true);
+      bool isSuccess = await _authenticationAPI.enterOTPCode(smsCode: _smsPin);
+      if (isSuccess == false) {
+        setState(() => _startLoading = false);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return NotificationDialog(
+              title: 'Упс...',
+              content: 'Похоже вы ввели неверный код',
+            );
+          },
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Stack(
       children: [
-        AppLogo(width: 70.0, height: 45.0, fontSize: 55.0),
-        Container(
-          height: 300,
-          child: PageView(
-            controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
-            onPageChanged: (int index) {
-              setState(() => _pageIndex = index);
-            },
-            children: <Widget>[
-              _firstPage(),
-              _secondPage(),
-              _thirdPage(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 45.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
+              Container(
+                height: 300,
+                child: PageView(
+                  controller: _pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (int index) {
+                    setState(() => _pageIndex = index);
+                  },
+                  children: <Widget>[
+                    _firstPage(),
+                    _secondPage(),
+                    _thirdPage(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
+        if (_startLoading == true) WaveIndicator(),
       ],
     );
   }

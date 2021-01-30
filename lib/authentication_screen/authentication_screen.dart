@@ -9,16 +9,15 @@ import 'package:swipe/authentication_screen/custom_widget/signup_widget.dart';
 class AuthenticationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-    );
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: AppColors.backgroundGradient,
+          ),
           child: Consumer<AuthNotifier>(
             builder: (context, authNotifier, child) {
               return AnimatedSwitcher(
