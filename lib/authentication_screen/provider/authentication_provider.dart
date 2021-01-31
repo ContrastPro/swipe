@@ -23,8 +23,8 @@ class AuthNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void setUser(User user){
-    _user = user;
+  void setUser(User user) {
+    _user = user ;
     notifyListeners();
   }
 }

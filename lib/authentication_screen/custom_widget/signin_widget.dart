@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/authentication_screen/api/authentication_api.dart';
+import 'package:swipe/authentication_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
 import 'package:swipe/global/app_colors.dart';
@@ -19,13 +19,13 @@ class _SignInWidgetState extends State<SignInWidget> {
   bool _startLoading = false;
   PageController _pageController;
   TextEditingController _phoneController;
-  AuthenticationAPI _authenticationAPI;
+  AuthAPI _authenticationAPI;
 
   @override
   void initState() {
     _pageController = PageController(initialPage: 0, keepPage: true);
     _phoneController = TextEditingController();
-    _authenticationAPI = AuthenticationAPI();
+    _authenticationAPI = AuthAPI();
     super.initState();
   }
 
@@ -36,6 +36,8 @@ class _SignInWidgetState extends State<SignInWidget> {
     super.dispose();
   }
 
+  /// Methods
+
   void _changePage() {
     setState(() => _pageIndex++);
     _pageController.animateToPage(
@@ -44,6 +46,44 @@ class _SignInWidgetState extends State<SignInWidget> {
       curve: Curves.ease,
     );
   }
+
+  void _showDialog(String content) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NotificationDialog(
+          title: 'Упс...',
+          content: _authenticationAPI.message,
+        );
+      },
+    );
+  }
+
+  void _verifyPhoneNumber(String phone) async {
+    // Test phone: +44 7123 123456
+    FocusScope.of(context).unfocus();
+    setState(() => _startLoading = true);
+    await _authenticationAPI.verifyPhoneNumber(phone: phone);
+    if (_authenticationAPI.status == AuthStatus.EXIST) {
+      _changePage();
+    } else if (_authenticationAPI.status == AuthStatus.NOTEXIST) {
+      _showDialog(_authenticationAPI.message);
+    }
+    setState(() => _startLoading = false);
+  }
+
+  void _signInWithPhoneNumber() async {
+    if (_smsPin.length == 6) {
+      setState(() => _startLoading = true);
+      await _authenticationAPI.signInWithPhoneNumber(smsCode: _smsPin);
+      if (_authenticationAPI.status == AuthStatus.ERROR) {
+        setState(() => _startLoading = false);
+        _showDialog(_authenticationAPI.message);
+      }
+    }
+  }
+
+  /// Widgets
 
   Widget _buildTextInfo({String title}) {
     return Padding(
@@ -123,7 +163,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           minHeight: 50.0,
           borderRadius: 10.0,
           onTap: () {
-            _sendPhone(_phoneController.text.trim());
+            _verifyPhoneNumber(_phoneController.text.trim());
           },
         ),
       ],
@@ -160,53 +200,10 @@ class _SignInWidgetState extends State<SignInWidget> {
           maxWidth: 280.0,
           minHeight: 50.0,
           borderRadius: 10.0,
-          onTap: () => _signIn(),
+          onTap: () => _signInWithPhoneNumber(),
         ),
       ],
     );
-  }
-
-  Future<void> _sendPhone(String phone) async {
-    //phone: "+44 7123 123456"
-    FocusScope.of(context).unfocus();
-    if (phone != null && phone != "") {
-      setState(() => _startLoading = true);
-      await _authenticationAPI.verifyPhoneNumber(phone: phone);
-      /*if (_authenticationAPI.errorCode != "") {
-        setState(() => _startLoading = false);
-        showDialog(
-          context: context,
-          builder: (context) {
-            return NotificationDialog(
-              title: 'Упс...',
-              content: 'Похоже вы номер неверного формата',
-            );
-          },
-        );
-      } else {
-        setState(() => _startLoading = false);
-        _changePage();
-      }*/
-    }
-  }
-
-  Future<void> _signIn() async {
-    if (_smsPin.length == 6) {
-      setState(() => _startLoading = true);
-      bool isSuccess = await _authenticationAPI.enterOTPCode(smsCode: _smsPin);
-      if (isSuccess == false) {
-        setState(() => _startLoading = false);
-        showDialog(
-          context: context,
-          builder: (context) {
-            return NotificationDialog(
-              title: 'Упс...',
-              content: 'Похоже вы ввели неверный код',
-            );
-          },
-        );
-      }
-    }
   }
 
   @override
