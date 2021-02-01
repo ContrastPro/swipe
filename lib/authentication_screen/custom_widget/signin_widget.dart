@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:swipe/authentication_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
@@ -60,13 +61,15 @@ class _SignInWidgetState extends State<SignInWidget> {
   }
 
   void _verifyPhoneNumber(String phone) async {
-    // Test phone: +44 7123 123456
+    // Test phone: +380999057519
     FocusScope.of(context).unfocus();
     setState(() => _startLoading = true);
     await _authenticationAPI.verifyPhoneNumber(phone: phone);
     if (_authenticationAPI.status == AuthStatus.EXIST) {
       _changePage();
     } else if (_authenticationAPI.status == AuthStatus.NOTEXIST) {
+      _showDialog(_authenticationAPI.message);
+    } else if (_authenticationAPI.status == AuthStatus.ERROR) {
       _showDialog(_authenticationAPI.message);
     }
     setState(() => _startLoading = false);
@@ -152,6 +155,9 @@ class _SignInWidgetState extends State<SignInWidget> {
                 hintText: 'Телефон',
                 hintStyle: TextStyle(color: Colors.white),
               ),
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+              ],
               controller: _phoneController,
             ),
           ),
@@ -163,7 +169,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           minHeight: 50.0,
           borderRadius: 10.0,
           onTap: () {
-            _verifyPhoneNumber(_phoneController.text.trim());
+            _verifyPhoneNumber(_phoneController.text);
           },
         ),
       ],
@@ -181,14 +187,15 @@ class _SignInWidgetState extends State<SignInWidget> {
         SizedBox(height: 20.0),
         OTPField(
           length: 6,
-          width: 270.0,
-          fieldWidth: 30.0,
+          width: 280.0,
+          fieldWidth: 35.0,
           style: TextStyle(
             fontSize: 40.0,
             color: Colors.white,
           ),
           textFieldAlignment: MainAxisAlignment.spaceAround,
           fieldStyle: FieldStyle.underline,
+          keyboardType: TextInputType.phone,
           onCompleted: (pin) {
             print("Completed: " + pin);
             setState(() => _smsPin = pin);

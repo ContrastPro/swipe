@@ -14,10 +14,21 @@ class AuthAPI {
 
   AuthStatus get status => _status;
 
+  String _autoEditPhoneNumber(String phone) {
+    String splitPhone = phone.split(" ").join("");
+    if (splitPhone.contains("+")) {
+      return splitPhone;
+    } else {
+      return "+$splitPhone";
+    }
+  }
+
   Future<void> verifyPhoneNumber({String phone}) async {
-    if (phone.contains("+") && phone != null && phone != "") {
+    String splitPhone = _autoEditPhoneNumber(phone);
+    print(splitPhone);
+    if (splitPhone != null && splitPhone != "") {
       final QuerySnapshot result =
-          await AuthFirebaseFirestore.checkUserStatus(phone: phone);
+          await AuthFirebaseFirestore.checkUserStatus(phone: splitPhone);
 
       if (result.docs.length == 1) {
         _status = AuthStatus.EXIST;
@@ -25,19 +36,15 @@ class AuthAPI {
         _firebaseAuth.setLanguageCode("ru");
 
         await _firebaseAuth.verifyPhoneNumber(
-          phoneNumber: phone,
-          verificationCompleted: (PhoneAuthCredential credential) {
-            print(">> Auto Verification COMPLETED");
-          },
-          verificationFailed: (FirebaseAuthException exception) {
-            /*_message = 'Похоже ваш номер неверного формата';
-              _status = AuthStatus.ERROR; */
-            print(">> Verification FAILED: ${exception.message}");
-          },
+          phoneNumber: splitPhone,
           codeSent: (String verificationId, int resendToken) {
             _verificationId = verificationId;
             print(">> Code sent: $verificationId, $resendToken");
           },
+          verificationCompleted: (PhoneAuthCredential credential) {
+            print(">> Auto Verification COMPLETED");
+          },
+          verificationFailed: (FirebaseAuthException exception) {},
           codeAutoRetrievalTimeout: (String verificationId) {},
         );
       } else {
@@ -45,6 +52,9 @@ class AuthAPI {
         _message = 'Аккаунта с таким номером телефона ещё не существует.';
         print('Document data NOT EXIST');
       }
+    } else {
+      _status = AuthStatus.ERROR;
+      _message = 'Похоже ваш номер неверного формата';
     }
   }
 
@@ -66,7 +76,7 @@ class AuthAPI {
       _status = AuthStatus.SUCCESS;
     } catch (e) {
       print(">>> SIGH IN FAILED: ${e.message}");
-      _message = "Похоже вы ввели неверный код";
+      _message = "Похоже вы ввели неверный код. Попробуйте снова";
       _status = AuthStatus.ERROR;
     }
   }

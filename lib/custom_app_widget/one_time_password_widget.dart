@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:swipe/global/app_colors.dart';
 
 enum FieldStyle { underline, box }
@@ -71,7 +72,8 @@ class _OTPFieldState extends State<OTPField> {
     });
     _textFields = List.generate(widget.length, (int i) {
       Widget textField;
-      if (i % 2 == 0 && i != 0) {
+      // i % 2 == 0 && i != 0
+      if (i == 3) {
         textField = Padding(
           padding: const EdgeInsets.only(left: 20),
           child: buildTextField(context, i),
@@ -124,6 +126,9 @@ class _OTPFieldState extends State<OTPField> {
         style: widget.style,
         focusNode: _focusNodes[i],
         obscureText: widget.obscureText,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
         decoration: InputDecoration(
           counterText: "",
           hintText: "*",
