@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 enum AuthMode { SIGNUP, SIGNIN }
 
-class AuthNotifier with ChangeNotifier {
+class AuthModeNotifier with ChangeNotifier {
   AuthMode _authMode = AuthMode.SIGNIN;
 
   AuthMode get authMode => _authMode;

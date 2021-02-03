@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/authentication_screen/provider/authentication_provider.dart';
+import 'package:swipe/auth_screen/provider/auth_mode_provider.dart';
+
 
 class SwitchAuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthNotifier>(
+    return Consumer<AuthModeNotifier>(
       builder: (context, authNotifier, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,

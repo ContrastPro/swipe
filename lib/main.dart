@@ -2,24 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe/auth_screen/auth_screen.dart';
+import 'package:swipe/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/global/app_style.dart';
-import 'package:swipe/authentication_screen/provider/authentication_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swipe/authentication_screen/authentication_screen.dart';
 import 'package:swipe/home_screen/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  return runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => AuthNotifier(),
-        ),
-      ],
-      child: SwipeApp(),
-    ),
-  );
+  return runApp(SwipeApp());
 }
 
 class SwipeApp extends StatelessWidget {
@@ -55,7 +46,10 @@ class SwipeApp extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Scaffold();
                 }
-                return AuthenticationScreen();
+                return ChangeNotifierProvider<AuthModeNotifier>(
+                  create: (_) => AuthModeNotifier(),
+                  child: AuthenticationScreen(),
+                );
               },
             );
           }

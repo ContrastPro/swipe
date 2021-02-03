@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe/authentication_screen/api/firebase_auth_api.dart';
+import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _user = AuthAPI.getCurrentUser();
+    _user = AuthFirebaseAPI.getCurrentUser();
     super.initState();
   }
 
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
-              AuthAPI.signOut();
+              AuthFirebaseAPI.signOut();
             },
           )
         ],
