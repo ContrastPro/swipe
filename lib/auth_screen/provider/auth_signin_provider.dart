@@ -14,9 +14,10 @@ class AuthSignInNotifier with ChangeNotifier {
 
   set smsPin(String value) => _smsPin = value;
 
-  Future<void> signInWithPhoneNumber({BuildContext context, String phone}) async {
+  Future<void> signInWithPhoneNumber(
+      {BuildContext context, String phone}) async {
     FocusScope.of(context).unfocus();
-    if (phone != null && phone != "") {
+    if (phone != "") {
       _authFirebaseAPI = AuthFirebaseAPI();
       _changeLoading(true);
       String splitPhone = _autoEditPhoneNumber(phone);

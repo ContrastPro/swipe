@@ -51,7 +51,7 @@ class AuthFirebaseAPI {
 
   Future<void> signUpWithPhoneNumber({String phone}) async {
     final QuerySnapshot result =
-    await AuthFirestoreAPI.checkUserStatus(phone: phone);
+        await AuthFirestoreAPI.checkUserStatus(phone: phone);
 
     if (result.docs.length == 1) {
       _status = AuthStatus.EXIST;
@@ -72,7 +72,8 @@ class AuthFirebaseAPI {
           print(">> Auto Verification COMPLETED");
         },
         verificationFailed: (FirebaseAuthException exception) {
-          print(">>> ERROR ${exception.message}");
+          _status = AuthStatus.ERROR;
+          print(">> ERROR ${exception.message}");
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );

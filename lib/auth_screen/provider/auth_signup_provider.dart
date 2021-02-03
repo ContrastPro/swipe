@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
 
-class AuthSignUpNotifier with ChangeNotifier{
-
+class AuthSignUpNotifier with ChangeNotifier {
   bool _startLoading = false;
   String _smsPin;
   AuthFirebaseAPI _authFirebaseAPI;
@@ -15,20 +14,27 @@ class AuthSignUpNotifier with ChangeNotifier{
 
   set smsPin(String value) => _smsPin = value;
 
-  Future<void> signUpWithPhoneNumber({BuildContext context, String phone}) async {
+  Future<void> signUpWithPhoneNumber({
+    BuildContext context,
+    String firstName,
+    String phone,
+    String email,
+  }) async {
     FocusScope.of(context).unfocus();
-    if (phone != null && phone != "") {
+    if (firstName != "" && phone != "" && email != "") {
       _authFirebaseAPI = AuthFirebaseAPI();
       _changeLoading(true);
       String splitPhone = _autoEditPhoneNumber(phone);
       print(splitPhone);
+
       await _authFirebaseAPI.signUpWithPhoneNumber(phone: splitPhone);
+
       if (_authFirebaseAPI.status == AuthStatus.EXIST) {
         _showDialog(context, _authFirebaseAPI.message);
       }
       _changeLoading(false);
     } else {
-      _showDialog(context, "Похоже ваш номер неверного формата");
+      _showDialog(context, "Похоже вы забыли кое-что указать");
     }
   }
 
@@ -43,9 +49,9 @@ class AuthSignUpNotifier with ChangeNotifier{
     }
   }
 
-  bool phoneIsExist() {
+  bool phoneIsNotExist() {
     if (_authFirebaseAPI != null &&
-        _authFirebaseAPI.status == AuthStatus.EXIST) {
+        _authFirebaseAPI.status == AuthStatus.NOTEXIST) {
       return true;
     } else {
       return false;

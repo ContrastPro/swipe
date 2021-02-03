@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe/auth_screen/custom_widget/gradient_text_field.dart';
 import 'package:swipe/auth_screen/custom_widget/switch_auth_widget.dart';
 import 'package:swipe/auth_screen/provider/auth_signin_provider.dart';
+import 'package:swipe/custom_app_widget/expandeble_page_view.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
-import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/custom_app_widget/app_logo_widget.dart';
 import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
 import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
@@ -85,44 +86,20 @@ class _SignInWidgetState extends State<SignInWidget> {
   }
 
   Widget _secondPage() {
-    final InputBorder border = OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      borderSide: BorderSide(color: Colors.transparent),
-    );
-
     return Padding(
       padding: _itemPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          GradientTextField(
             width: 280.0,
             height: 50.0,
-            decoration: BoxDecoration(
-              gradient: AppColors.textFieldGradient,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: TextField(
-                keyboardType: TextInputType.phone,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                  ),
-                  enabledBorder: border,
-                  disabledBorder: border,
-                  focusedBorder: border,
-                  border: border,
-                  hintText: 'Телефон',
-                  hintStyle: TextStyle(color: Colors.white),
-                ),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
-                ],
-                controller: _phoneController,
-              ),
-            ),
+            hintText: "Телефон",
+            keyboardType: TextInputType.phone,
+            formatter: [
+              FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+            ],
+            controller: _phoneController,
           ),
           SizedBox(height: 22.0),
           GradientButton(
@@ -133,7 +110,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             onTap: () async {
               await _signInNotifier.signInWithPhoneNumber(
                 context: context,
-                phone: _phoneController.text,
+                phone: _phoneController.text.trim(),
               );
               if (_signInNotifier.phoneIsExist() == true) {
                 _changePage();
@@ -199,20 +176,18 @@ class _SignInWidgetState extends State<SignInWidget> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
-            Container(
-              height: 300,
-              child: PageView(
-                controller: _pageController,
-                physics: NeverScrollableScrollPhysics(),
-                onPageChanged: (int index) {
-                  setState(() => _pageIndex = index);
-                },
-                children: <Widget>[
-                  _firstPage(),
-                  _secondPage(),
-                  _thirdPage(),
-                ],
-              ),
+            SizedBox(height: 40.0),
+            ExpandablePageView(
+              pageController: _pageController,
+              physics: NeverScrollableScrollPhysics(),
+              onPageChanged: (int index) {
+                setState(() => _pageIndex = index);
+              },
+              children: [
+                _firstPage(),
+                _secondPage(),
+                _thirdPage(),
+              ],
             ),
           ],
         ),
