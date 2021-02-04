@@ -11,7 +11,6 @@ class AuthSignInNotifier with ChangeNotifier {
 
   AuthFirebaseAPI get authFirebaseAPI => _authFirebaseAPI;
 
-
   Future<void> signInWithPhoneNumber(
       {BuildContext context, String phone}) async {
     FocusScope.of(context).unfocus();

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
-import 'package:swipe/model/user.dart';
+import 'package:swipe/model/custom_user.dart';
 
 class AuthSignUpNotifier with ChangeNotifier {
   bool _startLoading = false;

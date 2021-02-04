@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/auth_screen/api/auth_firestore_api.dart';
-import 'package:swipe/model/user.dart';
+import 'package:swipe/model/custom_user.dart';
 
 enum AuthStatus { EXIST, NOTEXIST, SUCCESS, ERROR }
 
@@ -81,7 +81,7 @@ class AuthFirebaseAPI {
         if (value.user != null) {
           print(">> SIGH IN SUCCESSFULLY");
           if (verificationId != null) {
-            print(">> Post to firebase firestore");
+            print(">> Post to Firebase Firestore");
             await AuthFirestoreAPI.addUser(customUser);
           }
         }

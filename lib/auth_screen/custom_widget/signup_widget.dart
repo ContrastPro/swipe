@@ -11,7 +11,7 @@ import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
 import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
-import 'package:swipe/model/user.dart';
+import 'package:swipe/model/custom_user.dart';
 
 class SignUpWidget extends StatefulWidget {
   @override
@@ -26,20 +26,12 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
   EdgeInsets _itemPadding;
   PageController _pageController;
-  TextEditingController _nameController;
-  TextEditingController _lastNameController;
-  TextEditingController _phoneController;
-  TextEditingController _emailController;
 
   @override
   void initState() {
     _userBuilder = UserBuilder();
     _itemPadding = const EdgeInsets.symmetric(horizontal: 45.0);
     _pageController = PageController(initialPage: 0, keepPage: true);
-    _nameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _phoneController = TextEditingController();
-    _emailController = TextEditingController();
     super.initState();
   }
 
@@ -56,6 +48,50 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       duration: Duration(milliseconds: 800),
       curve: Curves.ease,
     );
+  }
+
+  void _showDialog(String content) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NotificationDialog(
+          title: 'Упс...',
+          content: content,
+        );
+      },
+    );
+  }
+
+  Future<void> _startSignUp() async {
+    _signUpNotifier.userBuilder = _userBuilder;
+    String splitPhone = await _signUpNotifier.signUpWithPhoneNumber(
+      context: context,
+    );
+    print(splitPhone);
+    if (_signUpNotifier.phoneIsNotExist() == true) {
+      try {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: splitPhone,
+          codeSent: (String verificationId, int resendToken) {
+            _signUpNotifier.setVerificationId = verificationId;
+            _changePage();
+          },
+          verificationFailed: (FirebaseAuthException exception) {
+            if (exception.code == 'invalid-phone-number') {
+              _showDialog("Указаный вами телефон неверного формата");
+            } else {
+              _showDialog(exception.message);
+            }
+          },
+          verificationCompleted: (PhoneAuthCredential credential) {},
+          codeAutoRetrievalTimeout: (String verId) {},
+        );
+      } catch (e) {
+        print(e.massage);
+      }
+    } else {
+      setState(() => _showHelp = true);
+    }
   }
 
   Widget _buildTextInfo({String title}) {
@@ -113,7 +149,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             height: fieldHeight,
             hintText: "Имя",
             keyboardType: TextInputType.name,
-            controller: _nameController,
             onChanged: (String value) {
               _userBuilder.name = value;
             },
@@ -124,7 +159,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             height: fieldHeight,
             hintText: "Фамилия",
             keyboardType: TextInputType.name,
-            controller: _lastNameController,
             onChanged: (String value) {
               _userBuilder.lastName = value;
             },
@@ -138,7 +172,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             formatter: [
               FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
             ],
-            controller: _phoneController,
             onChanged: (String value) {
               _userBuilder.phone = value;
             },
@@ -149,7 +182,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             height: fieldHeight,
             hintText: "Электронная почта",
             keyboardType: TextInputType.emailAddress,
-            controller: _emailController,
             onChanged: (String value) {
               _userBuilder.email = value;
             },
@@ -170,51 +202,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       ),
     );
   }
-
-  ///
-  ///
-  ///
-  ///
-
-  void _showDialog(String content) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return NotificationDialog(
-          title: 'Упс...',
-          content: content,
-        );
-      },
-    );
-  }
-
-  Future<void> _startSignUp() async {
-    _signUpNotifier.userBuilder = _userBuilder;
-    String splitPhone = await _signUpNotifier.signUpWithPhoneNumber(
-      context: context,
-    );
-    print(splitPhone);
-    if (_signUpNotifier.phoneIsNotExist() == true) {
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: splitPhone,
-        codeSent: (String verificationId, int resendToken) {
-          _signUpNotifier.setVerificationId = verificationId;
-          _changePage();
-        },
-        verificationFailed: (FirebaseAuthException exception) {
-          _showDialog(exception.message);
-        },
-        verificationCompleted: (PhoneAuthCredential credential) {},
-        codeAutoRetrievalTimeout: (String verId) {},
-      );
-    } else {
-      setState(() => _showHelp = true);
-    }
-  }
-
-  ///
-  ///
-  ///
 
   Widget _thirdPage() {
     return Padding(
