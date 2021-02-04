@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,9 @@ import 'package:swipe/custom_app_widget/app_logo_widget.dart';
 import 'package:swipe/custom_app_widget/expandeble_page_view.dart';
 import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/custom_app_widget/notification_dialog.dart';
 import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
+import 'package:swipe/model/user.dart';
 
 class SignUpWidget extends StatefulWidget {
   @override
@@ -17,29 +20,32 @@ class SignUpWidget extends StatefulWidget {
 
 class _SignUpWidgetState extends State<SignUpWidget> {
   int _pageIndex = 0;
+  AuthSignUpNotifier _signUpNotifier;
+  UserBuilder _userBuilder;
+  bool _showHelp = false;
+
+  EdgeInsets _itemPadding;
   PageController _pageController;
   TextEditingController _nameController;
+  TextEditingController _lastNameController;
   TextEditingController _phoneController;
   TextEditingController _emailController;
-  EdgeInsets _itemPadding;
-  AuthSignUpNotifier _signUpNotifier;
 
   @override
   void initState() {
+    _userBuilder = UserBuilder();
+    _itemPadding = const EdgeInsets.symmetric(horizontal: 45.0);
     _pageController = PageController(initialPage: 0, keepPage: true);
     _nameController = TextEditingController();
+    _lastNameController = TextEditingController();
     _phoneController = TextEditingController();
     _emailController = TextEditingController();
-    _itemPadding = const EdgeInsets.symmetric(horizontal: 45.0);
     super.initState();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
     super.dispose();
   }
 
@@ -94,60 +100,121 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   }
 
   Widget _secondPage() {
-    double height = 14.0;
+    double boxHeight = 14.0;
+    double fieldWidth = 280.0;
+    double fieldHeight = 50.0;
     return Padding(
       padding: _itemPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GradientTextField(
-            width: 280.0,
-            height: 50.0,
+            width: fieldWidth,
+            height: fieldHeight,
             hintText: "Имя",
             keyboardType: TextInputType.name,
             controller: _nameController,
+            onChanged: (String value) {
+              _userBuilder.name = value;
+            },
           ),
-          SizedBox(height: height),
+          SizedBox(height: boxHeight),
           GradientTextField(
-            width: 280.0,
-            height: 50.0,
+            width: fieldWidth,
+            height: fieldHeight,
+            hintText: "Фамилия",
+            keyboardType: TextInputType.name,
+            controller: _lastNameController,
+            onChanged: (String value) {
+              _userBuilder.lastName = value;
+            },
+          ),
+          SizedBox(height: boxHeight),
+          GradientTextField(
+            width: fieldWidth,
+            height: fieldHeight,
             hintText: "Телефон",
             keyboardType: TextInputType.phone,
             formatter: [
               FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
             ],
             controller: _phoneController,
+            onChanged: (String value) {
+              _userBuilder.phone = value;
+            },
           ),
-          SizedBox(height: height),
+          SizedBox(height: boxHeight),
           GradientTextField(
-            width: 280.0,
-            height: 50.0,
-            hintText: "Email",
+            width: fieldWidth,
+            height: fieldHeight,
+            hintText: "Электронная почта",
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
+            onChanged: (String value) {
+              _userBuilder.email = value;
+            },
           ),
           SizedBox(height: 32.0),
           GradientButton(
-            title: "Далее",
             maxWidth: 280.0,
             minHeight: 50.0,
             borderRadius: 10.0,
-            onTap: () async {
-              await _signUpNotifier.signUpWithPhoneNumber(
-                context: context,
-                firstName: _nameController.text.trim(),
-                phone: _phoneController.text.trim(),
-                email: _emailController.text.trim(),
-              );
-              /*if (_signUpNotifier.phoneIsNotExist() == true) {
-                _changePage();
-              }*/
-            },
+            title: "Далее",
+            onTap: () => _startSignUp(),
           ),
+          if (_showHelp == true) ...[
+            SizedBox(height: 20.0),
+            SwitchAuthWidget(),
+          ],
         ],
       ),
     );
   }
+
+  ///
+  ///
+  ///
+  ///
+
+  void _showDialog(String content) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NotificationDialog(
+          title: 'Упс...',
+          content: content,
+        );
+      },
+    );
+  }
+
+  Future<void> _startSignUp() async {
+    _signUpNotifier.userBuilder = _userBuilder;
+    String splitPhone = await _signUpNotifier.signUpWithPhoneNumber(
+      context: context,
+    );
+    print(splitPhone);
+    if (_signUpNotifier.phoneIsNotExist() == true) {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: splitPhone,
+        codeSent: (String verificationId, int resendToken) {
+          _signUpNotifier.setVerificationId = verificationId;
+          _changePage();
+        },
+        verificationFailed: (FirebaseAuthException exception) {
+          _showDialog(exception.message);
+        },
+        verificationCompleted: (PhoneAuthCredential credential) {},
+        codeAutoRetrievalTimeout: (String verId) {},
+      );
+    } else {
+      setState(() => _showHelp = true);
+    }
+  }
+
+  ///
+  ///
+  ///
 
   Widget _thirdPage() {
     return Padding(
@@ -183,9 +250,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             minHeight: 50.0,
             borderRadius: 10.0,
             onTap: () {
-              _signUpNotifier.enterWithCredential(
-                context: context,
-              );
+              _signUpNotifier.enterWithCredential(context: context);
             },
           ),
         ],
@@ -211,7 +276,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 setState(() => _pageIndex = index);
               },
               children: [
-                //_firstPage(),
+                _firstPage(),
                 _secondPage(),
                 _thirdPage(),
               ],

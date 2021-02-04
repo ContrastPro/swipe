@@ -21,6 +21,7 @@ class _SignInWidgetState extends State<SignInWidget> {
   TextEditingController _phoneController;
   EdgeInsets _itemPadding;
   AuthSignInNotifier _signInNotifier;
+  bool _showHelp = false;
 
   @override
   void initState() {
@@ -114,9 +115,15 @@ class _SignInWidgetState extends State<SignInWidget> {
               );
               if (_signInNotifier.phoneIsExist() == true) {
                 _changePage();
+              } else {
+                setState(() => _showHelp = true);
               }
             },
           ),
+          if (_showHelp == true) ...[
+            SizedBox(height: 20.0),
+            SwitchAuthWidget(),
+          ],
         ],
       ),
     );
@@ -146,7 +153,10 @@ class _SignInWidgetState extends State<SignInWidget> {
             keyboardType: TextInputType.phone,
             onCompleted: (pin) {
               print("Completed: " + pin);
-              _signInNotifier.smsPin = pin;
+              _signInNotifier.enterWithCredential(
+                context: context,
+                smsPin: pin,
+              );
             },
           ),
           SizedBox(height: 40.0),
@@ -156,9 +166,9 @@ class _SignInWidgetState extends State<SignInWidget> {
             minHeight: 50.0,
             borderRadius: 10.0,
             onTap: () {
-              _signInNotifier.enterWithCredential(
+              /*_signInNotifier.enterWithCredential(
                 context: context,
-              );
+              );*/
             },
           ),
         ],

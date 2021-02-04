@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/auth_screen/api/auth_firestore_api.dart';
+import 'package:swipe/model/user.dart';
 
 enum AuthStatus { EXIST, NOTEXIST, SUCCESS, ERROR }
 
@@ -22,10 +23,10 @@ class AuthFirebaseAPI {
   factory AuthFirebaseAPI() => _authFirebaseAPI ?? AuthFirebaseAPI._();
 
   Future<void> signInWithPhoneNumber({String phone}) async {
-    final QuerySnapshot result =
-        await AuthFirestoreAPI.checkUserStatus(phone: phone);
+    final QuerySnapshot phoneStatus =
+        await AuthFirestoreAPI.checkPhoneStatus(phone: phone);
 
-    if (result.docs.length == 1) {
+    if (phoneStatus.docs.length == 1) {
       _status = AuthStatus.EXIST;
       print('Document data EXIST');
       _firebaseAuth.setLanguageCode("ru");
@@ -50,39 +51,26 @@ class AuthFirebaseAPI {
   }
 
   Future<void> signUpWithPhoneNumber({String phone}) async {
-    final QuerySnapshot result =
-        await AuthFirestoreAPI.checkUserStatus(phone: phone);
+    final QuerySnapshot phoneStatus =
+        await AuthFirestoreAPI.checkPhoneStatus(phone: phone);
 
-    if (result.docs.length == 1) {
+    if (phoneStatus.docs.length == 1) {
       _status = AuthStatus.EXIST;
       _message = 'Аккаунт с таким номером телефона уже существует.';
       print('Document data EXIST');
     } else {
       _status = AuthStatus.NOTEXIST;
       print('Document data NOT EXIST');
-      _firebaseAuth.setLanguageCode("ru");
-
-      await _firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phone,
-        codeSent: (String verificationId, int resendToken) {
-          _verificationId = verificationId;
-          print(">> Code sent: $verificationId, $resendToken");
-        },
-        verificationCompleted: (PhoneAuthCredential credential) {
-          print(">> Auto Verification COMPLETED");
-        },
-        verificationFailed: (FirebaseAuthException exception) {
-          _status = AuthStatus.ERROR;
-          print(">> ERROR ${exception.message}");
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
     }
   }
 
-  Future<void> enterWithCredential({String smsCode}) async {
+  Future<void> enterWithCredential({
+    String verificationId,
+    String smsCode,
+    CustomUser customUser,
+  }) async {
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: _verificationId,
+      verificationId: verificationId ?? _verificationId,
       smsCode: smsCode,
     );
 
@@ -92,6 +80,10 @@ class AuthFirebaseAPI {
           .then((value) async {
         if (value.user != null) {
           print(">> SIGH IN SUCCESSFULLY");
+          if (verificationId != null) {
+            print(">> Post to firebase firestore");
+            await AuthFirestoreAPI.addUser(customUser);
+          }
         }
       });
 

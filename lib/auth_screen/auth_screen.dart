@@ -22,11 +22,11 @@ class AuthenticationScreen extends StatelessWidget {
           ),
           child: Consumer<AuthModeNotifier>(
             builder: (context, authNotifier, child) {
-              return ChangeNotifierProvider<AuthSignUpNotifier>(
+             /* return ChangeNotifierProvider<AuthSignUpNotifier>(
                 create: (_) => AuthSignUpNotifier(),
                 child: SignUpWidget(),
-              );
-             /* return AnimatedSwitcher(
+              );*/
+              return AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
                 child: authNotifier.authMode == AuthMode.SIGNIN
                     ? ChangeNotifierProvider<AuthSignInNotifier>(
@@ -37,7 +37,7 @@ class AuthenticationScreen extends StatelessWidget {
                         create: (_) => AuthSignUpNotifier(),
                         child: SignUpWidget(),
                       ),
-              );*/
+              );
             },
           ),
         ),

@@ -5,14 +5,12 @@ import 'package:swipe/custom_app_widget/notification_dialog.dart';
 
 class AuthSignInNotifier with ChangeNotifier {
   bool _startLoading = false;
-  String _smsPin;
   AuthFirebaseAPI _authFirebaseAPI;
 
   bool get startLoading => _startLoading;
 
   AuthFirebaseAPI get authFirebaseAPI => _authFirebaseAPI;
 
-  set smsPin(String value) => _smsPin = value;
 
   Future<void> signInWithPhoneNumber(
       {BuildContext context, String phone}) async {
@@ -32,10 +30,10 @@ class AuthSignInNotifier with ChangeNotifier {
     }
   }
 
-  void enterWithCredential({BuildContext context}) async {
-    if (_smsPin != null && _smsPin.length == 6) {
+  void enterWithCredential({BuildContext context, String smsPin}) async {
+    if (smsPin != null && smsPin.length == 6) {
       _changeLoading(true);
-      await _authFirebaseAPI.enterWithCredential(smsCode: _smsPin);
+      await _authFirebaseAPI.enterWithCredential(smsCode: smsPin);
       if (_authFirebaseAPI.status == AuthStatus.ERROR) {
         _changeLoading(false);
         _showDialog(context, _authFirebaseAPI.message);

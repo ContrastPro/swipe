@@ -2,30 +2,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
+import 'package:swipe/model/user.dart';
 
 class AuthSignUpNotifier with ChangeNotifier {
   bool _startLoading = false;
+  String _verificationId;
   String _smsPin;
   AuthFirebaseAPI _authFirebaseAPI;
+  UserBuilder _userBuilder;
 
   bool get startLoading => _startLoading;
 
   AuthFirebaseAPI get authFirebaseAPI => _authFirebaseAPI;
 
+  set userBuilder(UserBuilder value) => _userBuilder = value;
+
+  set setVerificationId(String value) => _verificationId = value;
+
   set smsPin(String value) => _smsPin = value;
 
-  Future<void> signUpWithPhoneNumber({
-    BuildContext context,
-    String firstName,
-    String phone,
-    String email,
-  }) async {
+  Future<String> signUpWithPhoneNumber({BuildContext context}) async {
     FocusScope.of(context).unfocus();
-    if (firstName != "" && phone != "" && email != "") {
-      _authFirebaseAPI = AuthFirebaseAPI();
+    String splitPhone;
+    if (_userBuilder.phone != null && _userBuilder.phone != "") {
       _changeLoading(true);
-      String splitPhone = _autoEditPhoneNumber(phone);
-      print(splitPhone);
+      splitPhone = _autoEditPhoneNumber(_userBuilder.phone);
+      _authFirebaseAPI = AuthFirebaseAPI();
 
       await _authFirebaseAPI.signUpWithPhoneNumber(phone: splitPhone);
 
@@ -36,12 +38,17 @@ class AuthSignUpNotifier with ChangeNotifier {
     } else {
       _showDialog(context, "Похоже вы забыли кое-что указать");
     }
+    return splitPhone;
   }
 
   void enterWithCredential({BuildContext context}) async {
     if (_smsPin != null && _smsPin.length == 6) {
       _changeLoading(true);
-      await _authFirebaseAPI.enterWithCredential(smsCode: _smsPin);
+      await _authFirebaseAPI.enterWithCredential(
+        verificationId: _verificationId,
+        smsCode: _smsPin,
+        customUser: CustomUser(builder: _userBuilder),
+      );
       if (_authFirebaseAPI.status == AuthStatus.ERROR) {
         _changeLoading(false);
         _showDialog(context, _authFirebaseAPI.message);
@@ -61,8 +68,10 @@ class AuthSignUpNotifier with ChangeNotifier {
   String _autoEditPhoneNumber(String phone) {
     String splitPhone = phone.split(" ").join("");
     if (splitPhone.contains("+")) {
+      _userBuilder.phone = splitPhone;
       return splitPhone;
     } else {
+      _userBuilder.phone = "+$splitPhone";
       return "+$splitPhone";
     }
   }

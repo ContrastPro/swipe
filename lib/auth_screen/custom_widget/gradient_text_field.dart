@@ -9,6 +9,7 @@ class GradientTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter> formatter;
   final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 
   const GradientTextField({
     Key key,
@@ -18,6 +19,7 @@ class GradientTextField extends StatelessWidget {
     this.keyboardType,
     this.formatter,
     this.controller,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -50,7 +52,8 @@ class GradientTextField extends StatelessWidget {
           ),
           keyboardType: keyboardType ?? TextInputType.phone,
           inputFormatters: formatter ?? <TextInputFormatter>[],
-          controller: controller,
+          controller: controller ?? TextEditingController(),
+          onChanged: (String value) => onChanged(value),
         ),
       ),
     );
