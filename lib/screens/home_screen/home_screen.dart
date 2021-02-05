@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/screens/home_screen/custom_vidget/drawer.dart';
+import 'package:swipe/screens/home_screen/custom_widget/drawer.dart';
 import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.tune),
             onPressed: () {},
           )
         ],

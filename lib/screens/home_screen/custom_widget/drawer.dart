@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/custom_app_widget/app_logo_widget.dart';
+import 'package:swipe/custom_app_widget/app_logo.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/edit_profile/edit_profile.dart';
 import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
 class GradientDrawer extends StatelessWidget {
@@ -88,7 +89,15 @@ class GradientDrawer extends StatelessWidget {
                             Icons.settings,
                             color: Colors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              FadeRoute(
+                                page: EditProfile(userProfile: userProfile),
+                              ),
+                            );
+                            userNotifier.setUserProfile();
+                          },
                         ),
                       ],
                     ),

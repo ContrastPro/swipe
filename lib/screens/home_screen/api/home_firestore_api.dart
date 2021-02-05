@@ -4,14 +4,6 @@ import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
 class HomeFirestoreAPI {
-  static HomeFirestoreAPI _firestoreAPI;
-
-  HomeFirestoreAPI._() {
-    _firestoreAPI = this;
-  }
-
-  factory HomeFirestoreAPI() => _firestoreAPI ?? HomeFirestoreAPI._();
-
   static Future<UserBuilder> getUserProfile() async {
     final User user = AuthFirebaseAPI.getCurrentUser();
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -29,5 +21,17 @@ class HomeFirestoreAPI {
       userProfileList.add(userBuilder);
     });
     return userProfileList[0];
+  }
+
+  static Future<void> editUserProfile(CustomUser customUser) {
+    CollectionReference users = FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users");
+
+    return users
+        .add(customUser.toMap())
+        .then((value) => print(">> User Info Modified"))
+        .catchError((error) => print(">> Failed to modified user info: $error"));
   }
 }

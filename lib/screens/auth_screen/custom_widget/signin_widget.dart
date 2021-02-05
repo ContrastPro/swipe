@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe/screens/auth_screen/custom_widget/expandeble_page_view.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/gradient_text_field.dart';
+import 'package:swipe/screens/auth_screen/custom_widget/one_time_password_widget.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/switch_auth_widget.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_signin_provider.dart';
-import 'package:swipe/custom_app_widget/expandeble_page_view.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
-import 'package:swipe/custom_app_widget/app_logo_widget.dart';
-import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
-import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
+import 'package:swipe/custom_app_widget/app_logo.dart';
+import 'package:swipe/custom_app_widget/gradient_button.dart';
 
 class SignInWidget extends StatefulWidget {
   @override
