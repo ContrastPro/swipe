@@ -232,7 +232,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           ),
           SizedBox(height: 40.0),
           GradientButton(
-            title: "Войти",
+            title: "Регистрация",
             maxWidth: 280.0,
             minHeight: 50.0,
             borderRadius: 10.0,
@@ -240,6 +240,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               _signUpNotifier.enterWithCredential(context: context);
             },
           ),
+          /*SizedBox(height: 50.0),
+          PrivacyPolicy(),*/
         ],
       ),
     );
@@ -271,7 +273,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           ],
         ),
         if (_signUpNotifier.startLoading == true) WaveIndicator(),
-        //if (_pageIndex == 1) PrivacyPolicy(),
+        //if (_pageIndex == 2) PrivacyPolicy(),
       ],
     );
   }

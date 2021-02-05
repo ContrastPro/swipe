@@ -7,10 +7,20 @@ import 'package:swipe/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/global/app_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/home_screen/home_screen.dart';
+import 'package:swipe/home_screen/provider/user_notifier.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  return runApp(SwipeApp());
+  return runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserNotifier(),
+        ),
+      ],
+      child: SwipeApp(),
+    ),
+  );
 }
 
 class SwipeApp extends StatelessWidget {

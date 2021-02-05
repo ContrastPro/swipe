@@ -27,7 +27,7 @@ class SwitchAuthWidget extends StatelessWidget {
               child: Text(
                 authNotifier.authMode == AuthMode.SIGNIN
                     ? "Регистрация"
-                    : "Вход",
+                    : "Войти",
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,

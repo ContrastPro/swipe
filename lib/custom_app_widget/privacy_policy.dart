@@ -20,14 +20,13 @@ class PrivacyPolicy extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 45.0,
+          horizontal: 16.0,
           vertical: 16.0,
         ),
         child: RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            text:
-                'Создавая Учетную запись в\nонлайн сервесе Swipe, Вы соглашаетесь c ',
+            text: 'Создавая Учетную запись, Вы соглашаетесь c ',
             style: _normalStyle,
             children: <TextSpan>[
               TextSpan(
@@ -35,7 +34,7 @@ class PrivacyPolicy extends StatelessWidget {
                 style: _boldStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    //
+                    print("Условиями использования");
                   },
               ),
               TextSpan(
@@ -47,7 +46,7 @@ class PrivacyPolicy extends StatelessWidget {
                 style: _boldStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    //
+                    print("Политикой конфеденциальности");
                   },
               ),
             ],

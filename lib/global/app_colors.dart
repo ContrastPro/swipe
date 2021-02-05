@@ -14,6 +14,15 @@ class AppColors {
     ],
   );
 
+  static const LinearGradient drawerGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF0A3137),
+      Color(0xFF094A46),
+    ],
+  );
+
   static const LinearGradient buttonGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

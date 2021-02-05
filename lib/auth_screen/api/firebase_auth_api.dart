@@ -67,7 +67,7 @@ class AuthFirebaseAPI {
   Future<void> enterWithCredential({
     String verificationId,
     String smsCode,
-    CustomUser customUser,
+    UserBuilder userBuilder,
   }) async {
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
       verificationId: verificationId ?? _verificationId,
@@ -81,8 +81,7 @@ class AuthFirebaseAPI {
         if (value.user != null) {
           print(">> SIGH IN SUCCESSFULLY");
           if (verificationId != null) {
-            print(">> Post to Firebase Firestore");
-            await AuthFirestoreAPI.addUser(customUser);
+            _addUser(userBuilder: userBuilder, user: value.user);
           }
         }
       });
@@ -101,5 +100,15 @@ class AuthFirebaseAPI {
 
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  void _addUser({UserBuilder userBuilder, User user}) async {
+    print(">> Post to Firebase Firestore");
+    userBuilder.uid = user.uid;
+    userBuilder.createdAt = Timestamp.now();
+    userBuilder.updatedAt = Timestamp.now();
+    await AuthFirestoreAPI.addUser(
+      CustomUser(builder: userBuilder),
+    );
   }
 }

@@ -47,7 +47,7 @@ class AuthSignUpNotifier with ChangeNotifier {
       await _authFirebaseAPI.enterWithCredential(
         verificationId: _verificationId,
         smsCode: _smsPin,
-        customUser: CustomUser(builder: _userBuilder),
+        userBuilder: _userBuilder,
       );
       if (_authFirebaseAPI.status == AuthStatus.ERROR) {
         _changeLoading(false);
