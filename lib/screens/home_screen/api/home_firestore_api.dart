@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
-import 'package:swipe/home_screen/provider/user_notifier.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
 class HomeFirestoreAPI {
   static HomeFirestoreAPI _firestoreAPI;

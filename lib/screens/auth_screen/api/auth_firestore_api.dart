@@ -2,14 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/model/custom_user.dart';
 
 class AuthFirestoreAPI {
-  static AuthFirestoreAPI _firestoreAPI;
-
-  AuthFirestoreAPI._() {
-    _firestoreAPI = this;
-  }
-
-  factory AuthFirestoreAPI() => _firestoreAPI ?? AuthFirestoreAPI._();
-
   static Future<QuerySnapshot> checkPhoneStatus({String phone}) async {
     return await FirebaseFirestore.instance
         .collection("Swipe")

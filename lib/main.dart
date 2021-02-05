@@ -1,13 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/auth_screen/auth_screen.dart';
-import 'package:swipe/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/global/app_style.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swipe/home_screen/home_screen.dart';
-import 'package:swipe/home_screen/provider/user_notifier.dart';
+import 'package:swipe/screens/auth_screen/auth_screen.dart';
+import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
+import 'package:swipe/screens/home_screen/home_screen.dart';
+import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

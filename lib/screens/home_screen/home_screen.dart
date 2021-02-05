@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/home_screen/custom_vidget/drawer.dart';
-import 'package:swipe/home_screen/provider/user_notifier.dart';
+import 'package:swipe/screens/home_screen/custom_vidget/drawer.dart';
+import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

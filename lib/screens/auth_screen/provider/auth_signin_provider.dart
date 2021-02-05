@@ -1,49 +1,34 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
-import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
-class AuthSignUpNotifier with ChangeNotifier {
+class AuthSignInNotifier with ChangeNotifier {
   bool _startLoading = false;
-  String _verificationId;
-  String _smsPin;
   AuthFirebaseAPI _authFirebaseAPI;
-  UserBuilder _userBuilder;
 
   bool get startLoading => _startLoading;
 
   AuthFirebaseAPI get authFirebaseAPI => _authFirebaseAPI;
 
-  set userBuilder(UserBuilder value) => _userBuilder = value;
-
-  set setVerificationId(String value) => _verificationId = value;
-
-  set smsPin(String value) => _smsPin = value;
-
-  Future<String> signUpWithPhoneNumber({BuildContext context}) async {
+  Future<void> signInWithPhoneNumber(
+      {BuildContext context, String phone}) async {
     FocusScope.of(context).unfocus();
     _changeLoading(true);
     _authFirebaseAPI = AuthFirebaseAPI();
-    String splitPhone = _autoEditPhoneNumber(_userBuilder.phone);
+    String splitPhone = _autoEditPhoneNumber(phone);
 
-    await _authFirebaseAPI.signUpWithPhoneNumber(phone: splitPhone);
-
-    if (_authFirebaseAPI.status == AuthStatus.EXIST) {
+    await _authFirebaseAPI.signInWithPhoneNumber(phone: splitPhone);
+    if (_authFirebaseAPI.status == AuthStatus.NOTEXIST) {
       _showDialog(context, _authFirebaseAPI.message);
     }
     _changeLoading(false);
-    return splitPhone;
   }
 
-  void enterWithCredential({BuildContext context}) async {
-    if (_smsPin != null && _smsPin.length == 6) {
+  void enterWithCredential({BuildContext context, String smsPin}) async {
+    if (smsPin != null && smsPin.length == 6) {
       _changeLoading(true);
-      await _authFirebaseAPI.enterWithCredential(
-        verificationId: _verificationId,
-        smsCode: _smsPin,
-        userBuilder: _userBuilder,
-      );
+      await _authFirebaseAPI.enterWithCredential(smsCode: smsPin);
       if (_authFirebaseAPI.status == AuthStatus.ERROR) {
         _changeLoading(false);
         _showDialog(context, _authFirebaseAPI.message);
@@ -51,9 +36,9 @@ class AuthSignUpNotifier with ChangeNotifier {
     }
   }
 
-  bool phoneIsNotExist() {
+  bool phoneIsExist() {
     if (_authFirebaseAPI != null &&
-        _authFirebaseAPI.status == AuthStatus.NOTEXIST) {
+        _authFirebaseAPI.status == AuthStatus.EXIST) {
       return true;
     } else {
       return false;
@@ -63,10 +48,8 @@ class AuthSignUpNotifier with ChangeNotifier {
   String _autoEditPhoneNumber(String phone) {
     String splitPhone = phone.split(" ").join("");
     if (splitPhone.contains("+")) {
-      _userBuilder.phone = splitPhone;
       return splitPhone;
     } else {
-      _userBuilder.phone = "+$splitPhone";
       return "+$splitPhone";
     }
   }

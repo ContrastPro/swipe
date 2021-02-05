@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swipe/auth_screen/api/auth_firestore_api.dart';
+import 'package:swipe/screens/auth_screen/api/auth_firestore_api.dart';
 import 'package:swipe/model/custom_user.dart';
 
 enum AuthStatus { EXIST, NOTEXIST, SUCCESS, ERROR }

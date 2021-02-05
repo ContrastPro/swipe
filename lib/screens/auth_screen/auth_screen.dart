@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/auth_screen/custom_widget/signin_widget.dart';
-import 'package:swipe/auth_screen/custom_widget/signup_widget.dart';
-import 'package:swipe/auth_screen/provider/auth_mode_provider.dart';
-import 'package:swipe/auth_screen/provider/auth_signin_provider.dart';
-import 'package:swipe/auth_screen/provider/auth_signup_provider.dart';
+import 'package:swipe/screens/auth_screen/custom_widget/signin_widget.dart';
+import 'package:swipe/screens/auth_screen/custom_widget/signup_widget.dart';
+import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
+import 'package:swipe/screens/auth_screen/provider/auth_signin_provider.dart';
+import 'package:swipe/screens/auth_screen/provider/auth_signup_provider.dart';
 
 class AuthenticationScreen extends StatelessWidget {
   @override
