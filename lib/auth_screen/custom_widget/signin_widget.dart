@@ -17,24 +17,25 @@ class SignInWidget extends StatefulWidget {
 
 class _SignInWidgetState extends State<SignInWidget> {
   int _pageIndex = 0;
-  PageController _pageController;
-  TextEditingController _phoneController;
-  EdgeInsets _itemPadding;
-  AuthSignInNotifier _signInNotifier;
   bool _showHelp = false;
+  String _phone;
+  AuthSignInNotifier _signInNotifier;
+
+  PageController _pageController;
+  EdgeInsets _itemPadding;
+  GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _pageController = PageController(initialPage: 0, keepPage: true);
-    _phoneController = TextEditingController();
     _itemPadding = const EdgeInsets.symmetric(horizontal: 45.0);
+    _formKey = GlobalKey<FormState>();
     super.initState();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
@@ -87,44 +88,56 @@ class _SignInWidgetState extends State<SignInWidget> {
   }
 
   Widget _secondPage() {
-    return Padding(
-      padding: _itemPadding,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GradientTextField(
-            width: 280.0,
-            height: 50.0,
-            hintText: "Телефон",
-            keyboardType: TextInputType.phone,
-            formatter: [
-              FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+    return Form(
+      key: _formKey,
+      autovalidate: true,
+      child: Padding(
+        padding: _itemPadding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GradientTextField(
+              width: 280.0,
+              height: 50.0,
+              hintText: "Телефон",
+              keyboardType: TextInputType.phone,
+              formatter: [
+                FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+              ],
+              onChanged: (String value) {
+                setState(() => _phone = value);
+              },
+              validator: (String value) {
+                if (value.isEmpty) return '';
+                return null;
+              },
+            ),
+            SizedBox(height: 22.0),
+            GradientButton(
+              title: "Далее",
+              maxWidth: 280.0,
+              minHeight: 50.0,
+              borderRadius: 10.0,
+              onTap: () async {
+                if (_formKey.currentState.validate()) {
+                  await _signInNotifier.signInWithPhoneNumber(
+                    context: context,
+                    phone: _phone,
+                  );
+                  if (_signInNotifier.phoneIsExist() == true) {
+                    _changePage();
+                  } else {
+                    setState(() => _showHelp = true);
+                  }
+                }
+              },
+            ),
+            if (_showHelp == true) ...[
+              SizedBox(height: 20.0),
+              SwitchAuthWidget(),
             ],
-            controller: _phoneController,
-          ),
-          SizedBox(height: 22.0),
-          GradientButton(
-            title: "Далее",
-            maxWidth: 280.0,
-            minHeight: 50.0,
-            borderRadius: 10.0,
-            onTap: () async {
-              await _signInNotifier.signInWithPhoneNumber(
-                context: context,
-                phone: _phoneController.text.trim(),
-              );
-              if (_signInNotifier.phoneIsExist() == true) {
-                _changePage();
-              } else {
-                setState(() => _showHelp = true);
-              }
-            },
-          ),
-          if (_showHelp == true) ...[
-            SizedBox(height: 20.0),
-            SwitchAuthWidget(),
           ],
-        ],
+        ),
       ),
     );
   }

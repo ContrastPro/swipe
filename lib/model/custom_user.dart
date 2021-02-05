@@ -27,13 +27,13 @@ class UserBuilder {
   String toString() {
     return '\n********************************\n'
         '--- UserBuilder ---'
-        '\n>> uid: $uid, '
-        '\n>> name: $name, '
-        '\n>> lastName: $lastName,'
-        '\n>> phone: $phone, '
-        '\n>> email: $email, '
-        '\n>> photoURL: $photoURL,'
-        '\n>> createdAt: $createdAt, '
+        '\n>> uid: $uid'
+        '\n>> name: $name'
+        '\n>> lastName: $lastName'
+        '\n>> phone: $phone'
+        '\n>> email: $email'
+        '\n>> photoURL: $photoURL'
+        '\n>> createdAt: $createdAt'
         '\n>> updatedAt: $updatedAt'
         '\n********************************\n';
   }
@@ -65,7 +65,7 @@ class CustomUser {
       "name": name,
       "lastName": lastName,
       "phone": phone,
-      "email": email,
+      "email": email?.toLowerCase(),
       "photoURL": photoURL,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
@@ -76,13 +76,13 @@ class CustomUser {
   String toString() {
     return '\n********************************\n'
         '--- CustomUser ---'
-        '\n>> uid: $uid, '
-        '\n>> name: $name, '
-        '\n>> lastName: $lastName,'
-        '\n>> phone: $phone, '
-        '\n>> email: $email, '
-        '\n>> photoURL: $photoURL,'
-        '\n>> createdAt: $createdAt, '
+        '\n>> uid: $uid'
+        '\n>> name: $name'
+        '\n>> lastName: $lastName'
+        '\n>> phone: $phone'
+        '\n>> email: $email'
+        '\n>> photoURL: $photoURL'
+        '\n>> createdAt: $createdAt'
         '\n>> updatedAt: $updatedAt'
         '\n********************************\n';
   }

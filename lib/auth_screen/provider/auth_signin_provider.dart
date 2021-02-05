@@ -14,19 +14,15 @@ class AuthSignInNotifier with ChangeNotifier {
   Future<void> signInWithPhoneNumber(
       {BuildContext context, String phone}) async {
     FocusScope.of(context).unfocus();
-    if (phone != "") {
-      _authFirebaseAPI = AuthFirebaseAPI();
-      _changeLoading(true);
-      String splitPhone = _autoEditPhoneNumber(phone);
-      print(splitPhone);
-      await _authFirebaseAPI.signInWithPhoneNumber(phone: splitPhone);
-      if (_authFirebaseAPI.status == AuthStatus.NOTEXIST) {
-        _showDialog(context, _authFirebaseAPI.message);
-      }
-      _changeLoading(false);
-    } else {
-      _showDialog(context, "Похоже ваш номер неверного формата");
+    _changeLoading(true);
+    _authFirebaseAPI = AuthFirebaseAPI();
+    String splitPhone = _autoEditPhoneNumber(phone);
+
+    await _authFirebaseAPI.signInWithPhoneNumber(phone: splitPhone);
+    if (_authFirebaseAPI.status == AuthStatus.NOTEXIST) {
+      _showDialog(context, _authFirebaseAPI.message);
     }
+    _changeLoading(false);
   }
 
   void enterWithCredential({BuildContext context, String smsPin}) async {

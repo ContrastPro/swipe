@@ -23,21 +23,16 @@ class AuthSignUpNotifier with ChangeNotifier {
 
   Future<String> signUpWithPhoneNumber({BuildContext context}) async {
     FocusScope.of(context).unfocus();
-    String splitPhone;
-    if (_userBuilder.phone != null && _userBuilder.phone != "") {
-      _changeLoading(true);
-      splitPhone = _autoEditPhoneNumber(_userBuilder.phone);
-      _authFirebaseAPI = AuthFirebaseAPI();
+    _changeLoading(true);
+    _authFirebaseAPI = AuthFirebaseAPI();
+    String splitPhone = _autoEditPhoneNumber(_userBuilder.phone);
 
-      await _authFirebaseAPI.signUpWithPhoneNumber(phone: splitPhone);
+    await _authFirebaseAPI.signUpWithPhoneNumber(phone: splitPhone);
 
-      if (_authFirebaseAPI.status == AuthStatus.EXIST) {
-        _showDialog(context, _authFirebaseAPI.message);
-      }
-      _changeLoading(false);
-    } else {
-      _showDialog(context, "Похоже вы забыли кое-что указать");
+    if (_authFirebaseAPI.status == AuthStatus.EXIST) {
+      _showDialog(context, _authFirebaseAPI.message);
     }
+    _changeLoading(false);
     return splitPhone;
   }
 

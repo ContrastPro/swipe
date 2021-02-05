@@ -10,6 +10,7 @@ class GradientTextField extends StatelessWidget {
   final List<TextInputFormatter> formatter;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final FormFieldValidator<String> validator;
 
   const GradientTextField({
     Key key,
@@ -20,6 +21,7 @@ class GradientTextField extends StatelessWidget {
     this.formatter,
     this.controller,
     this.onChanged,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,11 @@ class GradientTextField extends StatelessWidget {
     final InputBorder border = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(color: Colors.transparent),
+    );
+
+    final InputBorder errorBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(color: Colors.white54),
     );
 
     return Container(
@@ -37,7 +44,7 @@ class GradientTextField extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
       child: Center(
-        child: TextField(
+        child: TextFormField(
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
@@ -46,14 +53,17 @@ class GradientTextField extends StatelessWidget {
             enabledBorder: border,
             disabledBorder: border,
             focusedBorder: border,
+            errorBorder: errorBorder,
             border: border,
             hintText: hintText ?? "TextField",
             hintStyle: TextStyle(color: Colors.white54),
+            errorStyle: TextStyle(height: 0),
           ),
           keyboardType: keyboardType ?? TextInputType.phone,
           inputFormatters: formatter ?? <TextInputFormatter>[],
           controller: controller,
           onChanged: (String value) => onChanged(value),
+          validator: (String value) => validator(value),
         ),
       ),
     );

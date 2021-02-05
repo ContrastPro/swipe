@@ -10,17 +10,10 @@ class AuthFirebaseAPI {
   String _message;
   String _verificationId;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  static AuthFirebaseAPI _authFirebaseAPI;
 
   AuthStatus get status => _status;
 
   String get message => _message;
-
-  AuthFirebaseAPI._() {
-    _authFirebaseAPI = this;
-  }
-
-  factory AuthFirebaseAPI() => _authFirebaseAPI ?? AuthFirebaseAPI._();
 
   Future<void> signInWithPhoneNumber({String phone}) async {
     final QuerySnapshot phoneStatus =
@@ -98,7 +91,7 @@ class AuthFirebaseAPI {
     return FirebaseAuth.instance.currentUser;
   }
 
-  static Future<void> signOut() async {
+  static void signOut() async {
     await FirebaseAuth.instance.signOut();
   }
 

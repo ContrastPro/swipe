@@ -11,6 +11,7 @@ import 'package:swipe/custom_app_widget/gradient_button_widget.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/notification_dialog.dart';
 import 'package:swipe/custom_app_widget/one_time_password_widget.dart';
+import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/model/custom_user.dart';
 
 class SignUpWidget extends StatefulWidget {
@@ -20,18 +21,20 @@ class SignUpWidget extends StatefulWidget {
 
 class _SignUpWidgetState extends State<SignUpWidget> {
   int _pageIndex = 0;
+  bool _showHelp = false;
   AuthSignUpNotifier _signUpNotifier;
   UserBuilder _userBuilder;
-  bool _showHelp = false;
 
   EdgeInsets _itemPadding;
   PageController _pageController;
+  GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _userBuilder = UserBuilder();
     _itemPadding = const EdgeInsets.symmetric(horizontal: 45.0);
     _pageController = PageController(initialPage: 0, keepPage: true);
+    _formKey = GlobalKey<FormState>();
     super.initState();
   }
 
@@ -50,13 +53,25 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  void _showDialog(String content) {
+  void _showInfoDialog(String content) {
     showDialog(
       context: context,
       builder: (context) {
         return NotificationDialog(
           title: 'Упс...',
           content: content,
+        );
+      },
+    );
+  }
+
+  void _showPrivacyDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return PrivacyDialog(
+          onPressed: () => _changePage(),
         );
       },
     );
@@ -74,21 +89,19 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           phoneNumber: splitPhone,
           codeSent: (String verificationId, int resendToken) {
             _signUpNotifier.setVerificationId = verificationId;
-            _changePage();
+            _showPrivacyDialog();
           },
           verificationFailed: (FirebaseAuthException exception) {
             if (exception.code == 'invalid-phone-number') {
-              _showDialog("Указаный вами телефон неверного формата");
+              _showInfoDialog("Указаный вами телефон неверного формата");
             } else {
-              _showDialog(exception.message);
+              _showInfoDialog(exception.message);
             }
           },
           verificationCompleted: (PhoneAuthCredential credential) {},
           codeAutoRetrievalTimeout: (String verId) {},
         );
-      } catch (e) {
-        print(e.massage);
-      }
+      } catch (e) {}
     } else {
       setState(() => _showHelp = true);
     }
@@ -139,66 +152,94 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     double boxHeight = 14.0;
     double fieldWidth = 280.0;
     double fieldHeight = 50.0;
-    return Padding(
-      padding: _itemPadding,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GradientTextField(
-            width: fieldWidth,
-            height: fieldHeight,
-            hintText: "Имя",
-            keyboardType: TextInputType.name,
-            onChanged: (String value) {
-              _userBuilder.name = value;
-            },
-          ),
-          SizedBox(height: boxHeight),
-          GradientTextField(
-            width: fieldWidth,
-            height: fieldHeight,
-            hintText: "Фамилия",
-            keyboardType: TextInputType.name,
-            onChanged: (String value) {
-              _userBuilder.lastName = value;
-            },
-          ),
-          SizedBox(height: boxHeight),
-          GradientTextField(
-            width: fieldWidth,
-            height: fieldHeight,
-            hintText: "Телефон",
-            keyboardType: TextInputType.phone,
-            formatter: [
-              FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+    return Form(
+      key: _formKey,
+      autovalidate: true,
+      child: Padding(
+        padding: _itemPadding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GradientTextField(
+              width: fieldWidth,
+              height: fieldHeight,
+              hintText: "Имя",
+              keyboardType: TextInputType.name,
+              onChanged: (String value) {
+                _userBuilder.name = value;
+              },
+              validator: (String value) {
+                if (value.isEmpty) return '';
+                return null;
+              },
+            ),
+            SizedBox(height: boxHeight),
+            GradientTextField(
+              width: fieldWidth,
+              height: fieldHeight,
+              hintText: "Фамилия",
+              keyboardType: TextInputType.name,
+              onChanged: (String value) {
+                _userBuilder.lastName = value;
+              },
+              validator: (String value) {
+                if (value.isEmpty) return '';
+                return null;
+              },
+            ),
+            SizedBox(height: boxHeight),
+            GradientTextField(
+              width: fieldWidth,
+              height: fieldHeight,
+              hintText: "Телефон",
+              keyboardType: TextInputType.phone,
+              formatter: [
+                FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
+              ],
+              onChanged: (String value) {
+                _userBuilder.phone = value;
+              },
+              validator: (String value) {
+                if (value.isEmpty) return '';
+                return null;
+              },
+            ),
+            SizedBox(height: boxHeight),
+            GradientTextField(
+              width: fieldWidth,
+              height: fieldHeight,
+              hintText: "Электронная почта",
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (String value) {
+                _userBuilder.email = value;
+              },
+              validator: (value) {
+                if (value.isEmpty ||
+                    !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value)) {
+                  return '';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 32.0),
+            GradientButton(
+              maxWidth: 280.0,
+              minHeight: 50.0,
+              borderRadius: 10.0,
+              title: "Далее",
+              onTap: () {
+                if (_formKey.currentState.validate()) {
+                  _startSignUp();
+                }
+              },
+            ),
+            if (_showHelp == true) ...[
+              SizedBox(height: 20.0),
+              SwitchAuthWidget(),
             ],
-            onChanged: (String value) {
-              _userBuilder.phone = value;
-            },
-          ),
-          SizedBox(height: boxHeight),
-          GradientTextField(
-            width: fieldWidth,
-            height: fieldHeight,
-            hintText: "Электронная почта",
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (String value) {
-              _userBuilder.email = value;
-            },
-          ),
-          SizedBox(height: 32.0),
-          GradientButton(
-            maxWidth: 280.0,
-            minHeight: 50.0,
-            borderRadius: 10.0,
-            title: "Далее",
-            onTap: () => _startSignUp(),
-          ),
-          if (_showHelp == true) ...[
-            SizedBox(height: 20.0),
-            SwitchAuthWidget(),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -240,8 +281,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               _signUpNotifier.enterWithCredential(context: context);
             },
           ),
-          /*SizedBox(height: 50.0),
-          PrivacyPolicy(),*/
         ],
       ),
     );
@@ -273,7 +312,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           ],
         ),
         if (_signUpNotifier.startLoading == true) WaveIndicator(),
-        //if (_pageIndex == 2) PrivacyPolicy(),
       ],
     );
   }
