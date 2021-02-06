@@ -99,9 +99,9 @@ class AuthFirebaseAPI {
     print(">> Post to Firebase Firestore");
     userBuilder.uid = user.uid;
     userBuilder.createdAt = Timestamp.now();
-    userBuilder.updatedAt = Timestamp.now();
     await AuthFirestoreAPI.addUser(
-      CustomUser(builder: userBuilder),
+      customUser: CustomUser(builder: userBuilder),
+      user: user,
     );
   }
 }

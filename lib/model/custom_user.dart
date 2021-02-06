@@ -11,6 +11,12 @@ class UserBuilder {
   Timestamp createdAt;
   Timestamp updatedAt;
 
+  //
+  String agentName;
+  String agentLastName;
+  String agentPhone;
+  String agentEmail;
+
   UserBuilder();
 
   UserBuilder.fromMap(Map<String, dynamic> map)
@@ -21,7 +27,13 @@ class UserBuilder {
         email = map["email"],
         photoURL = map["photoURL"],
         createdAt = map["createdAt"],
-        updatedAt = map["updatedAt"];
+        updatedAt = map["updatedAt"],
+
+        //
+        agentName = map["agentName"],
+        agentLastName = map["agentLastName"],
+        agentPhone = map["agentPhone"],
+        agentEmail = map["agentEmail"];
 
   @override
   String toString() {
@@ -35,6 +47,12 @@ class UserBuilder {
         '\n>> photoURL: $photoURL'
         '\n>> createdAt: $createdAt'
         '\n>> updatedAt: $updatedAt'
+
+        //
+        '\n>> agentName: $agentName'
+        '\n>> agentLastName: $agentLastName'
+        '\n>> agentPhone: $agentPhone'
+        '\n>> agentEmail: $agentEmail'
         '\n********************************\n';
   }
 }
@@ -49,6 +67,12 @@ class CustomUser {
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
+  //
+  final String agentName;
+  final String agentLastName;
+  final String agentPhone;
+  final String agentEmail;
+
   CustomUser({@required UserBuilder builder})
       : uid = builder.uid,
         name = builder.name,
@@ -57,7 +81,13 @@ class CustomUser {
         email = builder.email,
         photoURL = builder.photoURL,
         createdAt = builder.createdAt,
-        updatedAt = builder.updatedAt;
+        updatedAt = builder.updatedAt,
+
+        //
+        agentName = builder.agentName,
+        agentLastName = builder.agentLastName,
+        agentPhone = builder.agentPhone,
+        agentEmail = builder.agentEmail;
 
   Map<String, dynamic> toMap() {
     return {
@@ -69,21 +99,12 @@ class CustomUser {
       "photoURL": photoURL,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
-    };
-  }
 
-  @override
-  String toString() {
-    return '\n********************************\n'
-        '--- CustomUser ---'
-        '\n>> uid: $uid'
-        '\n>> name: $name'
-        '\n>> lastName: $lastName'
-        '\n>> phone: $phone'
-        '\n>> email: $email'
-        '\n>> photoURL: $photoURL'
-        '\n>> createdAt: $createdAt'
-        '\n>> updatedAt: $updatedAt'
-        '\n********************************\n';
+      //
+      "agentName": agentName,
+      "agentLastName": agentLastName,
+      "agentPhone": agentPhone,
+      "agentEmail": agentEmail?.toLowerCase(),
+    };
   }
 }

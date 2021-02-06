@@ -46,9 +46,10 @@ class InfoField extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600),
+                color: Colors.black87,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           Container(
@@ -58,10 +59,10 @@ class InfoField extends StatelessWidget {
             ),
             child: TextFormField(
               style: TextStyle(
-                color: Colors.black54,
+                color: Colors.black.withAlpha(165),
                 fontWeight: FontWeight.w500,
               ),
-              initialValue: initialValue,
+              initialValue: initialValue ?? "",
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 15.0,
