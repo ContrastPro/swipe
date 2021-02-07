@@ -1,14 +1,16 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/edit_profile/api/edit_profile_cloudstore_api.dart';
 import 'package:swipe/screens/edit_profile/api/edit_profile_firestore_api.dart';
+import 'package:swipe/screens/edit_profile/custom_widget/avatar_picker.dart';
 import 'package:swipe/screens/edit_profile/custom_widget/expandable_card.dart';
 import 'package:swipe/screens/edit_profile/custom_widget/info_field.dart';
+import 'package:swipe/screens/edit_profile/local_image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   final UserBuilder userProfile;
@@ -21,64 +23,41 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   bool startLoading = false;
+  File _imageFile;
+
   UserBuilder _userBuilder;
-  File _imageFileLow;
+  LocalImagePicker _imagePicker;
   GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _userBuilder = widget.userProfile;
     _formKey = GlobalKey<FormState>();
+    _imagePicker = LocalImagePicker();
     super.initState();
   }
 
-  Widget _buildProfileImage() {
-    double radius = 80.0;
-    double thickness = 30.0;
-    Color color = Colors.black38;
-    Widget image;
-
-    if (widget.userProfile.photoURL != null) {
-      image = CachedNetworkImage(
-        imageUrl: widget.userProfile.photoURL,
-        imageBuilder: (context, imageProvider) => CircleAvatar(
-          backgroundImage: imageProvider,
-          radius: radius / 2,
-        ),
-        placeholder: (context, url) => CircularProgressIndicator(),
-        errorWidget: (context, url, error) => Icon(Icons.error),
+  void _editProfile() async {
+    if (_formKey.currentState.validate()) {
+      setState(() => startLoading = true);
+      if (_userBuilder.phone != widget.userProfile.phone) {
+        // Обновить телефон в профиле FirebaseAuth
+      }
+      if (_imageFile != null) {
+        // Загрузить/Обновить изображение и вернуть ссылку
+        _userBuilder.photoURL =
+            await EditProfileCloudstoreAPI.uploadProfileImage(
+          userProfile: widget.userProfile,
+          imageFile: _imageFile,
+          photoURL: widget.userProfile.photoURL,
+        );
+      }
+      _userBuilder.updatedAt = Timestamp.now();
+      await EditProfileFirestoreAPI.editUserProfile(
+        customUser: CustomUser(builder: _userBuilder),
       );
-    } else if (_imageFileLow != null) {
-      image = CircleAvatar(
-        radius: radius / 2,
-        child: Image.file(
-          _imageFileLow,
-          fit: BoxFit.cover,
-        ),
-      );
-    } else if (widget.userProfile.photoURL == null && _imageFileLow == null) {
-      image = Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: radius,
-            height: radius,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: color),
-            ),
-          ),
-          Container(width: thickness, height: 1.0, color: color),
-          Container(width: 1.0, height: thickness, color: color),
-        ],
-      );
+      Navigator.pop(context);
     }
-    return GestureDetector(
-      onTap: () {
-        print("OPEN FOLDER");
-      },
-      child: image,
-    );
   }
 
   Widget _buildHeader() {
@@ -86,7 +65,16 @@ class _EditProfileState extends State<EditProfile> {
       padding: const EdgeInsets.fromLTRB(8.0, 30.0, 22.0, 35.0),
       child: Row(
         children: [
-          _buildProfileImage(),
+          AvatarPicker(
+            photoURL: widget.userProfile.photoURL,
+            imageFile: _imageFile,
+            onTap: () async {
+              await _imagePicker.getLocalImage();
+              setState(() {
+                _imageFile = _imagePicker.imageFile;
+              });
+            },
+          ),
           SizedBox(width: 22.0),
           Expanded(
             child: Column(
@@ -281,20 +269,6 @@ class _EditProfileState extends State<EditProfile> {
         SizedBox(height: 20.0),
       ],
     );
-  }
-
-  void _editProfile() async {
-    if (_formKey.currentState.validate()) {
-      setState(() => startLoading = true);
-      _userBuilder.updatedAt = Timestamp.now();
-      if (_userBuilder.phone != widget.userProfile.phone) {
-        // Обновить телефон в профиле FirebaseAuth
-      }
-      await EditProfileFirestoreAPI.editUserProfile(
-        customUser: CustomUser(builder: _userBuilder),
-      );
-      Navigator.pop(context);
-    }
   }
 
   @override
