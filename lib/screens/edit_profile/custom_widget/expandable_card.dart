@@ -31,6 +31,7 @@ class ExpandableCard extends StatelessWidget {
           dividerColor: Colors.transparent,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
+          accentColor: Colors.black,
         ),
         child: ExpansionTile(
           title: Text(

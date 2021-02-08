@@ -1,10 +1,12 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
-import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/screens/edit_profile/api/edit_profile_cloudstore_api.dart';
 import 'package:swipe/screens/edit_profile/api/edit_profile_firestore_api.dart';
 import 'package:swipe/screens/edit_profile/custom_widget/avatar_picker.dart';
@@ -22,7 +24,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  bool startLoading = false;
+  bool _startLoading = false;
   File _imageFile;
 
   UserBuilder _userBuilder;
@@ -39,9 +41,10 @@ class _EditProfileState extends State<EditProfile> {
 
   void _editProfile() async {
     if (_formKey.currentState.validate()) {
-      setState(() => startLoading = true);
+      setState(() => _startLoading = true);
       if (_userBuilder.phone != widget.userProfile.phone) {
         // Обновить телефон в профиле FirebaseAuth
+        // и проверить зарегистрирован ли он в БД
       }
       if (_imageFile != null) {
         // Загрузить/Обновить изображение и вернуть ссылку
@@ -57,6 +60,29 @@ class _EditProfileState extends State<EditProfile> {
         customUser: CustomUser(builder: _userBuilder),
       );
       Navigator.pop(context);
+    }
+  }
+
+  void _changeNotification(int newIndex) {
+    int oldIndex = _userBuilder.notification.indexWhere(
+      (element) => element == true,
+    );
+    if (oldIndex != newIndex) {
+      setState(() {
+        // Меняем старое значение
+        if (_userBuilder.notification[oldIndex] == true) {
+          _userBuilder.notification[oldIndex] = false;
+        } else {
+          _userBuilder.notification[oldIndex] = true;
+        }
+        // Устанавливаем новое значение
+        if (_userBuilder.notification[newIndex] == true) {
+          _userBuilder.notification[newIndex] = false;
+        } else {
+          _userBuilder.notification[newIndex] = true;
+        }
+      });
+      print(_userBuilder.notification);
     }
   }
 
@@ -251,12 +277,58 @@ class _EditProfileState extends State<EditProfile> {
         vertical: 15.0,
       ),
       children: [
-        SizedBox(height: 20.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 25.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Оплачено до",
+                    style: TextStyle(
+                      color: Colors.black.withAlpha(165),
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    "23.03.2020",
+                    style: TextStyle(
+                      color: AppColors.accentColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 35.0),
+              GradientButton(
+                maxWidth: double.infinity,
+                minHeight: 50.0,
+                borderRadius: 10.0,
+                elevation: 0,
+                highlightElevation: 0,
+                title: "Продлить",
+                onTap: () {},
+              ),
+              SizedBox(height: 20.0),
+              GestureDetector(
+                onTap: () {},
+                child: Text(
+                  "Отменить автопродление",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
 
   Widget _buildNotification() {
+    List<String> title = ["Мне", "Мне и агенту", "Агенту", "Отключить"];
+
     return ExpandableCard(
       title: "Уведомления",
       margin: const EdgeInsets.only(
@@ -266,7 +338,57 @@ class _EditProfileState extends State<EditProfile> {
         bottom: 35.0,
       ),
       children: [
-        SizedBox(height: 20.0),
+        ListView.builder(
+          itemCount: widget.userProfile.notification.length,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 16.0),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => _changeNotification(index),
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withAlpha(10),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title[index],
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black.withAlpha(165),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Container(
+                      width: 18.0,
+                      height: 18.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                        color: _userBuilder.notification[index] == true
+                            ? AppColors.accentColor
+                            : Colors.black.withAlpha(40),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -298,7 +420,7 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
-        if (startLoading == true) WaveIndicator(),
+        if (_startLoading == true) WaveIndicator(),
       ],
     );
   }

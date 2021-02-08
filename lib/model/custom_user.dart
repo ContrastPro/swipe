@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserBuilder {
   String uid;
@@ -17,6 +17,9 @@ class UserBuilder {
   String agentPhone;
   String agentEmail;
 
+  //
+  List notification;
+
   UserBuilder();
 
   UserBuilder.fromMap(Map<String, dynamic> map)
@@ -33,7 +36,9 @@ class UserBuilder {
         agentName = map["agentName"],
         agentLastName = map["agentLastName"],
         agentPhone = map["agentPhone"],
-        agentEmail = map["agentEmail"];
+        agentEmail = map["agentEmail"],
+        //
+        notification = map["notification"];
 
   @override
   String toString() {
@@ -53,6 +58,9 @@ class UserBuilder {
         '\n>> agentLastName: $agentLastName'
         '\n>> agentPhone: $agentPhone'
         '\n>> agentEmail: $agentEmail'
+
+        //
+        '\n>> notification: $notification'
         '\n********************************\n';
   }
 }
@@ -73,6 +81,9 @@ class CustomUser {
   final String agentPhone;
   final String agentEmail;
 
+  //
+  final List notification;
+
   CustomUser({@required UserBuilder builder})
       : uid = builder.uid,
         name = builder.name,
@@ -87,7 +98,10 @@ class CustomUser {
         agentName = builder.agentName,
         agentLastName = builder.agentLastName,
         agentPhone = builder.agentPhone,
-        agentEmail = builder.agentEmail;
+        agentEmail = builder.agentEmail,
+
+        //
+        notification = builder.notification;
 
   Map<String, dynamic> toMap() {
     return {
@@ -105,6 +119,9 @@ class CustomUser {
       "agentLastName": agentLastName,
       "agentPhone": agentPhone,
       "agentEmail": agentEmail?.toLowerCase(),
+
+      //
+      "notification": notification ?? [true, false, false, false],
     };
   }
 }
