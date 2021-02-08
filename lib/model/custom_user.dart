@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swipe/model/subscription.dart';
 
 class UserBuilder {
+
+  // Personal User information
   String uid;
   String name;
   String lastName;
@@ -11,14 +14,15 @@ class UserBuilder {
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  //
+  // Information about User agent
   String agentName;
   String agentLastName;
   String agentPhone;
   String agentEmail;
 
-  //
+  // ets
   List notification;
+  Subscription subscription;
 
   UserBuilder();
 
@@ -38,7 +42,8 @@ class UserBuilder {
         agentPhone = map["agentPhone"],
         agentEmail = map["agentEmail"],
         //
-        notification = map["notification"];
+        notification = map["notification"],
+        subscription = Subscription.fromMap(map["subscription"]);
 
   @override
   String toString() {
@@ -50,8 +55,8 @@ class UserBuilder {
         '\n>> phone: $phone'
         '\n>> email: $email'
         '\n>> photoURL: $photoURL'
-        '\n>> createdAt: $createdAt'
-        '\n>> updatedAt: $updatedAt'
+        '\n>> createdAt: ${createdAt?.toDate()}'
+        '\n>> updatedAt: ${updatedAt?.toDate()}'
 
         //
         '\n>> agentName: $agentName'
@@ -60,12 +65,15 @@ class UserBuilder {
         '\n>> agentEmail: $agentEmail'
 
         //
+        '\n>> subscription: $subscription'
         '\n>> notification: $notification'
         '\n********************************\n';
   }
 }
 
 class CustomUser {
+
+  // Personal User information
   final String uid;
   final String name;
   final String lastName;
@@ -75,21 +83,22 @@ class CustomUser {
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
-  //
+  // Information about User agent
   final String agentName;
   final String agentLastName;
   final String agentPhone;
   final String agentEmail;
 
-  //
+  // ets
   final List notification;
+  final Subscription subscription;
 
   CustomUser({@required UserBuilder builder})
       : uid = builder.uid,
         name = builder.name,
         lastName = builder.lastName,
         phone = builder.phone,
-        email = builder.email,
+        email = builder.email?.toLowerCase(),
         photoURL = builder.photoURL,
         createdAt = builder.createdAt,
         updatedAt = builder.updatedAt,
@@ -98,10 +107,11 @@ class CustomUser {
         agentName = builder.agentName,
         agentLastName = builder.agentLastName,
         agentPhone = builder.agentPhone,
-        agentEmail = builder.agentEmail,
+        agentEmail = builder.agentEmail?.toLowerCase(),
 
         //
-        notification = builder.notification;
+        subscription = builder.subscription ?? Subscription(),
+        notification = builder.notification ?? [true, false, false, false];
 
   Map<String, dynamic> toMap() {
     return {
@@ -109,7 +119,7 @@ class CustomUser {
       "name": name,
       "lastName": lastName,
       "phone": phone,
-      "email": email?.toLowerCase(),
+      "email": email,
       "photoURL": photoURL,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
@@ -118,10 +128,11 @@ class CustomUser {
       "agentName": agentName,
       "agentLastName": agentLastName,
       "agentPhone": agentPhone,
-      "agentEmail": agentEmail?.toLowerCase(),
+      "agentEmail": agentEmail,
 
       //
-      "notification": notification ?? [true, false, false, false],
+      "subscription": subscription.toMap(),
+      "notification": notification,
     };
   }
 }
