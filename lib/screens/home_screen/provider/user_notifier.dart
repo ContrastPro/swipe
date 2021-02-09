@@ -7,8 +7,14 @@ class UserNotifier with ChangeNotifier {
 
   UserBuilder get userProfile => _userBuilder;
 
-  void setUserProfile() async {
-    _userBuilder = await HomeFirestoreAPI.getUserProfile();
+  void setUserProfile({@required UserBuilder userBuilder}) async {
+    _userBuilder = userBuilder;
+    print(_userBuilder);
+    notifyListeners();
+  }
+
+  void updateUserProfile() async {
+    _userBuilder = await HomeFirestoreAPI.updateUserProfile();
     print(_userBuilder);
     notifyListeners();
   }

@@ -96,7 +96,7 @@ class GradientDrawer extends StatelessWidget {
                                 page: EditProfile(userProfile: userProfile),
                               ),
                             );
-                            userNotifier.setUserProfile();
+                            userNotifier.updateUserProfile();
                           },
                         ),
                       ],

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:swipe/custom_app_widget/gradient_switch.dart';
+import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,6 +27,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   bool _startLoading = false;
+  bool _isOpened = false;
   File _imageFile;
 
   UserBuilder _userBuilder;
@@ -169,7 +172,7 @@ class _EditProfileState extends State<EditProfile> {
             FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
           ],
           onChanged: (String value) {
-            _userBuilder.phone = value;
+            //_userBuilder.phone = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -335,8 +338,10 @@ class _EditProfileState extends State<EditProfile> {
         left: 8.0,
         top: 15.0,
         right: 8.0,
-        bottom: 35.0,
       ),
+      onExpansionChanged: (bool value) {
+        setState(() => _isOpened = value);
+      },
       children: [
         ListView.builder(
           itemCount: widget.userProfile.notification.length,
@@ -393,6 +398,63 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Widget _buildCallSwitcher() {
+    return AnimatedContainer(
+      height: _isOpened ? 0.0 : 100.0,
+      duration: Duration(milliseconds: 800),
+      curve: Curves.fastLinearToSlowEaseIn,
+      margin: const EdgeInsets.symmetric(horizontal: 22.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Переключить звонки и сообщения на агента",
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black.withAlpha(165),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          SizedBox(width: 30.0),
+          GradientSwitch(
+            value: _userBuilder.notification[2] == true ? true : false,
+            onChanged: (bool value) {
+              if (value = true) {
+                _changeNotification(2);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrivacyPolicy() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 22.0, 16.0, 45.0),
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return PrivacyDialog(
+                textButton: "ЗАКРЫТЬ",
+              );
+            },
+          );
+        },
+        child: Text(
+          "Политика конфеденциальности",
+          style: TextStyle(
+            color: AppColors.accentColor,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -415,6 +477,8 @@ class _EditProfileState extends State<EditProfile> {
                   _buildAgentContact(),
                   _buildSubscriptionManagement(),
                   _buildNotification(),
+                  _buildCallSwitcher(),
+                  _buildPrivacyPolicy(),
                 ],
               ),
             ),

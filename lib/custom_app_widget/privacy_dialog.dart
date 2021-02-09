@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PrivacyDialog extends StatelessWidget {
+  final String textButton;
   final double radius;
   final String fileName;
   final VoidCallback onPressed;
 
   const PrivacyDialog({
     Key key,
+    this.textButton,
     this.radius = 8,
     this.fileName = "privacy_policy.txt",
     this.onPressed,
@@ -15,14 +17,18 @@ class PrivacyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget _buildPrivacy() {
-      return SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: FutureBuilder(
-          future: DefaultAssetBundle.of(context)
-              .loadString("assets/privacy/$fileName"),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Padding(
+      return FutureBuilder(
+        future: Future.delayed(
+          Duration(milliseconds: 200),
+        ).then((value) {
+          return DefaultAssetBundle.of(context)
+              .loadString("assets/privacy/$fileName");
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 22.0,
                   vertical: 32.0,
@@ -31,13 +37,13 @@ class PrivacyDialog extends StatelessWidget {
                   snapshot.data,
                   softWrap: true,
                 ),
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
+              ),
             );
-          },
-        ),
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       );
     }
 
@@ -71,7 +77,7 @@ class PrivacyDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: Text(
-                "ПРИНЯТЬ",
+                textButton?.toUpperCase() ?? "ПРИНЯТЬ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,
@@ -81,7 +87,9 @@ class PrivacyDialog extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              onPressed();
+              if(onPressed != null){
+                onPressed();
+              }
             },
           ),
         ],

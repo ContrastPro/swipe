@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/model/custom_user.dart';
 
 class AuthFirestoreAPI {
+  AuthFirestoreAPI._();
+
   static Future<QuerySnapshot> checkPhoneStatus({String phone}) async {
     return await FirebaseFirestore.instance
         .collection("Swipe")

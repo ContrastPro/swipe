@@ -8,9 +8,9 @@ class AppLogo extends StatelessWidget {
 
   const AppLogo({
     Key key,
-    @required this.width,
-    @required this.height,
-    @required this.fontSize,
+    this.width = 70.0,
+    this.height = 45.0,
+    this.fontSize = 55.0,
   }) : super(key: key);
 
   @override
@@ -21,8 +21,8 @@ class AppLogo extends StatelessWidget {
         Stack(
           children: [
             Container(
-              width: width ?? 70.0,
-              height: height ?? 45.0,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(90),
                 gradient: LinearGradient(
@@ -36,8 +36,8 @@ class AppLogo extends StatelessWidget {
               ),
             ),
             Container(
-              width: height ?? 45.0,
-              height: height ?? 45.0,
+              width: height,
+              height: height,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: AppColors.buttonGradient,
@@ -50,7 +50,7 @@ class AppLogo extends StatelessWidget {
           "свайп",
           style: TextStyle(
             color: Colors.white,
-            fontSize: fontSize ?? 55.0,
+            fontSize: fontSize,
             fontWeight: FontWeight.w900,
           ),
         ),

@@ -4,12 +4,14 @@ class ExpandableCard extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final EdgeInsetsGeometry margin;
+  final ValueChanged<bool> onExpansionChanged;
 
   const ExpandableCard({
     Key key,
     this.title,
     this.children,
     this.margin,
+    this.onExpansionChanged,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,11 @@ class ExpandableCard extends StatelessWidget {
             style: TextStyle(),
           ),
           children: children,
+          onExpansionChanged: (bool value) {
+            if (onExpansionChanged != null) {
+              onExpansionChanged(value);
+            }
+          },
         ),
       ),
     );

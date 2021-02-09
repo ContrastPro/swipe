@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
-class EditProfileFirestoreAPI{
+class EditProfileFirestoreAPI {
+  EditProfileFirestoreAPI._();
+
   static Future<void> editUserProfile({CustomUser customUser}) {
     final User user = AuthFirebaseAPI.getCurrentUser();
     final DocumentReference users = FirebaseFirestore.instance

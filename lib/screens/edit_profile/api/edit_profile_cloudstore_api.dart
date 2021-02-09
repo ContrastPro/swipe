@@ -3,6 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:swipe/model/custom_user.dart';
 
 class EditProfileCloudstoreAPI {
+  EditProfileCloudstoreAPI._();
+
   static Future<String> uploadProfileImage({
     UserBuilder userProfile,
     File imageFile,
