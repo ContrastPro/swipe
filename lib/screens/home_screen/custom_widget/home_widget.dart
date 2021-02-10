@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/screens/home_screen/custom_widget/bulletin_board_widget.dart';
 import 'package:swipe/screens/home_screen/custom_widget/drawer.dart';
+import 'package:swipe/screens/home_screen/custom_widget/filter_item.dart';
 import 'package:swipe/screens/home_screen/custom_widget/gradient_fab.dart';
 import 'package:swipe/screens/home_screen/custom_widget/map_widget.dart';
 
@@ -10,30 +11,28 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
+  static const int _duration = 300;
   bool _isMapWidget = false;
 
-  Widget _home() {
-    final _items = List<String>.generate(10000, (i) => "Item $i");
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+  Widget _home() {
     return Stack(
       children: [
         AnimatedSwitcher(
-          duration: Duration(milliseconds: 800),
+          duration: Duration(milliseconds: _duration),
           child: _isMapWidget ? MapWidget() : BulletinBoardWidget(),
         ),
-        Container(
-          height: 30,
-          child: ListView.builder(
-            itemCount: _items.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return Container(
-                color: Colors.white,
-                child: Text('${_items[index]}'),
-              );
-            },
-          ),
-        ),
+        Filter(),
       ],
     );
   }
@@ -56,6 +55,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: GradientFAB(
         value: _isMapWidget,
+        duration: _duration,
+        title: _isMapWidget ? "Карта" : "Лента",
         onLeftTap: () {
           setState(() {
             _isMapWidget = false;

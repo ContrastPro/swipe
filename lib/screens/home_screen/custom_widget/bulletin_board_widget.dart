@@ -5,14 +5,16 @@ class BulletinBoardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      key: UniqueKey(),
-      itemCount: _items.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('${_items[index]}'),
-        );
-      },
+    return Container(
+      margin: EdgeInsets.only(top: 60.0),
+      child: ListView.builder(
+        itemCount: _items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('${_items[index]}'),
+          );
+        },
+      ),
     );
   }
 }

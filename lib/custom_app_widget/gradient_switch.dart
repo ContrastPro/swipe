@@ -12,8 +12,8 @@ class GradientSwitch extends StatelessWidget {
     Key key,
     this.width = 45.0,
     this.height = 28.0,
-    @required this.value,
     this.duration = 700,
+    @required this.value,
     @required this.onChanged,
   }) : super(key: key);
 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class GradientFAB extends StatelessWidget {
-  final double width = 200.0;
-  final double height = 56.0;
+  static const double width = 220.0;
+  static const double height = 56.0;
+
   final String title;
   final bool value;
   final int duration;
@@ -12,9 +13,9 @@ class GradientFAB extends StatelessWidget {
 
   const GradientFAB({
     Key key,
-    this.title = "Title",
+    this.title,
+    @required this.duration,
     @required this.value,
-    this.duration = 800,
     @required this.onLeftTap,
     @required this.onRightTap,
   }) : super(key: key);
@@ -23,13 +24,40 @@ class GradientFAB extends StatelessWidget {
   Widget build(BuildContext context) {
     BoxDecoration active = BoxDecoration(
       borderRadius: BorderRadius.circular(90),
-      color: Colors.white,
+      color: Color(0xFFEDF9F5),
     );
 
-    BoxDecoration inactive = BoxDecoration(
-      borderRadius: BorderRadius.circular(90),
-      gradient: AppColors.buttonGradient,
-    );
+    Widget _iconButton({
+      BoxDecoration decoration,
+      double opacity,
+      Icon activeIcon,
+      Icon inactiveIcon,
+    }) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Opacity(
+            opacity: 0.2,
+            child: Container(
+              width: height,
+              height: height,
+              decoration: active,
+            ),
+          ),
+          inactiveIcon,
+          AnimatedOpacity(
+            duration: Duration(milliseconds: duration),
+            opacity: opacity,
+            child: Container(
+              width: height,
+              height: height,
+              decoration: active,
+              child: activeIcon,
+            ),
+          ),
+        ],
+      );
+    }
 
     return Container(
       width: width,
@@ -41,40 +69,49 @@ class GradientFAB extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          AnimatedPositioned(
-            duration: Duration(milliseconds: duration),
-            curve: Curves.easeInOutCubic,
-            left: value ? width - height : 0.0,
-            right: value ? 0.0 : width - height,
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: duration),
-              child: value
-                  ? GestureDetector(
-                      key: UniqueKey(),
-                      onTap: () => onLeftTap(),
-                      child: Container(
-                        width: height,
-                        height: height,
-                        decoration: value ? active : inactive,
-                      ),
-                    )
-                  : GestureDetector(
-                      key: UniqueKey(),
-                      onTap: () => onRightTap(),
-                      child: Container(
-                        width: height,
-                        height: height,
-                        decoration: value ? inactive : active,
-                      ),
-                    ),
-            ),
-          ),
           Text(
             title,
             style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w700,
-                color: Colors.white),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () => onLeftTap(),
+              child: _iconButton(
+                decoration: active,
+                opacity: value ? 0 : 1,
+                activeIcon: Icon(
+                  Icons.menu,
+                  color: AppColors.accentColor,
+                ),
+                inactiveIcon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () => onRightTap(),
+              child: _iconButton(
+                decoration: active,
+                opacity: value ? 1 : 0,
+                activeIcon: Icon(
+                  Icons.map,
+                  color: AppColors.accentColor,
+                ),
+                inactiveIcon: Icon(
+                  Icons.map,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ],
       ),
