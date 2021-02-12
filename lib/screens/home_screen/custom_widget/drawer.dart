@@ -54,7 +54,8 @@ class GradientDrawer extends StatelessWidget {
           backgroundColor: AppColors.accentColor,
           backgroundImage: imageProvider,
         ),
-        placeholder: (context, url) => CircularProgressIndicator(),
+        progressIndicatorBuilder: (context, url, downloadProgress) =>
+            CircularProgressIndicator(value: downloadProgress.progress),
         errorWidget: (context, url, error) => errorAvatar,
       );
     }

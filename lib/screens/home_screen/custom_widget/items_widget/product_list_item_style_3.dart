@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class ProductItemIStyle3 extends StatelessWidget {
-
   final String imageUrl;
   final VoidCallback onTap;
-
 
   const ProductItemIStyle3({
     Key key,
@@ -16,6 +14,36 @@ class ProductItemIStyle3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _buildImage() {
+      return Expanded(
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: downloadProgress.progress,
+                  strokeWidth: 2,
+                ),
+              );
+            },
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Stack(
@@ -23,30 +51,7 @@ class ProductItemIStyle3 extends StatelessWidget {
         children: [
           Column(
             children: [
-              Expanded(
-                child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                ),
-              ),
+              _buildImage(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -62,11 +67,15 @@ class ProductItemIStyle3 extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 10.0),
-                      Text(
-                        "1-к квартира, 28.5 м², 1/8 эт.",
-                        style: TextStyle(
-                          fontSize: 15.5,
-                          fontWeight: FontWeight.w700,
+                      Flexible(
+                        child: Text(
+                          "1-к квартира, 28.5 м², 1/8 эт.",
+                          style: TextStyle(
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -82,14 +91,14 @@ class ProductItemIStyle3 extends StatelessWidget {
                           Text(
                             "р-н Центральный",
                             style: TextStyle(
-                              fontSize: 13.0,
+                              fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           Text(
                             "ул. Темерязева",
                             style: TextStyle(
-                              fontSize: 13.0,
+                              fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

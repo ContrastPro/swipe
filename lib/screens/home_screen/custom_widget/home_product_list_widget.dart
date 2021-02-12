@@ -39,9 +39,9 @@ class HomeProductListWidget extends StatelessWidget {
         },
         staggeredTileBuilder: (int index) {
           if (_items[index] == "Item 4") {
-            return StaggeredTile.count(4, 2.6);
+            return StaggeredTile.count(4, 2.8);
           } else {
-            return StaggeredTile.count(2, 2.4);
+            return StaggeredTile.count(2, 2.6);
           }
         },
       ),

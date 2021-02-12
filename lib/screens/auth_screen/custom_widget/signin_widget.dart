@@ -50,7 +50,7 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   Widget _buildTextInfo({String title}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Text(
         title,
         textAlign: TextAlign.center,

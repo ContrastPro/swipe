@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class PrivacyDialog extends StatelessWidget {
   final String textButton;
@@ -10,7 +11,7 @@ class PrivacyDialog extends StatelessWidget {
     Key key,
     this.textButton,
     this.radius = 8,
-    this.fileName = "privacy_policy.txt",
+    this.fileName = "privacy_policy.md",
     this.onPressed,
   }) : super(key: key);
 
@@ -19,25 +20,16 @@ class PrivacyDialog extends StatelessWidget {
     Widget _buildPrivacy() {
       return FutureBuilder(
         future: Future.delayed(
-          Duration(milliseconds: 200),
+          Duration(milliseconds: 250),
         ).then((value) {
           return DefaultAssetBundle.of(context)
               .loadString("assets/privacy/$fileName");
         }),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return SingleChildScrollView(
+            return Markdown(
               physics: BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 22.0,
-                  vertical: 32.0,
-                ),
-                child: Text(
-                  snapshot.data,
-                  softWrap: true,
-                ),
-              ),
+              data: snapshot.data,
             );
           }
           return Center(

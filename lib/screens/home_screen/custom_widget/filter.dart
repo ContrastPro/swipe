@@ -40,7 +40,7 @@ class _FilterState extends State<Filter> {
         itemCount: _items.length,
         scrollDirection: Axis.horizontal,
         physics: BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {

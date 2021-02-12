@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class ProductItemIStyle1 extends StatelessWidget {
-
   final String imageUrl;
   final VoidCallback onTap;
-
 
   const ProductItemIStyle1({
     Key key,
@@ -19,6 +17,36 @@ class ProductItemIStyle1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _buildImage() {
+      return Expanded(
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: downloadProgress.progress,
+                  strokeWidth: 2,
+                ),
+              );
+            },
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Stack(
@@ -31,30 +59,7 @@ class ProductItemIStyle1 extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
-                  ),
-                ),
+                _buildImage(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -73,6 +78,8 @@ class ProductItemIStyle1 extends StatelessWidget {
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5.0),
                     Text(
