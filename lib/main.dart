@@ -21,7 +21,7 @@ void main() {
       child: SwipeApp(),
     ),
   );
-} //
+}
 
 class SwipeApp extends StatelessWidget {
   @override
