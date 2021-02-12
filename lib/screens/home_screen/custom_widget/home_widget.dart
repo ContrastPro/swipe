@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/screens/home_screen/custom_widget/bulletin_board_widget.dart';
+import 'package:swipe/screens/home_screen/custom_widget/home_product_list_widget.dart';
 import 'package:swipe/screens/home_screen/custom_widget/drawer.dart';
-import 'package:swipe/screens/home_screen/custom_widget/filter_item.dart';
+import 'package:swipe/screens/home_screen/custom_widget/filter.dart';
 import 'package:swipe/screens/home_screen/custom_widget/gradient_fab.dart';
-import 'package:swipe/screens/home_screen/custom_widget/map_widget.dart';
+import 'package:swipe/screens/home_screen/custom_widget/home_map_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       children: [
         AnimatedSwitcher(
           duration: Duration(milliseconds: _duration),
-          child: _isMapWidget ? MapWidget() : BulletinBoardWidget(),
+          child: _isMapWidget ? HomeMapWidget() : HomeProductListWidget(),
         ),
         Filter(),
       ],

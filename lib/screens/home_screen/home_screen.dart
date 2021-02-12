@@ -4,6 +4,8 @@ import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 import 'package:swipe/screens/home_screen/custom_widget/home_widget.dart';
 import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
+
+// Добавить поток отслеживающий состояние соеденения с интернетом
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

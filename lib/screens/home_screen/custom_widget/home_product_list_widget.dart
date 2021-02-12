@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BulletinBoardWidget extends StatelessWidget {
+class HomeProductListWidget extends StatelessWidget {
   final _items = List<String>.generate(10000, (i) => "Item $i");
 
   @override
