@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class GradientFAB extends StatelessWidget {
+class HomeGradientFAB extends StatelessWidget {
   static const double width = 220.0;
   static const double height = 56.0;
 
@@ -11,7 +11,7 @@ class GradientFAB extends StatelessWidget {
   final VoidCallback onLeftTap;
   final VoidCallback onRightTap;
 
-  const GradientFAB({
+  const HomeGradientFAB({
     Key key,
     this.title,
     @required this.duration,

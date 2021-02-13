@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe/global/app_colors.dart';
 
-class ProductItemIStyle3 extends StatelessWidget {
-  final String imageUrl;
+class ApartmentComplexItem extends StatelessWidget {
+  final List<String> imageUrl;
   final VoidCallback onTap;
 
-  const ProductItemIStyle3({
+  const ApartmentComplexItem({
     Key key,
     @required this.imageUrl,
     @required this.onTap,
@@ -20,7 +19,7 @@ class ProductItemIStyle3 extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
           child: CachedNetworkImage(
-            imageUrl: imageUrl,
+            imageUrl: imageUrl[1],
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -56,60 +55,60 @@ class ProductItemIStyle3 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10.0),
+                  Text(
+                    'ЖК "Миллениум Тауэр"',
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "р-н Центральный ул. Темерязева",
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Text(
+                        "от",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
                       Text(
                         "3 400 000 ₽",
                         style: TextStyle(
-                          fontSize: 23.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 10.0),
-                      Flexible(
-                        child: Text(
-                          "1-к квартира, 28.5 м², 1/8 эт.",
-                          style: TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "р-н Центральный",
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            "ул. Темерязева",
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
                       Text(
-                        "Сегодня в 15:00",
+                        "от",
                         style: TextStyle(
-                          color: AppColors.accentColor,
-                          fontSize: 12.0,
+                          fontSize: 14.0,
                           fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Text(
+                        "40 м",
+                        style: TextStyle(
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],

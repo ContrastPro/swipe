@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class Filter extends StatefulWidget {
+class FilterList extends StatefulWidget {
   @override
-  _FilterState createState() => _FilterState();
+  _FilterListState createState() => _FilterListState();
 }
 
-class _FilterState extends State<Filter> {
-  final List _items = [
-    "Вторичный рынок",
-    "Новостройки",
-    "Все",
-    "Коттеджи",
-    "Вторичный рынок",
-    "Новостройки",
-    "Все",
-    "Коттеджи",
-  ];
+class _FilterListState extends State<FilterList> {
+  final List _items = ["Вторичный рынок", "Новостройки", "Все", "Коттеджи"];
   int _selectedIndex = 0;
 
   @override

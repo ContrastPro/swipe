@@ -40,6 +40,7 @@ class PrivacyDialog extends StatelessWidget {
     }
 
     return Dialog(
+      insetPadding: EdgeInsets.all(16.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       ),

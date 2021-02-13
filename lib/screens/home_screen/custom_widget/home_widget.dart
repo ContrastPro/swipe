@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/screens/home_screen/custom_widget/home_product_list_widget.dart';
+import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
+import 'package:swipe/screens/filter_screen/filter_list.dart';
+import 'package:swipe/screens/home_screen/custom_widget/home_apartment_list_widget.dart';
 import 'package:swipe/screens/home_screen/custom_widget/drawer.dart';
-import 'package:swipe/screens/home_screen/custom_widget/filter.dart';
-import 'package:swipe/screens/home_screen/custom_widget/gradient_fab.dart';
 import 'package:swipe/screens/home_screen/custom_widget/home_map_widget.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -24,15 +24,14 @@ class _HomeWidgetState extends State<HomeWidget> {
     super.dispose();
   }
 
-
-  Widget _home() {
+  Widget _buildHome() {
     return Stack(
       children: [
         AnimatedSwitcher(
           duration: Duration(milliseconds: _duration),
-          child: _isMapWidget ? HomeMapWidget() : HomeProductListWidget(),
+          child: _isMapWidget ? HomeMapWidget() : HomeApartmentListWidget(),
         ),
-        Filter(),
+        FilterList(),
       ],
     );
   }
@@ -45,15 +44,52 @@ class _HomeWidgetState extends State<HomeWidget> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.tune),
-            onPressed: () {},
-          )
+          GestureDetector(
+            onTap: (){},
+            child: Row(
+              children: [
+                RotatedBox(
+                  quarterTurns: 1,
+                  child: Icon(
+                    Icons.tune,
+                    color: Colors.black54,
+                  ),
+                ),
+                SizedBox(width: 10.0),
+                Text(
+                  "Уточнить поиск",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 20.0),
+          GestureDetector(
+            onTap: (){},
+            child: Row(
+              children: [
+                Icon(
+                  Icons.favorite_border,
+                  color: Colors.black54,
+                ),
+                SizedBox(width: 10.0),
+                Text(
+                  "Избранное",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 20.0),
         ],
       ),
-      body: _home(),
+      body: _buildHome(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: GradientFAB(
+      floatingActionButton: HomeGradientFAB(
         value: _isMapWidget,
         duration: _duration,
         title: _isMapWidget ? "Карта" : "Лента",
