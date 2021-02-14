@@ -8,7 +8,7 @@ import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_signin_provider.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_signup_provider.dart';
 
-class AuthenticationScreen extends StatelessWidget {
+class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(

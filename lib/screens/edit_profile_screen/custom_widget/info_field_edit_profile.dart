@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class InfoField extends StatelessWidget {
+class InfoFieldEditProfile extends StatelessWidget {
   final String initialValue;
   final String title;
   final String hintText;
@@ -12,7 +12,7 @@ class InfoField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final FormFieldValidator<String> validator;
 
-  const InfoField({
+  const InfoFieldEditProfile({
     Key key,
     this.initialValue,
     this.title,

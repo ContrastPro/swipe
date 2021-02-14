@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ExpandableCard extends StatelessWidget {
+class ExpandableCardEditProfile extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final EdgeInsetsGeometry margin;
   final ValueChanged<bool> onExpansionChanged;
 
-  const ExpandableCard({
+  const ExpandableCardEditProfile({
     Key key,
     this.title,
     this.children,

@@ -9,23 +9,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
-import 'package:swipe/screens/edit_profile/api/edit_profile_cloudstore_api.dart';
-import 'package:swipe/screens/edit_profile/api/edit_profile_firestore_api.dart';
-import 'package:swipe/screens/edit_profile/custom_widget/avatar_picker.dart';
-import 'package:swipe/screens/edit_profile/custom_widget/expandable_card.dart';
-import 'package:swipe/screens/edit_profile/custom_widget/info_field.dart';
-import 'package:swipe/screens/edit_profile/local_image_picker.dart';
+import 'package:swipe/screens/edit_profile_screen/api/edit_profile_cloudstore_api.dart';
+import 'package:swipe/screens/edit_profile_screen/api/edit_profile_firestore_api.dart';
+import 'package:swipe/screens/edit_profile_screen/custom_widget/avatar_picker.dart';
+import 'package:swipe/screens/edit_profile_screen/custom_widget/expandable_card_edit_profile.dart';
+import 'package:swipe/screens/edit_profile_screen/custom_widget/info_field_edit_profile.dart';
+import 'package:swipe/screens/edit_profile_screen/local_image_picker.dart';
 
-class EditProfile extends StatefulWidget {
+class EditProfileScreen extends StatefulWidget {
   final UserBuilder userProfile;
 
-  const EditProfile({Key key, this.userProfile}) : super(key: key);
+  const EditProfileScreen({Key key, this.userProfile}) : super(key: key);
 
   @override
-  _EditProfileState createState() => _EditProfileState();
+  _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _startLoading = false;
   bool _isOpened = false;
   File _imageFile;
@@ -128,7 +128,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildMyContact() {
-    return ExpandableCard(
+    return ExpandableCardEditProfile(
       title: "Мои контакты",
       margin: const EdgeInsets.only(
         left: 8.0,
@@ -137,7 +137,7 @@ class _EditProfileState extends State<EditProfile> {
       ),
       children: [
         SizedBox(height: 20.0),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Имя",
           hintText: "Имя",
           initialValue: _userBuilder.name,
@@ -150,7 +150,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Фамилия",
           hintText: "Фамилия",
           initialValue: _userBuilder.lastName,
@@ -163,7 +163,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Телефон",
           hintText: "+7 928 245 20 20",
           initialValue: _userBuilder.phone,
@@ -179,7 +179,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Email",
           hintText: "email@gmail.com",
           initialValue: _userBuilder.email,
@@ -201,7 +201,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildAgentContact() {
-    return ExpandableCard(
+    return ExpandableCardEditProfile(
       title: "Контакты агента",
       margin: const EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -209,7 +209,7 @@ class _EditProfileState extends State<EditProfile> {
       ),
       children: [
         SizedBox(height: 20.0),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Имя",
           hintText: "Имя",
           initialValue: _userBuilder.agentName,
@@ -222,7 +222,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Фамилия",
           hintText: "Фамилия",
           initialValue: _userBuilder.agentLastName,
@@ -235,7 +235,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Телефон",
           hintText: "+7 949 397 68 73",
           initialValue: _userBuilder.agentPhone,
@@ -251,7 +251,7 @@ class _EditProfileState extends State<EditProfile> {
             return null;
           },
         ),
-        InfoField(
+        InfoFieldEditProfile(
           title: "Email",
           hintText: "email@gmail.com",
           initialValue: _userBuilder.agentEmail,
@@ -273,7 +273,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildSubscriptionManagement() {
-    return ExpandableCard(
+    return ExpandableCardEditProfile(
       title: "Управление подпиской",
       margin: const EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -294,7 +294,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   SizedBox(width: 10.0),
                   Text(
-                    "23.03.2020",
+                    "${_userBuilder.subscription.isActiveUntil}",
                     style: TextStyle(
                       color: AppColors.accentColor,
                       fontWeight: FontWeight.w500,
@@ -332,7 +332,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget _buildNotification() {
     List<String> title = ["Мне", "Мне и агенту", "Агенту", "Отключить"];
 
-    return ExpandableCard(
+    return ExpandableCardEditProfile(
       title: "Уведомления",
       margin: const EdgeInsets.only(
         left: 8.0,

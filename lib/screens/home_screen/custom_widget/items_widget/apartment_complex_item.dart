@@ -105,7 +105,7 @@ class ApartmentComplexItem extends StatelessWidget {
                       ),
                       SizedBox(width: 5.0),
                       Text(
-                        "40 м",
+                        "40 м²",
                         style: TextStyle(
                           fontSize: 15.5,
                           fontWeight: FontWeight.bold,

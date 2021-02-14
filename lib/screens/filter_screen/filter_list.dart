@@ -7,8 +7,14 @@ class FilterList extends StatefulWidget {
 }
 
 class _FilterListState extends State<FilterList> {
-  final List _items = ["Вторичный рынок", "Новостройки", "Все", "Коттеджи"];
-  int _selectedIndex = 0;
+  final List _items = [
+    "Мои объявления",
+    "Все",
+    "Вторичный рынок",
+    "Новостройки",
+    "Коттеджи",
+  ];
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {

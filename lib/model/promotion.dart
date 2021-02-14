@@ -1,10 +1,10 @@
-class Subscription {
+class Promotion {
   final String isActiveUntil;
 
-  Subscription({this.isActiveUntil});
+  Promotion({this.isActiveUntil});
 
-  factory Subscription.fromMap(Map<String, dynamic> json) {
-    return Subscription(
+  factory Promotion.fromMap(Map<String, dynamic> json) {
+    return Promotion(
       isActiveUntil: json['isActiveUntil'],
     );
   }

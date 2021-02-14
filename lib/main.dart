@@ -58,7 +58,7 @@ class SwipeApp extends StatelessWidget {
                 }
                 return ChangeNotifierProvider<AuthModeNotifier>(
                   create: (_) => AuthModeNotifier(),
-                  child: AuthenticationScreen(),
+                  child: AuthScreen(),
                 );
               },
             );

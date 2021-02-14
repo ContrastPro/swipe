@@ -5,8 +5,9 @@ import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/add_apartment_screen/add_apartment_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
-import 'package:swipe/screens/edit_profile/edit_profile.dart';
+import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
 
 class GradientDrawer extends StatelessWidget {
@@ -94,7 +95,8 @@ class GradientDrawer extends StatelessWidget {
                             await Navigator.push(
                               context,
                               FadeRoute(
-                                page: EditProfile(userProfile: userProfile),
+                                page:
+                                    EditProfileScreen(userProfile: userProfile),
                               ),
                             );
                             userNotifier.updateUserProfile();
@@ -154,9 +156,35 @@ class GradientDrawer extends StatelessWidget {
                       ],
                     ),
                   ),
-                  _buildListTile(title: "Лента объявлений", onTap: () {}),
-                  _buildListTile(title: "Личный кабинет", onTap: () {}),
-                  _buildListTile(title: "Мое объявление", onTap: () {}),
+                  _buildListTile(
+                    title: "Лента объявлений",
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  _buildListTile(
+                    title: "Личный кабинет",
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: EditProfileScreen(userProfile: userProfile),
+                        ),
+                      );
+                      userNotifier.updateUserProfile();
+                    },
+                  ),
+                  _buildListTile(
+                    title: "Мое объявление",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: AddApartmentScreen(),
+                        ),
+                      );
+                    },
+                  ),
                   _buildListTile(title: "Избранное", onTap: () {}),
                   _buildListTile(title: "Сохраненные фильтры", onTap: () {}),
                   _buildListTile(title: "Нотариусы", onTap: () {}),

@@ -153,7 +153,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
       insetAnimationDuration: const Duration(milliseconds: 800),
       insetPadding: EdgeInsets.all(8.0),
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: double.infinity,
         height: 300,
         child: Card(
           semanticContainer: true,
