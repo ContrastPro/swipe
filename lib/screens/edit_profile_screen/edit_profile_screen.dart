@@ -14,7 +14,7 @@ import 'package:swipe/screens/edit_profile_screen/api/edit_profile_firestore_api
 import 'package:swipe/screens/edit_profile_screen/custom_widget/avatar_picker.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/expandable_card_edit_profile.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/info_field_edit_profile.dart';
-import 'package:swipe/screens/edit_profile_screen/local_image_picker.dart';
+import 'package:swipe/screens/edit_profile_screen/avatar_image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserBuilder userProfile;
@@ -31,14 +31,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File _imageFile;
 
   UserBuilder _userBuilder;
-  LocalImagePicker _imagePicker;
+  AvatarImagePicker _imagePicker;
   GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _userBuilder = widget.userProfile;
     _formKey = GlobalKey<FormState>();
-    _imagePicker = LocalImagePicker();
+    _imagePicker = AvatarImagePicker();
     super.initState();
   }
 

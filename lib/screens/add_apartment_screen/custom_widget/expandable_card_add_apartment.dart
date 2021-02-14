@@ -86,8 +86,9 @@ class _ExpandableCardAddApartmentState extends State<ExpandableCardAddApartment>
                       ),
                     ),
                     trailing: RotationTransition(
-                      turns: Tween(begin: 1.0, end: 0.5)
-                          .animate(_expandController),
+                      turns: Tween(begin: 1.0, end: 0.5).animate(
+                        _expandController,
+                      ),
                       child: Icon(
                         Icons.expand_more,
                       ),
