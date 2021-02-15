@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -154,7 +155,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     double fieldHeight = 50.0;
     return Form(
       key: _formKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: _itemPadding,
         child: Column(

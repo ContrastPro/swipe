@@ -90,7 +90,7 @@ class _SignInWidgetState extends State<SignInWidget> {
   Widget _secondPage() {
     return Form(
       key: _formKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: _itemPadding,
         child: Column(

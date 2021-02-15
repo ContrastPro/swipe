@@ -5,6 +5,7 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
+import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/expandable_card_add_apartment.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/info_field_add_apartment.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
@@ -439,53 +440,55 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         onTapLeading: () => Navigator.pop(context),
         onTapAction: () => Navigator.pop(context),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            _buildAddress(),
-            _buildApartmentComplex(),
-            _buildFoundingDocument(),
-            _buildAppointmentApartment(),
-            _buildNumberOfRooms(),
-            _buildApartmentLayout(),
-            _buildApartmentCondition(),
-            _buildTotalArea(),
-            _buildKitchenArea(),
-            _buildBalconyLoggia(),
-            _buildHeatingType(),
-            _buildTypeOfPayment(),
-            _buildAgentCommission(),
-            _buildCommunicationMethod(),
-            _buildDescription(),
-            _buildPrice(),
-            _buildImagePicker(),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 25.0,
-              ),
-              child: GradientButton(
-                title: "Продолжить",
-                maxWidth: double.infinity,
-                minHeight: 50.0,
-                borderRadius: 10.0,
-                onTap: () {
-                  print(_apartmentBuilder);
-                  Navigator.push(
-                    context,
-                    FadeRoute(
-                      page: PromotionScreen(
-                        apartmentBuilder: _apartmentBuilder,
-                        imageList: _imageList,
+      body: NetworkConnectivity(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              _buildAddress(),
+              _buildApartmentComplex(),
+              _buildFoundingDocument(),
+              _buildAppointmentApartment(),
+              _buildNumberOfRooms(),
+              _buildApartmentLayout(),
+              _buildApartmentCondition(),
+              _buildTotalArea(),
+              _buildKitchenArea(),
+              _buildBalconyLoggia(),
+              _buildHeatingType(),
+              _buildTypeOfPayment(),
+              _buildAgentCommission(),
+              _buildCommunicationMethod(),
+              _buildDescription(),
+              _buildPrice(),
+              _buildImagePicker(),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 25.0,
+                ),
+                child: GradientButton(
+                  title: "Продолжить",
+                  maxWidth: double.infinity,
+                  minHeight: 50.0,
+                  borderRadius: 10.0,
+                  onTap: () {
+                    print(_apartmentBuilder);
+                    Navigator.push(
+                      context,
+                      FadeRoute(
+                        page: PromotionScreen(
+                          apartmentBuilder: _apartmentBuilder,
+                          imageList: _imageList,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

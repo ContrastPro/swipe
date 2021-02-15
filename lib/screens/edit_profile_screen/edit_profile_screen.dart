@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/edit_profile_screen/api/edit_profile_cloudstore_api.dart';
 import 'package:swipe/screens/edit_profile_screen/api/edit_profile_firestore_api.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/avatar_picker.dart';
@@ -465,21 +466,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onTapLeading: () => _editProfile(),
             onTapAction: () => Navigator.pop(context),
           ),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Form(
-              key: _formKey,
-              autovalidate: true,
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  _buildMyContact(),
-                  _buildAgentContact(),
-                  _buildSubscriptionManagement(),
-                  _buildNotification(),
-                  _buildCallSwitcher(),
-                  _buildPrivacyPolicy(),
-                ],
+          body: NetworkConnectivity(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    _buildMyContact(),
+                    _buildAgentContact(),
+                    _buildSubscriptionManagement(),
+                    _buildNotification(),
+                    _buildCallSwitcher(),
+                    _buildPrivacyPolicy(),
+                  ],
+                ),
               ),
             ),
           ),
