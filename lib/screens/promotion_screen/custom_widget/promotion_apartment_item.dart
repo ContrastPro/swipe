@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
 
-class ApartmentItem extends StatelessWidget {
+class PromotionApartmentItem extends StatelessWidget {
   final List<String> imageUrl;
   final VoidCallback onTap;
 
-  const ApartmentItem({
+  const PromotionApartmentItem({
     Key key,
     @required this.imageUrl,
     @required this.onTap,

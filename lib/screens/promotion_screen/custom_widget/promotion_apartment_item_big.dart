@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class ApartmentItemBig extends StatelessWidget {
+class PromotionApartmentItemBig extends StatelessWidget {
   final List<String> imageUrl;
   final VoidCallback onTap;
 
-  const ApartmentItemBig({
+  const PromotionApartmentItemBig({
     Key key,
     @required this.imageUrl,
     @required this.onTap,

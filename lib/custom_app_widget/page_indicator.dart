@@ -34,7 +34,7 @@ class PageIndicator extends StatelessWidget {
                 color: Colors.black12,
                 spreadRadius: 2.5,
                 blurRadius: 2.5,
-                offset: Offset(0, 0), // changes position of shadow
+                offset: Offset(0, 0),
               ),
             ],
           ),

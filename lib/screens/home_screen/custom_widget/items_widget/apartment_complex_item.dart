@@ -124,10 +124,23 @@ class ApartmentComplexItem extends StatelessWidget {
               onTap: () => onTap(),
               child: Container(
                 padding: const EdgeInsets.all(7.0),
-                child: Icon(
-                  Icons.radio_button_off,
-                  color: Colors.white,
-                  size: 22.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(45.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.radio_button_off,
+                    color: Colors.white,
+                    size: 22.0,
+                  ),
                 ),
               ),
             ),

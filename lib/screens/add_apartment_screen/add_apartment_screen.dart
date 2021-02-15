@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/expandable_card_add_apartment.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/info_field_add_apartment.dart';
+import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 
 class AddApartmentScreen extends StatefulWidget {
   @override
@@ -471,6 +473,15 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                 borderRadius: 10.0,
                 onTap: () {
                   print(_apartmentBuilder);
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: PromotionScreen(
+                        apartmentBuilder: _apartmentBuilder,
+                        imageList: _imageList,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
