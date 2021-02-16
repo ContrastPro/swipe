@@ -4,60 +4,44 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
 
 class PromotionApartmentItem extends StatelessWidget {
-  final List<String> imageUrl;
-  final VoidCallback onTap;
+  final String imageUrl;
+  final bool isColored;
+  final bool isPhrase;
 
   const PromotionApartmentItem({
     Key key,
     @required this.imageUrl,
-    @required this.onTap,
+    this.isColored = false,
+    this.isPhrase = false,
   }) : super(key: key);
-
-  final bool _isColored = false;
-  final bool _isPhrase = false;
 
   @override
   Widget build(BuildContext context) {
-    void _showDetailDialog() {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return ApartmentDetailDialog(
-            imageUrl: imageUrl,
-            onTap: () {},
-          );
-        },
-      );
-    }
-
     Widget _buildImage() {
       return Expanded(
-        child: GestureDetector(
-          onTap: () => _showDetailDialog(),
-          child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: CachedNetworkImage(
-              imageUrl: imageUrl[0],
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
                 ),
               ),
-              progressIndicatorBuilder: (context, url, downloadProgress) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: downloadProgress.progress,
-                    strokeWidth: 2,
-                  ),
-                );
-              },
-              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: downloadProgress.progress,
+                  strokeWidth: 2,
+                ),
+              );
+            },
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
       );
@@ -71,66 +55,63 @@ class PromotionApartmentItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color: _isColored ? Colors.green.shade50 : Colors.transparent,
+              color: isColored ? Colors.green.shade50 : Colors.transparent,
             ),
             child: Column(
               children: [
                 _buildImage(),
-                GestureDetector(
-                  onTap: () {},
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10.0),
-                      Text(
-                        "3 400 000 ₽",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.0),
+                    Text(
+                      "3 400 000 ₽",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "1-к квартира, 28.5 м², 1/8 эт.",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2.0),
+                    Text(
+                      "1-к квартира, 28.5 м², 1/8 эт.",
+                      style: TextStyle(
+                        fontSize: 8.0,
+                        fontWeight: FontWeight.w600,
                       ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "р-н Центральный ул. Темерязева",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2.0),
+                    Text(
+                      "р-н Центральный ул. Темерязева",
+                      style: TextStyle(
+                        fontSize: 8.0,
+                        fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "Сегодня в 15:00",
-                        style: TextStyle(
-                          color: AppColors.accentColor,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    ),
+                    SizedBox(height: 2.0),
+                    Text(
+                      "Сегодня в 15:00",
+                      style: TextStyle(
+                        color: AppColors.accentColor,
+                        fontSize: 8.0,
+                        fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 5.0),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 5.0),
+                  ],
                 ),
               ],
             ),
           ),
-          if (_isPhrase)
+          if (isPhrase)
             Positioned(
               left: 0,
               child: Container(
-                height: 18.0,
+                height: 13.0,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
+                  horizontal: 5.0,
                 ),
                 margin: const EdgeInsets.symmetric(
                   horizontal: 8.0,
@@ -142,7 +123,7 @@ class PromotionApartmentItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 9.5,
+                    fontSize: 7,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -154,27 +135,24 @@ class PromotionApartmentItem extends StatelessWidget {
             ),
           Positioned(
             right: 0,
-            child: GestureDetector(
-              onTap: () => onTap(),
+            child: Container(
+              padding: const EdgeInsets.all(7.0),
               child: Container(
-                padding: const EdgeInsets.all(7.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(45.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.radio_button_off,
-                    color: Colors.white,
-                    size: 22.0,
-                  ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(45.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.radio_button_off,
+                  color: Colors.white,
+                  size: 16.0,
                 ),
               ),
             ),

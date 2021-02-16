@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class PromotionApartmentItemBig extends StatelessWidget {
-  final List<String> imageUrl;
-  final VoidCallback onTap;
+  final String imageUrl;
+  final bool isColored;
+  final bool isPhrase;
 
   const PromotionApartmentItemBig({
     Key key,
     @required this.imageUrl,
-    @required this.onTap,
+    this.isColored,
+    this.isPhrase,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class PromotionApartmentItemBig extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
           child: CachedNetworkImage(
-            imageUrl: imageUrl[2],
+            imageUrl: imageUrl,
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -45,7 +47,11 @@ class PromotionApartmentItemBig extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(
+        left: 12.0,
+        top: 12.0,
+        right: 12.0,
+      ),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -62,7 +68,7 @@ class PromotionApartmentItemBig extends StatelessWidget {
                       Text(
                         "3 400 000 ₽",
                         style: TextStyle(
-                          fontSize: 23.0,
+                          fontSize: 18.0,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -71,7 +77,7 @@ class PromotionApartmentItemBig extends StatelessWidget {
                         child: Text(
                           "1-к квартира, 28.5 м², 1/8 эт.",
                           style: TextStyle(
-                            fontSize: 15.5,
+                            fontSize: 12,
                             fontWeight: FontWeight.w700,
                           ),
                           maxLines: 1,
@@ -90,7 +96,7 @@ class PromotionApartmentItemBig extends StatelessWidget {
                           "р-н Центральный ул. Темерязева",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 10.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -101,7 +107,7 @@ class PromotionApartmentItemBig extends StatelessWidget {
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: AppColors.accentColor,
-                            fontSize: 12.0,
+                            fontSize: 10.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -115,27 +121,24 @@ class PromotionApartmentItemBig extends StatelessWidget {
           ),
           Positioned(
             right: 0,
-            child: GestureDetector(
-              onTap: () => onTap(),
+            child: Container(
+              padding: const EdgeInsets.all(7.0),
               child: Container(
-                padding: const EdgeInsets.all(7.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(45.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.radio_button_off,
-                    color: Colors.white,
-                    size: 22.0,
-                  ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(45.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.radio_button_off,
+                  color: Colors.white,
+                  size: 20.0,
                 ),
               ),
             ),

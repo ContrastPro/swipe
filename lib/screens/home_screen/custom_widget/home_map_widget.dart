@@ -4,8 +4,13 @@ class HomeMapWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       key: UniqueKey(),
-      color: Colors.blue[900],
+      child: Image.asset(
+        "assets/images/map.png",
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

@@ -21,8 +21,10 @@ class NetworkConnectivity extends StatelessWidget {
           child,
           Container(
             color: Colors.redAccent,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 10.0,
+            ),
             child: Row(
               children: [
                 Icon(
