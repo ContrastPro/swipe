@@ -8,7 +8,7 @@ import 'package:swipe/global/app_style.dart';
 import 'package:swipe/screens/auth_screen/auth_screen.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
-import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
+import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

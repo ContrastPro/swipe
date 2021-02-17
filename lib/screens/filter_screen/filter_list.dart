@@ -19,6 +19,9 @@ class _FilterListState extends State<FilterList> {
   @override
   Widget build(BuildContext context) {
     BoxDecoration active = BoxDecoration(
+      border: Border.all(
+        color: Colors.transparent,
+      ),
       gradient: AppColors.buttonGradient,
       borderRadius: BorderRadius.circular(10),
     );

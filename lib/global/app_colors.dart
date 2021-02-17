@@ -4,6 +4,12 @@ class AppColors {
   static const Color primaryColor = Color(0xFFF5F5F5);
   static const Color backgroundColor = Color(0xFFFFFFFF);
   static const Color accentColor = Color(0xFF27AEA4);
+  static const Color promotionTitle = Color(0xFF374252);
+
+  static const List<Color> promotionColors = [
+    Color(0xFFFDD7D7),
+    Color(0xFFCEF2D2),
+  ];
 
   static List<BoxShadow> promotionCardShadow = [
     BoxShadow(

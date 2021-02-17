@@ -8,7 +8,7 @@ import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/add_apartment_screen/add_apartment_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
-import 'package:swipe/screens/home_screen/provider/user_notifier.dart';
+import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 class GradientDrawer extends StatelessWidget {
   Widget _buildListTile({String title, GestureTapCallback onTap}) {

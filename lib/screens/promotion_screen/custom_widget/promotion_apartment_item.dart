@@ -1,18 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
 
 class PromotionApartmentItem extends StatelessWidget {
   final String imageUrl;
   final bool isColored;
   final bool isPhrase;
+  final int color;
 
   const PromotionApartmentItem({
     Key key,
     @required this.imageUrl,
-    this.isColored = false,
-    this.isPhrase = false,
+    this.isColored,
+    this.isPhrase,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -48,14 +49,16 @@ class PromotionApartmentItem extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(8.0),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color: isColored ? Colors.green.shade50 : Colors.transparent,
+              color: isColored
+                  ? Color(color ?? AppColors.promotionColors[0].value)
+                  : Colors.transparent,
             ),
             child: Column(
               children: [
@@ -67,7 +70,7 @@ class PromotionApartmentItem extends StatelessWidget {
                     Text(
                       "3 400 000 ₽",
                       style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -75,7 +78,7 @@ class PromotionApartmentItem extends StatelessWidget {
                     Text(
                       "1-к квартира, 28.5 м², 1/8 эт.",
                       style: TextStyle(
-                        fontSize: 8.0,
+                        fontSize: 9.0,
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 1,
@@ -85,7 +88,7 @@ class PromotionApartmentItem extends StatelessWidget {
                     Text(
                       "р-н Центральный ул. Темерязева",
                       style: TextStyle(
-                        fontSize: 8.0,
+                        fontSize: 9.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -94,7 +97,7 @@ class PromotionApartmentItem extends StatelessWidget {
                       "Сегодня в 15:00",
                       style: TextStyle(
                         color: AppColors.accentColor,
-                        fontSize: 8.0,
+                        fontSize: 9.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -108,10 +111,10 @@ class PromotionApartmentItem extends StatelessWidget {
             Positioned(
               left: 0,
               child: Container(
-                height: 13.0,
+                height: 15.0,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 5.0,
+                  horizontal: 6.0,
                 ),
                 margin: const EdgeInsets.symmetric(
                   horizontal: 8.0,
@@ -123,7 +126,7 @@ class PromotionApartmentItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 7,
+                    fontSize: 8.5,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -152,7 +155,7 @@ class PromotionApartmentItem extends StatelessWidget {
                 child: Icon(
                   Icons.radio_button_off,
                   color: Colors.white,
-                  size: 16.0,
+                  size: 19.0,
                 ),
               ),
             ),

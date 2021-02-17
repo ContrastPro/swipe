@@ -383,7 +383,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 18.0,
                       height: 18.0,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                        borderRadius: BorderRadius.circular(45.0),
                         color: _userBuilder.notification[index] == true
                             ? AppColors.accentColor
                             : Colors.black.withAlpha(40),
