@@ -4,7 +4,7 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_apartment_item.dart';
 import 'package:swipe/screens/promotion_screen/provider/promotion_provider.dart';
 
-class PromotionCardMedium extends StatefulWidget {
+class PromotionCardMedium extends StatelessWidget {
   final String imageUrl;
 
   const PromotionCardMedium({
@@ -13,15 +13,10 @@ class PromotionCardMedium extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PromotionCardMediumState createState() => _PromotionCardMediumState();
-}
-
-class _PromotionCardMediumState extends State<PromotionCardMedium> {
-  int _color;
-
-
-  @override
   Widget build(BuildContext context) {
+    PromotionNotifier promotionNotifier =
+        Provider.of<PromotionNotifier>(context);
+
     Widget circle(bool value) {
       return Container(
         width: 16.0,
@@ -34,20 +29,22 @@ class _PromotionCardMediumState extends State<PromotionCardMedium> {
       );
     }
 
-    Widget colored(PromotionNotifier promotionNotifier) {
+    Widget colored() {
       return GestureDetector(
-        onTap: (){},
+        onTap: () {
+          promotionNotifier.switchIsColored(0);
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionNotifier.isColored),
+            circle(promotionNotifier.getIsColored),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotionNotifier.promotionList[0].title,
+                  promotionNotifier.getPromotionList[0].title,
                   style: TextStyle(
                     fontSize: 16.0,
                     color: AppColors.promotionTitle,
@@ -56,7 +53,7 @@ class _PromotionCardMediumState extends State<PromotionCardMedium> {
                 ),
                 SizedBox(height: 5.0),
                 Text(
-                  "${promotionNotifier.promotionList[0].price}₽/мес",
+                  "${promotionNotifier.getPromotionList[0].price}₽/мес",
                   style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.black.withAlpha(108),
@@ -70,22 +67,22 @@ class _PromotionCardMediumState extends State<PromotionCardMedium> {
       );
     }
 
-    Widget phrase(PromotionNotifier promotionNotifier) {
+    Widget phrase() {
       return GestureDetector(
         onTap: () {
-
+          promotionNotifier.switchIsPhrase();
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionNotifier.isPhrase),
+            circle(promotionNotifier.getPhrase != null),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotionNotifier.promotionList[1].title,
+                  promotionNotifier.getPromotionList[1].title,
                   style: TextStyle(
                     fontSize: 16.0,
                     color: AppColors.promotionTitle,
@@ -94,7 +91,7 @@ class _PromotionCardMediumState extends State<PromotionCardMedium> {
                 ),
                 SizedBox(height: 2.0),
                 Text(
-                  "${promotionNotifier.promotionList[1].price}₽/мес",
+                  "${promotionNotifier.getPromotionList[1].price}₽/мес",
                   style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.black.withAlpha(108),
@@ -108,67 +105,60 @@ class _PromotionCardMediumState extends State<PromotionCardMedium> {
       );
     }
 
-    return Consumer<PromotionNotifier>(
-        builder: (context, promotionNotifier, child){
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 40,
-                child: Container(
-                  height: 200,
-                  child: PromotionApartmentItem(
-                    imageUrl: widget.imageUrl,
-                    isColored: promotionNotifier.isColored,
-                    isPhrase: promotionNotifier.isPhrase,
-                    color: _color,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 40,
+          child: Container(
+            height: 200,
+            child: PromotionApartmentItem(
+              imageUrl: imageUrl,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 60,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 12.0, 12.0, 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                colored(),
+                if (promotionNotifier.getIsColored)
+                  Container(
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: AppColors.promotionColors.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            promotionNotifier.setColor =
+                                AppColors.promotionColors[index].value;
+                          },
+                          child: Container(
+                            width: 30,
+                            margin: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              color: AppColors.promotionColors[index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                flex: 60,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 12.0, 12.0, 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      colored(promotionNotifier),
-                      if (promotionNotifier.isColored)
-                        Container(
-                          height: 40,
-                          margin: const EdgeInsets.only(top: 10.0),
-                          child: ListView.builder(
-                              itemCount: AppColors.promotionColors.length,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _color = AppColors.promotionColors[index].value;
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 30,
-                                    margin: const EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                      color: AppColors.promotionColors[index],
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      SizedBox(height: 15.0),
-                      phrase(promotionNotifier),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
+                SizedBox(height: 15.0),
+                phrase(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

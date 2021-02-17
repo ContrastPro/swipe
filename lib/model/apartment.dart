@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swipe/model/promotion.dart';
 
 class ApartmentBuilder {
   String id;
@@ -20,6 +21,7 @@ class ApartmentBuilder {
   String description;
   String price;
   List<String> images;
+  Promotion promotion;
 
 
   Timestamp createdAt;

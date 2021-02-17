@@ -6,9 +6,10 @@ import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_medium.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_small.dart';
+import 'package:swipe/screens/promotion_screen/custom_widget/promotion_phrase_picker.dart';
 import 'package:swipe/screens/promotion_screen/provider/promotion_provider.dart';
 
-class PromotionScreen extends StatefulWidget {
+class PromotionScreen extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;
   final List<String> imageList;
 
@@ -19,35 +20,19 @@ class PromotionScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PromotionScreenState createState() => _PromotionScreenState();
-}
-
-class _PromotionScreenState extends State<PromotionScreen> {
-  int _currentIndex;
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarStyle1(
-        title: "Продвижение",
-        onTapLeading: () => Navigator.pop(context),
-        onTapAction: () => Navigator.pop(context),
-      ),
-      body: NetworkConnectivity(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 16.0,
-          ),
-          physics: BouncingScrollPhysics(),
-          child: Consumer<PromotionNotifier>(
-            builder: (context, promotionNotifier, child) {
-              return Column(
+    Widget _buildScreen() {
+      return Consumer<PromotionNotifier>(
+        builder: (context, promotionNotifier, child) {
+          return Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
                     child: PromotionCardMedium(
-                      imageUrl: widget.imageList[0],
+                      imageUrl: imageList[0],
                     ),
                   ),
                   ListView.builder(
@@ -57,27 +42,27 @@ class _PromotionScreenState extends State<PromotionScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            _currentIndex = index;
-                          });
+                          promotionNotifier.setCurrentIndex = index;
+                          promotionNotifier.disableColoredPhrase();
+                          promotionNotifier.setSimplePrice(index + 2);
                         },
                         child: PromotionCardSmall(
                           initialIndex: index,
-                          currentIndex: _currentIndex,
-                          promotionList: promotionNotifier.promotionList,
                         ),
                       );
                     },
                   ),
-                  if (promotionNotifier.totalPrice != 0)
+                  if (promotionNotifier.getPrice != 0)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(32.0, 22.0, 32.0, 8.0),
                       child: GradientButton(
-                        title: "Оплатить ${promotionNotifier.totalPrice}₽",
+                        title: "Оплатить ${promotionNotifier.getPrice}₽",
                         maxWidth: double.infinity,
                         minHeight: 60.0,
                         borderRadius: 45.0,
-                        onTap: () {},
+                        onTap: () {
+                          promotionNotifier.makePayment(apartmentBuilder);
+                        },
                       ),
                     ),
                   Padding(
@@ -86,7 +71,9 @@ class _PromotionScreenState extends State<PromotionScreen> {
                       bottom: 42.0,
                     ),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        promotionNotifier.addWithoutPayment(apartmentBuilder);
+                      },
                       child: Text(
                         "Разместить без оплаты",
                         style: TextStyle(
@@ -97,8 +84,38 @@ class _PromotionScreenState extends State<PromotionScreen> {
                     ),
                   ),
                 ],
-              );
-            },
+              ),
+              AnimatedContainer(
+                width: promotionNotifier.getIsPhrase
+                    ? MediaQuery.of(context).size.width
+                    : 0,
+                height: promotionNotifier.getIsPhrase ? 680 : 0,
+                duration: Duration(milliseconds: 1800),
+                curve: Curves.fastOutSlowIn,
+                child: PromotionPhrasePicker(),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    return ChangeNotifierProvider<PromotionNotifier>(
+      create: (_) => PromotionNotifier(),
+      child: Scaffold(
+        appBar: AppBarStyle1(
+          title: "Продвижение",
+          onTapLeading: () => Navigator.pop(context),
+          onTapAction: () => Navigator.pop(context),
+        ),
+        body: NetworkConnectivity(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 16.0,
+            ),
+            physics: BouncingScrollPhysics(),
+            child: _buildScreen(),
           ),
         ),
       ),
