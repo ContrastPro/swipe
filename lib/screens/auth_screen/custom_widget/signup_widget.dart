@@ -123,7 +123,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  Widget _firstPage() {
+  Widget _buildFirstPage() {
     return Padding(
       padding: _itemPadding,
       child: Column(
@@ -149,7 +149,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  Widget _secondPage() {
+  Widget _buildSecondPage() {
     double boxHeight = 14.0;
     double fieldWidth = 280.0;
     double fieldHeight = 50.0;
@@ -245,7 +245,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  Widget _thirdPage() {
+  Widget _buildThirdPage() {
     return Padding(
       padding: _itemPadding,
       child: Column(
@@ -305,9 +305,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 setState(() => _pageIndex = index);
               },
               children: [
-                _firstPage(),
-                _secondPage(),
-                _thirdPage(),
+                _buildFirstPage(),
+                _buildSecondPage(),
+                _buildThirdPage(),
               ],
             ),
           ],

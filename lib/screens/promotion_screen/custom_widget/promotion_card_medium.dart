@@ -1,13 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/model/promotion.dart';
+import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_apartment_item.dart';
 import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
 
 class PromotionCardMedium extends StatelessWidget {
-  final PromotionBuilder promotionBuilder;
+  final ApartmentBuilder apartmentBuilder;
   final List<PromotionCard> promotionList;
-  final String imageUrl;
+  final List<File> imageFile;
   final bool addColor;
   final VoidCallback changeColor;
   final VoidCallback changePhrase;
@@ -15,9 +17,9 @@ class PromotionCardMedium extends StatelessWidget {
 
   const PromotionCardMedium({
     Key key,
-    @required this.promotionBuilder,
+    @required this.apartmentBuilder,
     @required this.promotionList,
-    @required this.imageUrl,
+    @required this.imageFile,
     @required this.addColor,
     @required this.changeColor,
     @required this.changePhrase,
@@ -45,7 +47,7 @@ class PromotionCardMedium extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionBuilder.color != null),
+            circle(apartmentBuilder.promotionBuilder.color != null),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +97,7 @@ class PromotionCardMedium extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6.0),
                   border: Border.all(
-                    color: promotionBuilder.color ==
+                    color: apartmentBuilder.promotionBuilder.color ==
                             AppColors.promotionColors[index].value
                         ? AppColors.accentColor
                         : Colors.transparent,
@@ -116,7 +118,7 @@ class PromotionCardMedium extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionBuilder.phrase != null),
+            circle(apartmentBuilder.promotionBuilder.phrase != null),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,15 +155,15 @@ class PromotionCardMedium extends StatelessWidget {
           child: Container(
             height: 200,
             child: PromotionApartmentItem(
-              imageUrl: imageUrl,
-              promotionBuilder: promotionBuilder,
+              imageFile: imageFile,
+              apartmentBuilder: apartmentBuilder,
             ),
           ),
         ),
         Expanded(
           flex: 60,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 12.0, 12.0, 12.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

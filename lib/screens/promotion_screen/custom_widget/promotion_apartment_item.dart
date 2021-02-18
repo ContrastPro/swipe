@@ -1,48 +1,66 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/model/promotion.dart';
+import 'package:swipe/model/apartment.dart';
 
 class PromotionApartmentItem extends StatelessWidget {
-  final PromotionBuilder promotionBuilder;
-  final String imageUrl;
+  final ApartmentBuilder apartmentBuilder;
+  final List<File> imageFile;
 
   const PromotionApartmentItem({
     Key key,
-    @required this.promotionBuilder,
-    @required this.imageUrl,
+    @required this.apartmentBuilder,
+    @required this.imageFile,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Widget _buildImage() {
-      return Expanded(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
+      if (apartmentBuilder.images != null) {
+        return Expanded(
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: CachedNetworkImage(
+              imageUrl: apartmentBuilder.images[0],
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    strokeWidth: 2,
+                  ),
+                );
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
-            progressIndicatorBuilder: (context, url, downloadProgress) {
-              return Center(
-                child: CircularProgressIndicator(
-                  value: downloadProgress.progress,
-                  strokeWidth: 2,
-                ),
-              );
-            },
-            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
-        ),
-      );
+        );
+      } else {
+        return Expanded(
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0),
+              image: DecorationImage(
+                image: FileImage(imageFile[0]),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      }
     }
 
     return Padding(
@@ -53,8 +71,8 @@ class PromotionApartmentItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color: promotionBuilder.color != null
-                  ? Color(promotionBuilder.color)
+              color: apartmentBuilder.promotionBuilder.color != null
+                  ? Color(apartmentBuilder.promotionBuilder.color)
                   : Colors.transparent,
             ),
             child: Column(
@@ -104,7 +122,7 @@ class PromotionApartmentItem extends StatelessWidget {
               ],
             ),
           ),
-          if (promotionBuilder.phrase != null)
+          if (apartmentBuilder.promotionBuilder.phrase != null)
             Positioned(
               left: 0,
               child: Container(
@@ -118,7 +136,7 @@ class PromotionApartmentItem extends StatelessWidget {
                   vertical: 9.0,
                 ),
                 child: Text(
-                  "${promotionBuilder.phrase}",
+                  "${apartmentBuilder.promotionBuilder.phrase}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

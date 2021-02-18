@@ -25,7 +25,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     super.dispose();
   }
 
-  Widget _buildHome() {
+  Widget _buildScreen() {
     return Stack(
       children: [
         AnimatedSwitcher(
@@ -89,7 +89,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         ],
       ),
       body: NetworkConnectivity(
-        child: _buildHome(),
+        child: _buildScreen(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: HomeGradientFAB(

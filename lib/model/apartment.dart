@@ -31,7 +31,31 @@ class ApartmentBuilder {
 
   @override
   String toString() {
-    return 'ApartmentBuilder $price \n $promotionBuilder';
+    return '\n********************************\n'
+        '--- ApartmentBuilder ---'
+        '\n>> id: $id'
+        '\n>> ownerUID: $ownerUID'
+        '\n>> address: $address'
+        '\n>> apartmentComplex: $apartmentComplex'
+        '\n>> foundingDocument: $foundingDocument'
+        '\n>> appointmentApartment: $appointmentApartment'
+        '\n>> numberOfRooms: $numberOfRooms'
+        '\n>> apartmentLayout: $apartmentLayout'
+        '\n>> apartmentCondition: $apartmentCondition'
+        '\n>> totalArea: $totalArea'
+        '\n>> kitchenArea: $kitchenArea'
+        '\n>> balconyLoggia: $balconyLoggia'
+        '\n>> heatingType: $heatingType'
+        '\n>> typeOfPayment: $typeOfPayment'
+        '\n>> agentCommission: $agentCommission'
+        '\n>> communicationMethod: $communicationMethod'
+        '\n>> description: $description'
+        '\n>> price: $price'
+        '\n>> images: $images'
+        '\n>> promotionBuilder: $promotionBuilder'
+        '\n>> createdAt: $createdAt'
+        '\n>> updatedAt: $updatedAt'
+        '\n********************************\n';
   }
 }
 

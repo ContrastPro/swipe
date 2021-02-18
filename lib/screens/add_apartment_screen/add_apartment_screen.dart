@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
@@ -7,6 +10,7 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/promotion.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/add_apartment_screen/api/apartment_image_picker.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/expandable_card_add_apartment.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/info_field_add_apartment.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
@@ -17,35 +21,17 @@ class AddApartmentScreen extends StatefulWidget {
 }
 
 class _AddApartmentScreenState extends State<AddApartmentScreen> {
-  List<String> _imageList;
   ApartmentBuilder _apartmentBuilder;
   TextEditingController _addressController;
 
   @override
   void initState() {
-    _imageList = List<String>();
     _apartmentBuilder = ApartmentBuilder();
     _addressController = TextEditingController();
     super.initState();
   }
 
-  void _addImage() {
-    final List<String> dbList = [
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80",
-      "https://images.unsplash.com/photo-1554435493-93422e8220c8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80",
-      "https://images.unsplash.com/photo-1503174971373-b1f69850bded?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=676&q=80",
-    ];
-
-    if (_imageList.length < dbList.length) {
-      setState(() => _imageList.add(dbList[_imageList.length]));
-    }
-  }
-
-  void _deleteImage(int index) {
-    setState(() => _imageList.removeAt(index));
-  }
-
-  void _showFullSizeImage(int index) {
+  void _showFullSizeImage(int index, File image) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => GestureDetector(
@@ -54,15 +40,28 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             body: Center(
               child: Hero(
                 tag: index,
-                child: Image.network(
-                  _imageList[index],
-                ),
+                child: Image.file(image),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _goToPromotionScreen(ApartmentImagePicker imagePicker) {
+    if(imagePicker.imageList.isNotEmpty){
+      _apartmentBuilder.promotionBuilder = PromotionBuilder();
+      Navigator.push(
+        context,
+        FadeRoute(
+          page: PromotionScreen(
+            apartmentBuilder: _apartmentBuilder,
+            imageList: imagePicker.imageList,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildAddress() {
@@ -163,7 +162,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     return ExpandableCardAddApartment(
       title: "Количество комнат",
       hintText: "Выбрать количество комнат",
-      children: ["1 комнатная", "2 комнатная"],
+      children: ["1-комнатная", "2-комнатная"],
       onChange: (String value) {
         _apartmentBuilder.numberOfRooms = value;
       },
@@ -317,7 +316,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  Widget _buildImagePicker() {
+  Widget _buildImagePicker(ApartmentImagePicker imagePicker) {
     double thickness = 30.0;
 
     return Stack(
@@ -332,12 +331,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           ),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: _imageList.length + 1,
+          itemCount: imagePicker.imageList.length + 1,
           padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 16.0),
           itemBuilder: (context, index) {
-            if (index == _imageList.length) {
+            if (index == imagePicker.imageList.length) {
               return GestureDetector(
-                onTap: () => _addImage(),
+                onTap: () => imagePicker.getLocalImage(),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -364,7 +363,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               return Stack(
                 children: [
                   GestureDetector(
-                    onTap: () => _showFullSizeImage(index),
+                    onTap: () => _showFullSizeImage(
+                      index,
+                      imagePicker.imageList[index],
+                    ),
                     child: Hero(
                       tag: index,
                       child: Container(
@@ -373,8 +375,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
                           image: DecorationImage(
-                            image: NetworkImage(
-                              _imageList[index],
+                            image: FileImage(
+                              imagePicker.imageList[index],
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -385,7 +387,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   Positioned(
                     right: 0,
                     child: GestureDetector(
-                      onTap: () => _deleteImage(index),
+                      onTap: () => imagePicker.deleteImage(index),
                       child: Container(
                         width: 32.0,
                         height: 32.0,
@@ -413,7 +415,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             }
           },
         ),
-        if (_imageList.isNotEmpty)
+        if (imagePicker.imageList.isNotEmpty)
           Row(
             children: [
               Expanded(
@@ -435,61 +437,56 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarStyle1(
-        title: "Новое объявление",
-        onTapLeading: () => Navigator.pop(context),
-        onTapAction: () => Navigator.pop(context),
-      ),
-      body: NetworkConnectivity(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              _buildAddress(),
-              _buildApartmentComplex(),
-              _buildFoundingDocument(),
-              _buildAppointmentApartment(),
-              _buildNumberOfRooms(),
-              _buildApartmentLayout(),
-              _buildApartmentCondition(),
-              _buildTotalArea(),
-              _buildKitchenArea(),
-              _buildBalconyLoggia(),
-              _buildHeatingType(),
-              _buildTypeOfPayment(),
-              _buildAgentCommission(),
-              _buildCommunicationMethod(),
-              _buildDescription(),
-              _buildPrice(),
-              _buildImagePicker(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 25.0,
-                ),
-                child: GradientButton(
-                  title: "Продолжить",
-                  maxWidth: double.infinity,
-                  minHeight: 50.0,
-                  borderRadius: 10.0,
-                  onTap: () {
-                    _apartmentBuilder.promotionBuilder = PromotionBuilder();
-                    print(_apartmentBuilder);
-                    Navigator.push(
-                      context,
-                      FadeRoute(
-                        page: PromotionScreen(
-                          apartmentBuilder: _apartmentBuilder,
-                          imageList: _imageList,
-                        ),
+    return ChangeNotifierProvider<ApartmentImagePicker>(
+      create: (_) => ApartmentImagePicker(),
+      child: Scaffold(
+        appBar: AppBarStyle1(
+          title: "Новое объявление",
+          onTapLeading: () => Navigator.pop(context),
+          onTapAction: () => Navigator.pop(context),
+        ),
+        body: NetworkConnectivity(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+            physics: BouncingScrollPhysics(),
+            child: Consumer<ApartmentImagePicker>(
+              builder: (context, imagePicker, child) {
+                return Column(
+                  children: [
+                    _buildAddress(),
+                    _buildApartmentComplex(),
+                    _buildFoundingDocument(),
+                    _buildAppointmentApartment(),
+                    _buildNumberOfRooms(),
+                    _buildApartmentLayout(),
+                    _buildApartmentCondition(),
+                    _buildTotalArea(),
+                    _buildKitchenArea(),
+                    _buildBalconyLoggia(),
+                    _buildHeatingType(),
+                    _buildTypeOfPayment(),
+                    _buildAgentCommission(),
+                    _buildCommunicationMethod(),
+                    _buildDescription(),
+                    _buildPrice(),
+                    _buildImagePicker(imagePicker),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 25.0,
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
+                      child: GradientButton(
+                        title: "Продолжить",
+                        maxWidth: double.infinity,
+                        minHeight: 50.0,
+                        borderRadius: 10.0,
+                        onTap: () => _goToPromotionScreen(imagePicker),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

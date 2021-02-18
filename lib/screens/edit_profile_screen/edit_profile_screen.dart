@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,12 +11,12 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/edit_profile_screen/api/avatar_image_picker.dart';
 import 'package:swipe/screens/edit_profile_screen/api/edit_profile_cloudstore_api.dart';
 import 'package:swipe/screens/edit_profile_screen/api/edit_profile_firestore_api.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/avatar_picker.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/expandable_card_edit_profile.dart';
 import 'package:swipe/screens/edit_profile_screen/custom_widget/info_field_edit_profile.dart';
-import 'package:swipe/screens/edit_profile_screen/avatar_image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserBuilder userProfile;
@@ -86,7 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _userBuilder.notification[newIndex] = true;
         }
       });
-      print(_userBuilder.notification);
+      log("${_userBuilder.notification}");
     }
   }
 

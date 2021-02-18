@@ -63,7 +63,7 @@ class _SignInWidgetState extends State<SignInWidget> {
     );
   }
 
-  Widget _firstPage() {
+  Widget _buildFirstPage() {
     return Padding(
       padding: _itemPadding,
       child: Column(
@@ -87,7 +87,7 @@ class _SignInWidgetState extends State<SignInWidget> {
     );
   }
 
-  Widget _secondPage() {
+  Widget _buildSecondPage() {
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -142,7 +142,7 @@ class _SignInWidgetState extends State<SignInWidget> {
     );
   }
 
-  Widget _thirdPage() {
+  Widget _buildThirdPage() {
     return Padding(
       padding: _itemPadding,
       child: Column(
@@ -207,9 +207,9 @@ class _SignInWidgetState extends State<SignInWidget> {
                 setState(() => _pageIndex = index);
               },
               children: [
-                _firstPage(),
-                _secondPage(),
-                _thirdPage(),
+                _buildFirstPage(),
+                _buildSecondPage(),
+                _buildThirdPage(),
               ],
             ),
           ],

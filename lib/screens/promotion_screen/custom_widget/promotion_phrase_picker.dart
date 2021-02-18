@@ -110,15 +110,15 @@ class PromotionPhrasePicker extends StatelessWidget {
                     "Выбор фразы",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16.0,
+                      fontSize: 18.0,
                     ),
                   ),
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 35.0),
                   _buildPhrases(),
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 16.0,
-                      top: 30.0,
+                      top: 45.0,
                       right: 16.0,
                     ),
                     child: GradientButton(
@@ -126,10 +126,7 @@ class PromotionPhrasePicker extends StatelessWidget {
                       maxWidth: double.infinity,
                       minHeight: 50.0,
                       borderRadius: 10.0,
-                      onTap: () {
-                        print(promotionBuilder);
-                        changePhrase();
-                      },
+                      onTap: () => changePhrase(),
                     ),
                   ),
                 ],

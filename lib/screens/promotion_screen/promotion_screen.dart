@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/home_screen/home_screen.dart';
+import 'package:swipe/screens/promotion_screen/api/make_payment.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_medium.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_small.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_phrase_picker.dart';
@@ -10,11 +16,11 @@ import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
 
 class PromotionScreen extends StatefulWidget {
   final ApartmentBuilder apartmentBuilder;
-  final List<String> imageList;
+  final List<File> imageList;
 
   const PromotionScreen({
     Key key,
-    this.apartmentBuilder,
+    @required this.apartmentBuilder,
     this.imageList,
   }) : super(key: key);
 
@@ -27,6 +33,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
   int _totalPrice = 0;
   bool _addColor = false;
   bool _addPhrase = false;
+  bool _startLoading = false;
   List<int> _complexPrice = List<int>();
 
   ApartmentBuilder _apartmentBuilder;
@@ -60,6 +67,15 @@ class _PromotionScreenState extends State<PromotionScreen> {
     });
   }
 
+  void _goToHomeScreen() {
+    Future.delayed(
+      Duration(milliseconds: 2000),
+    ).then((value) {
+      Navigator.pushAndRemoveUntil(
+          context, FadeRoute(page: HomeScreen()), (route) => false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget _buildScreen() {
@@ -71,8 +87,8 @@ class _PromotionScreenState extends State<PromotionScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
                 child: PromotionCardMedium(
-                  promotionBuilder: _apartmentBuilder.promotionBuilder,
-                  imageUrl: widget.imageList[0],
+                  apartmentBuilder: _apartmentBuilder,
+                  imageFile: widget.imageList,
                   promotionList: _promotionList,
                   addColor: _addColor,
                   changeColor: () {
@@ -116,32 +132,45 @@ class _PromotionScreenState extends State<PromotionScreen> {
                     maxWidth: double.infinity,
                     minHeight: 60.0,
                     borderRadius: 45.0,
-                    onTap: () {
-                      print(_apartmentBuilder);
+                    onTap: () async {
+                      setState(() => _startLoading = true);
+                      await MakePayment.makePayment(
+                        apartmentBuilder: _apartmentBuilder,
+                        list: _promotionList,
+                        price: _totalPrice,
+                      );
+                      _goToHomeScreen();
                     },
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 32.0,
-                  bottom: 42.0,
-                ),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    "Разместить без оплаты",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
+              if (_apartmentBuilder.promotionBuilder.adWeight == null)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 32.0,
+                    bottom: 42.0,
+                  ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() => _startLoading = true);
+                      await MakePayment.addWithoutPayment(
+                        apartmentBuilder: _apartmentBuilder,
+                      );
+                      _goToHomeScreen();
+                    },
+                    child: Text(
+                      "Разместить без оплаты",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           AnimatedContainer(
             width: _addPhrase ? MediaQuery.of(context).size.width : 0,
-            height: _addPhrase ? 680 : 0,
+            height: _addPhrase ? 690 : 0,
             duration: Duration(milliseconds: 1500),
             curve: Curves.fastOutSlowIn,
             child: PromotionPhrasePicker(
@@ -162,22 +191,27 @@ class _PromotionScreenState extends State<PromotionScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBarStyle1(
-        title: "Продвижение",
-        onTapLeading: () => Navigator.pop(context),
-        onTapAction: () => Navigator.pop(context),
-      ),
-      body: NetworkConnectivity(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: 16.0,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBarStyle1(
+            title: "Продвижение",
+            onTapLeading: () => Navigator.pop(context),
+            onTapAction: () => Navigator.pop(context),
           ),
-          physics: BouncingScrollPhysics(),
-          child: _buildScreen(),
+          body: NetworkConnectivity(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 16.0,
+              ),
+              physics: BouncingScrollPhysics(),
+              child: _buildScreen(),
+            ),
+          ),
         ),
-      ),
+        if (_startLoading == true) WaveIndicator(),
+      ],
     );
   }
 }
