@@ -25,7 +25,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   void initState() {
     _imageList = List<String>();
     _apartmentBuilder = ApartmentBuilder();
-    _apartmentBuilder.promotionBuilder = PromotionBuilder();
     _addressController = TextEditingController();
     super.initState();
   }
@@ -476,6 +475,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   minHeight: 50.0,
                   borderRadius: 10.0,
                   onTap: () {
+                    _apartmentBuilder.promotionBuilder = PromotionBuilder();
                     print(_apartmentBuilder);
                     Navigator.push(
                       context,

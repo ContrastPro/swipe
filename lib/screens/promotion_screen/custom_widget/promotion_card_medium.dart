@@ -28,8 +28,8 @@ class PromotionCardMedium extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget circle(bool value) {
       return Container(
-        width: 16.0,
-        height: 16.0,
+        width: 15.0,
+        height: 15.0,
         margin: EdgeInsets.only(top: 2.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(45.0),
@@ -53,7 +53,7 @@ class PromotionCardMedium extends StatelessWidget {
                 Text(
                   promotionList[0].title,
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15.5,
                     color: AppColors.promotionTitle,
                     fontWeight: FontWeight.w600,
                   ),
@@ -62,7 +62,7 @@ class PromotionCardMedium extends StatelessWidget {
                 Text(
                   "${promotionList[0].price}₽/мес",
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15.0,
                     color: Colors.black.withAlpha(108),
                     fontWeight: FontWeight.w500,
                   ),
@@ -124,7 +124,7 @@ class PromotionCardMedium extends StatelessWidget {
                 Text(
                   promotionList[1].title,
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15.5,
                     color: AppColors.promotionTitle,
                     fontWeight: FontWeight.w600,
                   ),
@@ -133,7 +133,7 @@ class PromotionCardMedium extends StatelessWidget {
                 Text(
                   "${promotionList[1].price}₽/мес",
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15.5,
                     color: Colors.black.withAlpha(108),
                     fontWeight: FontWeight.w500,
                   ),

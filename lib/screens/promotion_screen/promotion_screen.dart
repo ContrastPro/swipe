@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_medium.dart';
+import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_small.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_phrase_picker.dart';
 import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
 
@@ -21,17 +23,41 @@ class PromotionScreen extends StatefulWidget {
 }
 
 class _PromotionScreenState extends State<PromotionScreen> {
-  ApartmentBuilder _apartmentBuilder;
-  List<PromotionCard> _promotionList;
-
+  int _currentIndex;
+  int _totalPrice = 0;
   bool _addColor = false;
   bool _addPhrase = false;
+  List<int> _complexPrice = List<int>();
+
+  ApartmentBuilder _apartmentBuilder;
+  List<PromotionCard> _promotionList;
 
   @override
   void initState() {
     _apartmentBuilder = widget.apartmentBuilder;
     _promotionList = PromotionCard.promotionList;
     super.initState();
+  }
+
+  void _setBasicPosition(int price) {
+    if (!_complexPrice.contains(price)) {
+      _complexPrice.add(price);
+    }
+    setState(() {
+      _totalPrice = _complexPrice.reduce((a, b) => a + b);
+      _currentIndex = null;
+    });
+  }
+
+  void _setPremiumPosition(int index) {
+    _apartmentBuilder.promotionBuilder.color = null;
+    _apartmentBuilder.promotionBuilder.phrase = null;
+    setState(() {
+      _addColor = false;
+      _currentIndex = index;
+      _totalPrice = _promotionList[index + 2].price;
+      _complexPrice = List<int>();
+    });
   }
 
   @override
@@ -50,50 +76,58 @@ class _PromotionScreenState extends State<PromotionScreen> {
                   promotionList: _promotionList,
                   addColor: _addColor,
                   changeColor: () {
-                    setState(() => _addColor = !_addColor);
+                    setState(() {
+                      _addColor = !_addColor;
+                    });
                   },
                   changePhrase: () {
-                    setState(() => _addPhrase = !_addPhrase);
+                    setState(() {
+                      _addPhrase = !_addPhrase;
+                    });
                   },
                   colorPicked: (int value) {
                     setState(() {
                       _apartmentBuilder.promotionBuilder.color = value;
                     });
+                    _setBasicPosition(_promotionList[0].price);
                   },
                 ),
               ),
-              /*ListView.builder(
+              ListView.builder(
                 itemCount: 3,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {},
-                    child: PromotionCardSmall(index: index),
+                    onTap: () => _setPremiumPosition(index),
+                    child: PromotionCardSmall(
+                      promotionList: _promotionList,
+                      index: index,
+                      currentIndex: _currentIndex,
+                    ),
                   );
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32.0, 22.0, 32.0, 8.0),
-                child: GradientButton(
-                  title: "Оплатить ${promotionNotifier.getPrice}₽",
-                  maxWidth: double.infinity,
-                  minHeight: 60.0,
-                  borderRadius: 45.0,
-                  onTap: () {
-                    promotionNotifier.makePayment(apartmentBuilder);
-                  },
+              if (_totalPrice != 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32.0, 22.0, 32.0, 8.0),
+                  child: GradientButton(
+                    title: "Оплатить $_totalPrice₽",
+                    maxWidth: double.infinity,
+                    minHeight: 60.0,
+                    borderRadius: 45.0,
+                    onTap: () {
+                      print(_apartmentBuilder);
+                    },
+                  ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                   top: 32.0,
                   bottom: 42.0,
                 ),
                 child: GestureDetector(
-                  onTap: () {
-                    promotionNotifier.addWithoutPayment(apartmentBuilder);
-                  },
+                  onTap: () {},
                   child: Text(
                     "Разместить без оплаты",
                     style: TextStyle(
@@ -102,7 +136,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
                     ),
                   ),
                 ),
-              ),*/
+              ),
             ],
           ),
           AnimatedContainer(
@@ -113,13 +147,14 @@ class _PromotionScreenState extends State<PromotionScreen> {
             child: PromotionPhrasePicker(
               promotionBuilder: _apartmentBuilder.promotionBuilder,
               addPhrase: _addPhrase,
-              changePhrase: () {
-                setState(() => _addPhrase = !_addPhrase);
-              },
               phrasePicked: (String value) {
                 setState(() {
                   _apartmentBuilder.promotionBuilder.phrase = value;
                 });
+                _setBasicPosition(_promotionList[1].price);
+              },
+              changePhrase: () {
+                setState(() => _addPhrase = !_addPhrase);
               },
             ),
           ),
