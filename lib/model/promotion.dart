@@ -1,22 +1,30 @@
-class Promotion {
-  final String isActiveUntil;
+import 'package:flutter/material.dart';
 
-  Promotion({this.isActiveUntil});
+class PromotionBuilder {
+  int color;
+  String phrase;
 
-  factory Promotion.fromMap(Map<String, dynamic> json) {
-    return Promotion(
-      isActiveUntil: json['isActiveUntil'],
-    );
-  }
+  PromotionBuilder();
 
-  Map<String, dynamic> toMap() {
-    return {
-      "isActiveUntil": isActiveUntil ?? "13.02.2022",
-    };
-  }
+  PromotionBuilder.fromMap(Map<String, dynamic> json)
+      : color = json['color'],
+        phrase = json['phrase'];
 
   @override
   String toString() {
-    return '{isActiveUntil: $isActiveUntil}';
+    return '{color: $color phrase: $phrase}';
+  }
+}
+
+class Promotion {
+  final int color;
+
+  Promotion({@required PromotionBuilder promotionBuilder})
+      : color = promotionBuilder.color;
+
+  Map<String, dynamic> toMap() {
+    return {
+      "color": color,
+    };
   }
 }

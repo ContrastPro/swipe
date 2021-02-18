@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/model/subscription.dart';
 
 class UserBuilder {
-
   // Personal User information
   String uid;
   String name;
@@ -72,7 +71,6 @@ class UserBuilder {
 }
 
 class CustomUser {
-
   // Personal User information
   final String uid;
   final String name;

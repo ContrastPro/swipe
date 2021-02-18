@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/promotion.dart';
 import 'package:swipe/screens/promotion_screen/custom_widget/promotion_apartment_item.dart';
-import 'package:swipe/screens/promotion_screen/provider/promotion_provider.dart';
+import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
 
 class PromotionCardMedium extends StatelessWidget {
+  final PromotionBuilder promotionBuilder;
+  final List<PromotionCard> promotionList;
   final String imageUrl;
+  final bool addColor;
+  final VoidCallback changeColor;
+  final VoidCallback changePhrase;
+  final ValueChanged<int> colorPicked;
 
   const PromotionCardMedium({
     Key key,
+    @required this.promotionBuilder,
+    @required this.promotionList,
     @required this.imageUrl,
+    @required this.addColor,
+    @required this.changeColor,
+    @required this.changePhrase,
+    @required this.colorPicked,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PromotionNotifier promotionNotifier =
-        Provider.of<PromotionNotifier>(context);
-
     Widget circle(bool value) {
       return Container(
         width: 16.0,
@@ -31,20 +40,18 @@ class PromotionCardMedium extends StatelessWidget {
 
     Widget colored() {
       return GestureDetector(
-        onTap: () {
-          promotionNotifier.switchIsColored(0);
-        },
+        onTap: () => changeColor(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionNotifier.getIsColored),
+            circle(promotionBuilder.color != null),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotionNotifier.getPromotionList[0].title,
+                  promotionList[0].title,
                   style: TextStyle(
                     fontSize: 16.0,
                     color: AppColors.promotionTitle,
@@ -53,7 +60,7 @@ class PromotionCardMedium extends StatelessWidget {
                 ),
                 SizedBox(height: 5.0),
                 Text(
-                  "${promotionNotifier.getPromotionList[0].price}₽/мес",
+                  "${promotionList[0].price}₽/мес",
                   style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.black.withAlpha(108),
@@ -67,22 +74,55 @@ class PromotionCardMedium extends StatelessWidget {
       );
     }
 
+    Widget colors() {
+      return AnimatedContainer(
+        height: addColor ? 60 : 0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.fastOutSlowIn,
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        margin: const EdgeInsets.only(bottom: 15.0),
+        child: ListView.builder(
+          itemCount: AppColors.promotionColors.length,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => colorPicked(AppColors.promotionColors[index].value),
+              child: Container(
+                width: 30,
+                margin: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6.0),
+                  border: Border.all(
+                    color: promotionBuilder.color ==
+                            AppColors.promotionColors[index].value
+                        ? AppColors.accentColor
+                        : Colors.transparent,
+                  ),
+                  color: AppColors.promotionColors[index],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
     Widget phrase() {
       return GestureDetector(
-        onTap: () {
-          promotionNotifier.switchIsPhrase();
-        },
+        onTap: () => changePhrase(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            circle(promotionNotifier.getPhrase != null),
+            circle(promotionBuilder.phrase != null),
             SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotionNotifier.getPromotionList[1].title,
+                  promotionList[1].title,
                   style: TextStyle(
                     fontSize: 16.0,
                     color: AppColors.promotionTitle,
@@ -91,7 +131,7 @@ class PromotionCardMedium extends StatelessWidget {
                 ),
                 SizedBox(height: 2.0),
                 Text(
-                  "${promotionNotifier.getPromotionList[1].price}₽/мес",
+                  "${promotionList[1].price}₽/мес",
                   style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.black.withAlpha(108),
@@ -114,6 +154,7 @@ class PromotionCardMedium extends StatelessWidget {
             height: 200,
             child: PromotionApartmentItem(
               imageUrl: imageUrl,
+              promotionBuilder: promotionBuilder,
             ),
           ),
         ),
@@ -125,34 +166,7 @@ class PromotionCardMedium extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 colored(),
-                if (promotionNotifier.getIsColored)
-                  Container(
-                    height: 40,
-                    margin: const EdgeInsets.only(top: 10.0),
-                    child: ListView.builder(
-                      itemCount: AppColors.promotionColors.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            promotionNotifier.setColor =
-                                AppColors.promotionColors[index].value;
-                          },
-                          child: Container(
-                            width: 30,
-                            margin: const EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6.0),
-                              color: AppColors.promotionColors[index],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                SizedBox(height: 15.0),
+                colors(),
                 phrase(),
               ],
             ),

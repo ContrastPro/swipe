@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:swipe/model/promotion.dart';
 
 class ApartmentBuilder {
@@ -21,35 +22,22 @@ class ApartmentBuilder {
   String description;
   String price;
   List<String> images;
-  Promotion promotion;
-
+  PromotionBuilder promotionBuilder;
 
   Timestamp createdAt;
   Timestamp updatedAt;
 
+  ApartmentBuilder();
+
   @override
   String toString() {
-    return 'ApartmentBuilder{'
-        'id: $id, '
-        'ownerUID: $ownerUID, '
-        'address: $address, '
-        'apartmentComplex: $apartmentComplex, '
-        'foundingDocument: $foundingDocument, '
-        'appointmentApartment: $appointmentApartment, '
-        'numberOfRooms: $numberOfRooms, '
-        'apartmentLayout: $apartmentLayout, '
-        'apartmentCondition: $apartmentCondition, '
-        'totalArea: $totalArea, '
-        'kitchenArea: $kitchenArea, '
-        'balconyLoggia: $balconyLoggia, '
-        'heatingType: $heatingType, '
-        'typeOfPayment: $typeOfPayment, '
-        'agentCommission: $agentCommission, '
-        'communicationMethod: $communicationMethod, '
-        'description: $description, '
-        'price: $price, '
-        'images: $images, '
-        'createdAt: $createdAt, '
-        'updatedAt: $updatedAt}';
+    return 'ApartmentBuilder $price \n $promotionBuilder';
   }
+}
+
+class Apartment {
+  final Promotion promotion;
+
+  Apartment({@required PromotionBuilder promotionBuilder})
+      : promotion = Promotion(promotionBuilder: promotionBuilder);
 }

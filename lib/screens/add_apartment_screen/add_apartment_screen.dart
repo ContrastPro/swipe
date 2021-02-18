@@ -5,6 +5,7 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
+import 'package:swipe/model/promotion.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/expandable_card_add_apartment.dart';
 import 'package:swipe/screens/add_apartment_screen/custom_widget/info_field_add_apartment.dart';
@@ -24,6 +25,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   void initState() {
     _imageList = List<String>();
     _apartmentBuilder = ApartmentBuilder();
+    _apartmentBuilder.promotionBuilder = PromotionBuilder();
     _addressController = TextEditingController();
     super.initState();
   }

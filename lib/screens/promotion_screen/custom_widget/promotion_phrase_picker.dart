@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/screens/promotion_screen/provider/promotion_provider.dart';
+import 'package:swipe/model/promotion.dart';
 
 class PromotionPhrasePicker extends StatelessWidget {
-  final List<String> _phrases = [
+  static const List<String> _phrases = [
     "Подарок при покупке",
     "Возможен торг",
     "Квартира у моря",
@@ -16,22 +15,29 @@ class PromotionPhrasePicker extends StatelessWidget {
     "Отдельная парковка",
   ];
 
+  final PromotionBuilder promotionBuilder;
+  final bool addPhrase;
+  final VoidCallback changePhrase;
+  final ValueChanged<String> phrasePicked;
+
+  const PromotionPhrasePicker({
+    Key key,
+    @required this.promotionBuilder,
+    @required this.phrasePicked,
+    @required this.addPhrase,
+    @required this.changePhrase,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    PromotionNotifier promotionNotifier =
-        Provider.of<PromotionNotifier>(context);
-
     Widget _buildPhrases() {
       return ListView.builder(
         itemCount: _phrases.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        //padding: const EdgeInsets.only(bottom: 16.0),
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              promotionNotifier.setCurrentIndex = index;
-            },
+            onTap: () => phrasePicked(_phrases[index]),
             child: Container(
               width: double.infinity,
               height: 50.0,
@@ -65,7 +71,7 @@ class PromotionPhrasePicker extends StatelessWidget {
                     height: 18.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(45.0),
-                      color: index == promotionNotifier.getCurrentIndex
+                      color: _phrases[index] == promotionBuilder.phrase
                           ? AppColors.accentColor
                           : Colors.black.withAlpha(40),
                     ),
@@ -91,9 +97,9 @@ class PromotionPhrasePicker extends StatelessWidget {
           alignment: Alignment.topRight,
           children: [
             AnimatedOpacity(
-              opacity: promotionNotifier.getIsPhrase ? 1.0 : 0.0,
+              opacity: addPhrase ? 1.0 : 0.0,
               duration: Duration(
-                milliseconds: promotionNotifier.getIsPhrase ? 1600 : 500,
+                milliseconds: addPhrase ? 1500 : 400,
               ),
               curve: Curves.easeInBack,
               child: Column(
@@ -121,9 +127,8 @@ class PromotionPhrasePicker extends StatelessWidget {
                       minHeight: 50.0,
                       borderRadius: 10.0,
                       onTap: () {
-                        if (promotionNotifier.getPhrase != null) {
-                          promotionNotifier.switchIsPhrase();
-                        }
+                        print(promotionBuilder);
+                        changePhrase();
                       },
                     ),
                   ),
@@ -131,17 +136,15 @@ class PromotionPhrasePicker extends StatelessWidget {
               ),
             ),
             AnimatedOpacity(
-              opacity: promotionNotifier.getIsPhrase ? 1.0 : 0.0,
-              duration: Duration(milliseconds: 1000),
+              opacity: addPhrase ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 600),
               curve: Curves.easeInBack,
               child: IconButton(
                 padding: EdgeInsets.all(20.0),
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 icon: Icon(Icons.close),
-                onPressed: () {
-                  promotionNotifier.switchIsPhrase();
-                },
+                onPressed: () => changePhrase(),
               ),
             ),
           ],

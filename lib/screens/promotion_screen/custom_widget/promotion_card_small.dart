@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/screens/promotion_screen/provider/promotion_provider.dart';
 
 class PromotionCardSmall extends StatelessWidget {
-  final int initialIndex;
+  final int index;
 
-  const PromotionCardSmall({
-    Key key,
-    @required this.initialIndex,
-  }) : super(key: key);
+  const PromotionCardSmall({Key key, @required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PromotionNotifier>(
+    /*return Consumer<PromotionNotifier>(
       builder: (context, promotionNotifier, child) {
         return Container(
           width: double.infinity,
@@ -26,7 +22,7 @@ class PromotionCardSmall extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(
-              color: initialIndex == promotionNotifier.getCurrentIndex
+              color: index == promotionNotifier.getIndex
                   ? Color(0xFF65DED5)
                   : Colors.transparent,
             ),
@@ -39,7 +35,7 @@ class PromotionCardSmall extends StatelessWidget {
               Expanded(
                 flex: 30,
                 child: Image.asset(
-                  promotionNotifier.getPromotionList[initialIndex + 2].image,
+                  promotionNotifier.getList[index + 2].image,
                 ),
               ),
               Expanded(
@@ -51,8 +47,7 @@ class PromotionCardSmall extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        promotionNotifier
-                            .getPromotionList[initialIndex + 2].title,
+                        promotionNotifier.getList[index + 2].title,
                         style: TextStyle(
                           color: AppColors.promotionTitle,
                           fontWeight: FontWeight.bold,
@@ -85,8 +80,7 @@ class PromotionCardSmall extends StatelessWidget {
                               Container(
                                 width: 30 *
                                     promotionNotifier
-                                        .getPromotionList[initialIndex + 2]
-                                        .efficiency,
+                                        .getList[index + 2].efficiency,
                                 height: 12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.0),
@@ -105,7 +99,7 @@ class PromotionCardSmall extends StatelessWidget {
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              "${promotionNotifier.getPromotionList[initialIndex + 2].price}₽/мес",
+                              "${promotionNotifier.getList[index + 2].price}₽/мес",
                               style: TextStyle(
                                 color: AppColors.promotionTitle,
                                 fontWeight: FontWeight.w500,
@@ -123,6 +117,6 @@ class PromotionCardSmall extends StatelessWidget {
           ),
         );
       },
-    );
+    );*/
   }
 }
