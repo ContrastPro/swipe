@@ -20,16 +20,18 @@ class PromotionFirestoreAPI {
         .catchError((error) => print("Failed to add apartment: $error"));
   }
 
-  /*static Future<void> updateApartment() {
-    final DocumentReference apartment = FirebaseFirestore.instance
+  static Future<void> updateApartment({
+    @required Apartment apartment,
+  }) {
+    final DocumentReference apartmentReference = FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
         .collection("Ads")
-        .doc();
+        .doc(apartment.id);
 
-    return apartment
-        .update({})
+    return apartmentReference
+        .update(apartment.toMap())
         .then((value) => print("Apartment Updated"))
         .catchError((error) => print("Failed to update apartment: $error"));
-  }*/
+  }
 }

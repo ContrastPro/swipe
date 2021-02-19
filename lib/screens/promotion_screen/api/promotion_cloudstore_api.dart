@@ -16,7 +16,7 @@ class PromotionCloudstoreAPI {
 
     Reference newReference = FirebaseStorage.instance
         .ref("Swipe/Users/${user.uid}/Ads")
-        .child("${Uuid().v4()}.jpeg");
+        .child("${Uuid().v1()}.jpeg");
 
     await newReference.putFile(imageFile).then((snapshot) async {
       photoURL = await snapshot.ref.getDownloadURL();

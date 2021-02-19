@@ -14,8 +14,10 @@ class MakePayment {
   static Future<void> makePayment({
     @required ApartmentBuilder apartmentBuilder,
     @required List<PromotionCard> list,
+    @required List<File> imageList,
     @required int price,
   }) async {
+    // Устанавливаем значения продвижения
     if (price == list[2].price) {
       apartmentBuilder.promotionBuilder.isBigAd = true;
       apartmentBuilder.promotionBuilder.adWeight = 0;
@@ -29,6 +31,23 @@ class MakePayment {
       apartmentBuilder.promotionBuilder.isBigAd = false;
       apartmentBuilder.promotionBuilder.adWeight = 0;
     }
+
+    if (apartmentBuilder.id == null) {
+      // Загрузить лист фото и вернуть лист ссылок
+      apartmentBuilder.images = await Future.wait(imageList.map((image) {
+        return PromotionCloudstoreAPI.uploadApartmentImage(imageFile: image);
+      }));
+      // Загружаем данные в БД
+      _setCommonValue(apartmentBuilder: apartmentBuilder);
+      await PromotionFirestoreAPI.uploadApartment(
+        apartment: Apartment(apartmentBuilder: apartmentBuilder),
+      );
+    } else {
+      await PromotionFirestoreAPI.updateApartment(
+        apartment: Apartment(apartmentBuilder: apartmentBuilder),
+      );
+    }
+
     log("$apartmentBuilder");
   }
 
@@ -45,15 +64,19 @@ class MakePayment {
     apartmentBuilder.images = await Future.wait(imageList.map((image) {
       return PromotionCloudstoreAPI.uploadApartmentImage(imageFile: image);
     }));
-    // Загрузить в БД
-    final User user = AuthFirebaseAPI.getCurrentUser();
-    apartmentBuilder.id = Uuid().v4();
-    apartmentBuilder.ownerUID = user.uid;
-    apartmentBuilder.createdAt = Timestamp.now();
+    // Загружаем данные в БД
+    _setCommonValue(apartmentBuilder: apartmentBuilder);
     await PromotionFirestoreAPI.uploadApartment(
       apartment: Apartment(apartmentBuilder: apartmentBuilder),
     );
 
     log("$apartmentBuilder");
+  }
+
+  static void _setCommonValue({@required ApartmentBuilder apartmentBuilder}) {
+    final User user = AuthFirebaseAPI.getCurrentUser();
+    apartmentBuilder.id = Uuid().v1();
+    apartmentBuilder.ownerUID = user.uid;
+    apartmentBuilder.createdAt = Timestamp.now();
   }
 }

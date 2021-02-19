@@ -68,13 +68,8 @@ class _PromotionScreenState extends State<PromotionScreen> {
   }
 
   void _goToHomeScreen() {
-   /* Future.delayed(
-      Duration(milliseconds: 2000),
-    ).then((value) {
-      Navigator.pushAndRemoveUntil(
-          context, FadeRoute(page: HomeScreen()), (route) => false);
-    });*/
-
+    Navigator.pushAndRemoveUntil(
+        context, FadeRoute(page: HomeScreen()), (route) => false);
   }
 
   @override
@@ -138,6 +133,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
                       await MakePayment.makePayment(
                         apartmentBuilder: _apartmentBuilder,
                         list: _promotionList,
+                        imageList: widget.imageList,
                         price: _totalPrice,
                       );
                       _goToHomeScreen();
