@@ -28,6 +28,31 @@ class ApartmentBuilder {
 
   ApartmentBuilder();
 
+  // .cast<String>()
+  ApartmentBuilder.fromMap(Map<String, dynamic> map)
+      : id = map["id"],
+        ownerUID = map["ownerUID"],
+        address = map["address"],
+        apartmentComplex = map["apartmentComplex"],
+        foundingDocument = map["foundingDocument"],
+        appointmentApartment = map["appointmentApartment"],
+        numberOfRooms = map["numberOfRooms"],
+        apartmentLayout = map["apartmentLayout"],
+        apartmentCondition = map["apartmentCondition"],
+        totalArea = map["totalArea"],
+        kitchenArea = map["kitchenArea"],
+        balconyLoggia = map["balconyLoggia"],
+        heatingType = map["heatingType"],
+        typeOfPayment = map["typeOfPayment"],
+        agentCommission = map["agentCommission"],
+        communicationMethod = map["communicationMethod"],
+        description = map["description"],
+        price = map["price"],
+        images = List<String>.from(map["images"]),
+        promotionBuilder = PromotionBuilder.fromMap(map["promotion"]),
+        createdAt = map["createdAt"],
+        updatedAt = map["updatedAt"];
+
   @override
   String toString() {
     return '\n********************************\n'
@@ -85,7 +110,7 @@ class Apartment {
   Apartment({@required ApartmentBuilder apartmentBuilder})
       : id = apartmentBuilder.id,
         ownerUID = apartmentBuilder.ownerUID,
-        address = apartmentBuilder.address,
+        address = apartmentBuilder.address ?? "р-н Центральный ул. Темерязева",
         apartmentComplex = apartmentBuilder.apartmentComplex,
         foundingDocument = apartmentBuilder.foundingDocument,
         appointmentApartment = apartmentBuilder.appointmentApartment,
@@ -99,7 +124,8 @@ class Apartment {
         typeOfPayment = apartmentBuilder.typeOfPayment,
         agentCommission = apartmentBuilder.agentCommission,
         communicationMethod = apartmentBuilder.communicationMethod,
-        description = apartmentBuilder.description,
+        description = apartmentBuilder.description ??
+            "Особенная квартира в одном из самых престижных и закрытых элитных домов - Diadema Club House. Крестовский остров. Собственная терраса 109 кв. м с газонным покрытием. Прямой вид на воду, Среднюю Невку. Высокие потолки 3,4 м. Панорамные окна. Свободная планировка. Теплые водяные полы в санузлах. 2 машиноместа в подземном паркинге. Жилой комплекс располагается на Крестовском острове - сложившейся локации элитной недвижимости.",
         price = apartmentBuilder.price,
         images = apartmentBuilder.images,
         promotion = Promotion(

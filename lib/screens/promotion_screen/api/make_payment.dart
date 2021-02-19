@@ -20,16 +20,16 @@ class MakePayment {
     // Устанавливаем значения продвижения
     if (price == list[2].price) {
       apartmentBuilder.promotionBuilder.isBigAd = true;
-      apartmentBuilder.promotionBuilder.adWeight = 0;
+      apartmentBuilder.promotionBuilder.adWeight = 1;
     } else if (price == list[3].price) {
       apartmentBuilder.promotionBuilder.isBigAd = false;
-      apartmentBuilder.promotionBuilder.adWeight = 1;
+      apartmentBuilder.promotionBuilder.adWeight = 2;
     } else if (price == list[4].price) {
       apartmentBuilder.promotionBuilder.isBigAd = false;
-      apartmentBuilder.promotionBuilder.adWeight = 2;
+      apartmentBuilder.promotionBuilder.adWeight = 3;
     } else {
       apartmentBuilder.promotionBuilder.isBigAd = false;
-      apartmentBuilder.promotionBuilder.adWeight = 0;
+      apartmentBuilder.promotionBuilder.adWeight = 1;
     }
 
     if (apartmentBuilder.id == null) {
@@ -59,7 +59,7 @@ class MakePayment {
     apartmentBuilder.promotionBuilder.color = null;
     apartmentBuilder.promotionBuilder.phrase = null;
     apartmentBuilder.promotionBuilder.isBigAd = false;
-    apartmentBuilder.promotionBuilder.adWeight = 0;
+    apartmentBuilder.promotionBuilder.adWeight = 1;
     // Загрузить лист фото и вернуть лист ссылок
     apartmentBuilder.images = await Future.wait(imageList.map((image) {
       return PromotionCloudstoreAPI.uploadApartmentImage(imageFile: image);

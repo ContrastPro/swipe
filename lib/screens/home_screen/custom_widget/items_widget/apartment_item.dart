@@ -1,20 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
 
 class ApartmentItem extends StatelessWidget {
-  final List<String> imageUrl;
+  final ApartmentBuilder apartmentBuilder;
   final VoidCallback onTap;
 
   const ApartmentItem({
     Key key,
-    @required this.imageUrl,
+    @required this.apartmentBuilder,
     @required this.onTap,
   }) : super(key: key);
-
-  final bool _isColored = false;
-  final bool _isPhrase = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class ApartmentItem extends StatelessWidget {
         context: context,
         builder: (context) {
           return ApartmentDetailDialog(
-            imageUrl: imageUrl,
+            apartmentBuilder: apartmentBuilder,
             onTap: () {},
           );
         },
@@ -38,7 +36,7 @@ class ApartmentItem extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: CachedNetworkImage(
-              imageUrl: imageUrl[0],
+              imageUrl: apartmentBuilder.images[0],
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.0),
@@ -71,9 +69,11 @@ class ApartmentItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color: _isColored ? Colors.green.shade50 : Colors.transparent,
+              color:
+                  apartmentBuilder.promotionBuilder.color ?? Colors.transparent,
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildImage(),
                 GestureDetector(
@@ -83,7 +83,7 @@ class ApartmentItem extends StatelessWidget {
                     children: [
                       SizedBox(height: 10.0),
                       Text(
-                        "3 400 000 ₽",
+                        "${apartmentBuilder.price}",
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -91,7 +91,9 @@ class ApartmentItem extends StatelessWidget {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        "1-к квартира, 28.5 м², 1/8 эт.",
+                        "${apartmentBuilder.numberOfRooms}, "
+                            "${apartmentBuilder.totalArea} м², "
+                            "1/8 эт.",
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
@@ -101,7 +103,7 @@ class ApartmentItem extends StatelessWidget {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        "р-н Центральный ул. Темерязева",
+                        "${apartmentBuilder.address}",
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.w500,
@@ -123,7 +125,7 @@ class ApartmentItem extends StatelessWidget {
               ],
             ),
           ),
-          if (_isPhrase)
+          if (apartmentBuilder.promotionBuilder.phrase != null)
             Positioned(
               left: 0,
               child: Container(
@@ -137,7 +139,7 @@ class ApartmentItem extends StatelessWidget {
                   vertical: 9.0,
                 ),
                 child: Text(
-                  "Квартира у моря",
+                  "${apartmentBuilder.promotionBuilder.phrase}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

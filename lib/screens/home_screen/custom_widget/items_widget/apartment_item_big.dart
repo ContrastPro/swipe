@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/apartment.dart';
 
 class ApartmentItemBig extends StatelessWidget {
-  final List<String> imageUrl;
+  final ApartmentBuilder apartmentBuilder;
   final VoidCallback onTap;
 
   const ApartmentItemBig({
     Key key,
-    @required this.imageUrl,
+    @required this.apartmentBuilder,
     @required this.onTap,
   }) : super(key: key);
 
@@ -20,7 +21,7 @@ class ApartmentItemBig extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
           child: CachedNetworkImage(
-            imageUrl: imageUrl[2],
+            imageUrl: apartmentBuilder.images[0],
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),

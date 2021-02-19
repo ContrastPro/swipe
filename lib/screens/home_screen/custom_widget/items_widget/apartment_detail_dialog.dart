@@ -2,14 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/page_indicator.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/apartment.dart';
 
 class ApartmentDetailDialog extends StatefulWidget {
-  final List<String> imageUrl;
+  final ApartmentBuilder apartmentBuilder;
   final VoidCallback onTap;
 
   const ApartmentDetailDialog({
     Key key,
-    @required this.imageUrl,
+    @required this.apartmentBuilder,
     @required this.onTap,
   }) : super(key: key);
 
@@ -57,7 +58,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
           alignment: Alignment.topCenter,
           children: [
             PageView.builder(
-              itemCount: widget.imageUrl.length,
+              itemCount: widget.apartmentBuilder.images.length,
               controller: _pageController,
               physics: BouncingScrollPhysics(),
               onPageChanged: (int index) {
@@ -68,7 +69,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                   height: double.infinity,
                   width: double.infinity,
                   child: CachedNetworkImage(
-                    imageUrl: widget.imageUrl[index],
+                    imageUrl: widget.apartmentBuilder.images[index],
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
@@ -137,7 +138,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                   width: 6.5,
                   height: 6.5,
                   index: _currentIndex,
-                  progressCount: widget.imageUrl.length,
+                  progressCount: widget.apartmentBuilder.images.length,
                   colorPrimary: Colors.grey.shade200,
                   colorSecondary: Colors.white,
                 ),
@@ -176,7 +177,9 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "1-к квартира, 28.5 м², 1/8 эт.",
+                            "${widget.apartmentBuilder.numberOfRooms}, "
+                                "${widget.apartmentBuilder.totalArea} м², "
+                                "1/8 эт.",
                             style: TextStyle(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w600,
@@ -186,7 +189,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                           ),
                           SizedBox(height: 10.0),
                           Text(
-                            "р-н Центральный ул. Темерязева",
+                            "${widget.apartmentBuilder.address}",
                             style: TextStyle(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w600,
@@ -202,7 +205,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "3 400 000 ₽",
+                              "${widget.apartmentBuilder.price}",
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
