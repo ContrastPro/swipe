@@ -4,7 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_item.dart';
-import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_complex_item.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_item_big.dart';
 
 class HomeApartmentListWidget extends StatelessWidget {

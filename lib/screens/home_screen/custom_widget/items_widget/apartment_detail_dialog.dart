@@ -205,7 +205,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "${widget.apartmentBuilder.price}",
+                              "${widget.apartmentBuilder.price} ₽",
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
+import 'package:swipe/time_format/time_format.dart';
 
 class ApartmentItemBig extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;
@@ -61,7 +62,7 @@ class ApartmentItemBig extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "3 400 000 ₽",
+                        "${apartmentBuilder.price} ₽",
                         style: TextStyle(
                           fontSize: 23.0,
                           fontWeight: FontWeight.w600,
@@ -70,7 +71,9 @@ class ApartmentItemBig extends StatelessWidget {
                       SizedBox(width: 10.0),
                       Flexible(
                         child: Text(
-                          "1-к квартира, 28.5 м², 1/8 эт.",
+                          "${apartmentBuilder.numberOfRooms}, "
+                          "${apartmentBuilder.totalArea} м², "
+                          "1/8 эт.",
                           style: TextStyle(
                             fontSize: 15.5,
                             fontWeight: FontWeight.w700,
@@ -88,7 +91,7 @@ class ApartmentItemBig extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          "р-н Центральный ул. Темерязева",
+                          "${apartmentBuilder.address}",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: 12.0,
@@ -98,7 +101,7 @@ class ApartmentItemBig extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          "Сегодня в 15:00",
+                          "${TimeFormat.buildTime(apartmentBuilder.createdAt)}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: AppColors.accentColor,

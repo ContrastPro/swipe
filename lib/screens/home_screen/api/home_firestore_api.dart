@@ -46,6 +46,7 @@ class HomeFirestoreAPI {
         .doc("Database")
         .collection("Ads")
         .orderBy("promotion.adWeight", descending: true)
+        .orderBy("createdAt", descending: true)
         .snapshots();
   }
 }

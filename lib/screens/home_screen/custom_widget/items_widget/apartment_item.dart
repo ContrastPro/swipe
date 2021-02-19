@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
+import 'package:swipe/time_format/time_format.dart';
 
 class ApartmentItem extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;
@@ -16,7 +17,7 @@ class ApartmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _showDetailDialog() {
+    void showDetailDialog() {
       showDialog(
         context: context,
         builder: (context) {
@@ -28,10 +29,10 @@ class ApartmentItem extends StatelessWidget {
       );
     }
 
-    Widget _buildImage() {
+    Widget buildImage() {
       return Expanded(
         child: GestureDetector(
-          onTap: () => _showDetailDialog(),
+          onTap: () => showDetailDialog(),
           child: Container(
             height: double.infinity,
             width: double.infinity,
@@ -69,13 +70,14 @@ class ApartmentItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
-              color:
-                  apartmentBuilder.promotionBuilder.color ?? Colors.transparent,
+              color: apartmentBuilder.promotionBuilder.color != null
+                  ? Color(apartmentBuilder.promotionBuilder.color)
+                  : Colors.transparent,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildImage(),
+                buildImage(),
                 GestureDetector(
                   onTap: () {},
                   child: Column(
@@ -83,7 +85,7 @@ class ApartmentItem extends StatelessWidget {
                     children: [
                       SizedBox(height: 10.0),
                       Text(
-                        "${apartmentBuilder.price}",
+                        "${apartmentBuilder.price} ₽",
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -92,8 +94,8 @@ class ApartmentItem extends StatelessWidget {
                       SizedBox(height: 5.0),
                       Text(
                         "${apartmentBuilder.numberOfRooms}, "
-                            "${apartmentBuilder.totalArea} м², "
-                            "1/8 эт.",
+                        "${apartmentBuilder.totalArea} м², "
+                        "1/8 эт.",
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
@@ -111,7 +113,7 @@ class ApartmentItem extends StatelessWidget {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        "Сегодня в 15:00",
+                        "${TimeFormat.buildTime(apartmentBuilder.createdAt)}",
                         style: TextStyle(
                           color: AppColors.accentColor,
                           fontSize: 12.0,
