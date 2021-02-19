@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class AppTheme {
+  AppTheme._();
   static ThemeData light() {
     return ThemeData(
       // Define the default brightness.

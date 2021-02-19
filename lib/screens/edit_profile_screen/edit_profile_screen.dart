@@ -55,7 +55,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // Загрузить/Обновить изображение и вернуть ссылку
         _userBuilder.photoURL =
             await EditProfileCloudstoreAPI.uploadProfileImage(
-          userProfile: widget.userProfile,
           imageFile: _imageFile,
           photoURL: widget.userProfile.photoURL,
         );

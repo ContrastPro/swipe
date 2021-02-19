@@ -68,12 +68,13 @@ class _PromotionScreenState extends State<PromotionScreen> {
   }
 
   void _goToHomeScreen() {
-    Future.delayed(
+   /* Future.delayed(
       Duration(milliseconds: 2000),
     ).then((value) {
       Navigator.pushAndRemoveUntil(
           context, FadeRoute(page: HomeScreen()), (route) => false);
-    });
+    });*/
+
   }
 
   @override
@@ -152,8 +153,9 @@ class _PromotionScreenState extends State<PromotionScreen> {
                   child: GestureDetector(
                     onTap: () async {
                       setState(() => _startLoading = true);
-                      await MakePayment.addWithoutPayment(
+                      await MakePayment.uploadWithoutPayment(
                         apartmentBuilder: _apartmentBuilder,
+                        imageList: widget.imageList,
                       );
                       _goToHomeScreen();
                     },

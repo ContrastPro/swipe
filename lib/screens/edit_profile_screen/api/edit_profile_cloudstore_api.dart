@@ -1,16 +1,17 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
 class EditProfileCloudstoreAPI {
   EditProfileCloudstoreAPI._();
 
   static Future<String> uploadProfileImage({
-    UserBuilder userProfile,
     File imageFile,
     String photoURL,
   }) async {
     String newPhotoURL;
+    final User user = AuthFirebaseAPI.getCurrentUser();
 
     if (photoURL != null) {
       // Удаляем старое изображение
@@ -19,7 +20,7 @@ class EditProfileCloudstoreAPI {
     }
 
     Reference newReference = FirebaseStorage.instance
-        .ref("Swipe/Users/${userProfile.uid}")
+        .ref("Swipe/Users/${user.uid}")
         .child("avatar.jpg");
 
     await newReference.putFile(imageFile).then((snapshot) async {

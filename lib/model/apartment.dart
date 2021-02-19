@@ -23,7 +23,6 @@ class ApartmentBuilder {
   String price;
   List<String> images;
   PromotionBuilder promotionBuilder;
-
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -53,15 +52,86 @@ class ApartmentBuilder {
         '\n>> price: $price'
         '\n>> images: $images'
         '\n>> promotionBuilder: $promotionBuilder'
-        '\n>> createdAt: $createdAt'
-        '\n>> updatedAt: $updatedAt'
+        '\n>> createdAt: ${createdAt?.toDate()}'
+        '\n>> updatedAt: ${updatedAt?.toDate()}'
         '\n********************************\n';
   }
 }
 
 class Apartment {
+  final String id;
+  final String ownerUID;
+  final String address;
+  final String apartmentComplex;
+  final String foundingDocument;
+  final String appointmentApartment;
+  final String numberOfRooms;
+  final String apartmentLayout;
+  final String apartmentCondition;
+  final String totalArea;
+  final String kitchenArea;
+  final String balconyLoggia;
+  final String heatingType;
+  final String typeOfPayment;
+  final String agentCommission;
+  final String communicationMethod;
+  final String description;
+  final String price;
+  final List<String> images;
   final Promotion promotion;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
 
-  Apartment({@required PromotionBuilder promotionBuilder})
-      : promotion = Promotion(promotionBuilder: promotionBuilder);
+  Apartment({@required ApartmentBuilder apartmentBuilder})
+      : id = apartmentBuilder.id,
+        ownerUID = apartmentBuilder.ownerUID,
+        address = apartmentBuilder.address,
+        apartmentComplex = apartmentBuilder.apartmentComplex,
+        foundingDocument = apartmentBuilder.foundingDocument,
+        appointmentApartment = apartmentBuilder.appointmentApartment,
+        numberOfRooms = apartmentBuilder.numberOfRooms,
+        apartmentLayout = apartmentBuilder.apartmentLayout,
+        apartmentCondition = apartmentBuilder.apartmentCondition,
+        totalArea = apartmentBuilder.totalArea,
+        kitchenArea = apartmentBuilder.kitchenArea,
+        balconyLoggia = apartmentBuilder.balconyLoggia,
+        heatingType = apartmentBuilder.heatingType,
+        typeOfPayment = apartmentBuilder.typeOfPayment,
+        agentCommission = apartmentBuilder.agentCommission,
+        communicationMethod = apartmentBuilder.communicationMethod,
+        description = apartmentBuilder.description,
+        price = apartmentBuilder.price,
+        images = apartmentBuilder.images,
+        promotion = Promotion(
+          promotionBuilder: apartmentBuilder.promotionBuilder,
+        ),
+        createdAt = apartmentBuilder.createdAt,
+        updatedAt = apartmentBuilder.updatedAt;
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "ownerUID": ownerUID,
+      "address": address,
+      "apartmentComplex": apartmentComplex,
+      "foundingDocument": foundingDocument,
+      "appointmentApartment": appointmentApartment,
+      "numberOfRooms": numberOfRooms,
+      "apartmentLayout": apartmentLayout,
+      "apartmentCondition": apartmentCondition,
+      "totalArea": totalArea,
+      "kitchenArea": kitchenArea,
+      "balconyLoggia": balconyLoggia,
+      "heatingType": heatingType,
+      "typeOfPayment": typeOfPayment,
+      "agentCommission": agentCommission,
+      "communicationMethod": communicationMethod,
+      "description": description,
+      "price": price,
+      "images": images,
+      "promotion": promotion.toMap(),
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
+    };
+  }
 }

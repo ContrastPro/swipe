@@ -21,6 +21,8 @@ class AddApartmentScreen extends StatefulWidget {
 }
 
 class _AddApartmentScreenState extends State<AddApartmentScreen> {
+  static const int _photoLength = 6;
+
   ApartmentBuilder _apartmentBuilder;
   TextEditingController _addressController;
 
@@ -50,7 +52,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   void _goToPromotionScreen(ApartmentImagePicker imagePicker) {
-    if(imagePicker.imageList.isNotEmpty){
+    if (imagePicker.imageList.isNotEmpty) {
       _apartmentBuilder.promotionBuilder = PromotionBuilder();
       Navigator.push(
         context,
@@ -334,7 +336,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           itemCount: imagePicker.imageList.length + 1,
           padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 16.0),
           itemBuilder: (context, index) {
-            if (index == imagePicker.imageList.length) {
+            if (index == imagePicker.imageList.length && index < _photoLength) {
               return GestureDetector(
                 onTap: () => imagePicker.getLocalImage(),
                 child: Stack(
@@ -359,7 +361,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   ],
                 ),
               );
-            } else {
+            } else if (index < _photoLength) {
               return Stack(
                 children: [
                   GestureDetector(
@@ -412,6 +414,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                   ),
                 ],
               );
+            } else {
+              return SizedBox();
             }
           },
         ),
