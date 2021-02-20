@@ -21,7 +21,7 @@ class ApartmentDetail extends StatelessWidget {
               title,
               style: TextStyle(
                 color: Colors.black.withAlpha(120),
-                fontSize: 15.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -31,7 +31,7 @@ class ApartmentDetail extends StatelessWidget {
               "$description",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 15.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w400,
               ),
             ),

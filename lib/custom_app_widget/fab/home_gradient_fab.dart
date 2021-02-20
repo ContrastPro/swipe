@@ -93,11 +93,11 @@ class HomeGradientFAB extends StatelessWidget {
                 decoration: active,
                 opacity: value ? 0 : 1,
                 activeIcon: Icon(
-                  Icons.menu,
+                  Icons.menu_rounded,
                   color: AppColors.accentColor,
                 ),
                 inactiveIcon: Icon(
-                  Icons.menu,
+                  Icons.menu_rounded,
                   color: Colors.white,
                 ),
               ),
@@ -111,11 +111,11 @@ class HomeGradientFAB extends StatelessWidget {
                 decoration: active,
                 opacity: value ? 1 : 0,
                 activeIcon: Icon(
-                  Icons.map,
+                  Icons.map_outlined,
                   color: AppColors.accentColor,
                 ),
                 inactiveIcon: Icon(
-                  Icons.map,
+                  Icons.map_outlined,
                   color: Colors.white,
                 ),
               ),

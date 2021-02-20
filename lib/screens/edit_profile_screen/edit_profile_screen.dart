@@ -169,11 +169,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           hintText: "+7 928 245 20 20",
           initialValue: _userBuilder.phone,
           keyboardType: TextInputType.phone,
+          readOnly: true,
           formatter: [
             FilteringTextInputFormatter.allow(RegExp(r'[+0-9]')),
           ],
           onChanged: (String value) {
-            //_userBuilder.phone = value;
+            _userBuilder.phone = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';

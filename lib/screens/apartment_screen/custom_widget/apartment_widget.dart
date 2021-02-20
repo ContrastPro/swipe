@@ -15,6 +15,7 @@ import 'package:swipe/screens/apartment_screen/custom_widget/apartment_detail.da
 import 'package:swipe/screens/apartment_screen/custom_widget/owner_field.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ApartmentWidget extends StatefulWidget {
   final ApartmentBuilder apartmentBuilder;
@@ -42,6 +43,15 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
 
   bool _isOwner() {
     return _user.uid == widget.apartmentBuilder.ownerUID;
+  }
+
+  _makePhoneCall() async {
+    String phone = "tel:${widget.userBuilder.phone}";
+    if (await canLaunch(phone)) {
+      await launch(phone);
+    } else {
+      throw 'Could not launch $phone';
+    }
   }
 
   Widget _buildImageList() {
@@ -109,54 +119,56 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${widget.apartmentBuilder.price} ₽",
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w600,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${widget.apartmentBuilder.price} ₽",
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5.0),
-              Text(
-                "${widget.apartmentBuilder.numberOfRooms}, "
-                "${widget.apartmentBuilder.totalArea} м², "
-                "1/8 эт.",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
+                SizedBox(height: 5.0),
+                Text(
+                  "${widget.apartmentBuilder.numberOfRooms}, "
+                  "${widget.apartmentBuilder.totalArea} м², "
+                  "1/8 эт.",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 15.0),
-              Text(
-                "${widget.apartmentBuilder.address}",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400,
+                SizedBox(height: 15.0),
+                Text(
+                  "${widget.apartmentBuilder.address}",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Icon(
-                Icons.map_outlined,
-                color: AppColors.accentColor,
-              ),
-              SizedBox(width: 10.0),
-              Text(
-                "На карте",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.map_outlined,
                   color: AppColors.accentColor,
                 ),
-              ),
-            ],
+                SizedBox(width: 10.0),
+                Text(
+                  "На карте",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.accentColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -318,7 +330,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
       );
     } else {
       return ApartmentFABCall(
-        onLeftTap: () {},
+        onLeftTap: () => _makePhoneCall(),
         onRightTap: () {},
       );
     }

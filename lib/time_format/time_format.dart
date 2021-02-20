@@ -15,9 +15,9 @@ class TimeFormat {
     final DateTime dateTime = timestamp.toDate();
 
     if (_calculateDifference(dateTime) == 0) {
-      return "Сегодня в ${DateFormat('hh:mm').format(dateTime)}";
+      return "Сегодня в ${DateFormat('Hm').format(dateTime)}";
     } else if (_calculateDifference(dateTime) == -1) {
-      return "Вчера в ${DateFormat('hh:mm').format(dateTime)}";
+      return "Вчера в ${DateFormat('Hm').format(dateTime)}";
     } else {
       return "${DateFormat('dd MMMM').format(dateTime)}";
     }

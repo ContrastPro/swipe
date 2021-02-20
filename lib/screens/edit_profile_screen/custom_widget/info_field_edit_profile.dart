@@ -6,6 +6,7 @@ class InfoFieldEditProfile extends StatelessWidget {
   final String initialValue;
   final String title;
   final String hintText;
+  final bool readOnly;
   final TextInputType keyboardType;
   final List<TextInputFormatter> formatter;
   final TextEditingController controller;
@@ -17,6 +18,7 @@ class InfoFieldEditProfile extends StatelessWidget {
     this.initialValue,
     this.title,
     this.hintText,
+    this.readOnly,
     this.keyboardType,
     this.formatter,
     this.controller,
@@ -62,6 +64,7 @@ class InfoFieldEditProfile extends StatelessWidget {
                 color: Colors.black.withAlpha(165),
                 fontWeight: FontWeight.w500,
               ),
+              readOnly: readOnly ?? false,
               initialValue: initialValue ?? "",
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
