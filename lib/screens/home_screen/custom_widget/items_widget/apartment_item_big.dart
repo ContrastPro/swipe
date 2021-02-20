@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
+import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
 import 'package:swipe/time_format/time_format.dart';
 
 class ApartmentItemBig extends StatelessWidget {
@@ -48,103 +50,115 @@ class ApartmentItemBig extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Column(
-            children: [
-              _buildImage(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${apartmentBuilder.price} ₽",
-                        style: TextStyle(
-                          fontSize: 23.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 10.0),
-                      Flexible(
-                        child: Text(
-                          "${apartmentBuilder.numberOfRooms}, "
-                          "${apartmentBuilder.totalArea} м², "
-                          "1/8 эт.",
-                          style: TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "${apartmentBuilder.address}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "${TimeFormat.buildTime(apartmentBuilder.createdAt)}",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: AppColors.accentColor,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.0),
-                ],
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: ApartmentScreen(
+                apartmentBuilder: apartmentBuilder,
               ),
-            ],
-          ),
-          Positioned(
-            right: 0,
-            child: GestureDetector(
-              onTap: () => onTap(),
-              child: Container(
-                padding: const EdgeInsets.all(7.0),
+            ),
+          );
+        },
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Column(
+              children: [
+                _buildImage(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${apartmentBuilder.price} ₽",
+                          style: TextStyle(
+                            fontSize: 23.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 10.0),
+                        Flexible(
+                          child: Text(
+                            "${apartmentBuilder.numberOfRooms}, "
+                            "${apartmentBuilder.totalArea} м², "
+                            "1/8 эт.",
+                            style: TextStyle(
+                              fontSize: 15.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${apartmentBuilder.address}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${TimeFormat.buildTime(apartmentBuilder.createdAt)}",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              color: AppColors.accentColor,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5.0),
+                  ],
+                ),
+              ],
+            ),
+            Positioned(
+              right: 0,
+              child: GestureDetector(
+                onTap: () => onTap(),
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(45.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.radio_button_off,
-                    color: Colors.white,
-                    size: 22.0,
+                  padding: const EdgeInsets.all(7.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(45.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.radio_button_off,
+                      color: Colors.white,
+                      size: 22.0,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

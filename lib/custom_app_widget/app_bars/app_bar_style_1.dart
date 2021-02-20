@@ -40,7 +40,7 @@ class AppBarStyle1 extends PreferredSize {
             ),
             Expanded(
               child: Text(
-                title,
+                title ?? "Title",
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w400,

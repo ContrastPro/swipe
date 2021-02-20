@@ -65,6 +65,14 @@ class HomeGradientFAB extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(90),
         gradient: AppColors.buttonGradient,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            spreadRadius: 2.0,
+            blurRadius: 2.0,
+            offset: Offset(1, 2),
+          ),
+        ],
       ),
       child: Stack(
         alignment: Alignment.center,

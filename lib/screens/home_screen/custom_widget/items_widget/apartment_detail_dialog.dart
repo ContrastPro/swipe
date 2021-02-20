@@ -70,14 +70,15 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                   width: double.infinity,
                   child: CachedNetworkImage(
                     imageUrl: widget.apartmentBuilder.images[index],
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                    imageBuilder: (context, imageProvider) =>
+                        Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                     progressIndicatorBuilder: (context, url, downloadProgress) {
                       return Center(
                         child: CircularProgressIndicator(
@@ -213,10 +214,7 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
                             ),
                             SizedBox(height: 2.0),
                             GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                                widget.onTap();
-                              },
+                              onTap: () => widget.onTap(),
                               child: Text(
                                 "смотреть объявление",
                                 style: TextStyle(

@@ -95,8 +95,9 @@ class GradientDrawer extends StatelessWidget {
                             await Navigator.push(
                               context,
                               FadeRoute(
-                                page:
-                                    EditProfileScreen(userProfile: userProfile),
+                                page: EditProfileScreen(
+                                  userProfile: userProfile,
+                                ),
                               ),
                             );
                             userNotifier.updateUserProfile();

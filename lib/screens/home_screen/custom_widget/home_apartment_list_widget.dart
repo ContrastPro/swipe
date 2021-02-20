@@ -8,7 +8,7 @@ import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_i
 
 class HomeApartmentListWidget extends StatelessWidget {
   Widget _buildAds(DocumentSnapshot document) {
-    /*if (document["promotion"]["adWeight"] == 0) {
+    /*if (document["promotion"]["isBigAd"] == null) {
       // Будет дрогой тип Квартиры
       return ApartmentComplexItem(
         apartmentBuilder: ApartmentBuilder.fromMap(
