@@ -67,9 +67,14 @@ class _PromotionScreenState extends State<PromotionScreen> {
     });
   }
 
-  void _goToHomeScreen() {
-    Navigator.pushAndRemoveUntil(
-        context, FadeRoute(page: HomeScreen()), (route) => false);
+  void _closeScreen() {
+    if(widget.imageList != null){
+      Navigator.pushAndRemoveUntil(
+          context, FadeRoute(page: HomeScreen()), (route) => false);
+    } else{
+      Navigator.pop(context);
+    }
+
   }
 
   @override
@@ -136,7 +141,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
                         imageList: widget.imageList,
                         price: _totalPrice,
                       );
-                      _goToHomeScreen();
+                      _closeScreen();
                     },
                   ),
                 ),
@@ -153,7 +158,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
                         apartmentBuilder: _apartmentBuilder,
                         imageList: widget.imageList,
                       );
-                      _goToHomeScreen();
+                      _closeScreen();
                     },
                     child: Text(
                       "Разместить без оплаты",

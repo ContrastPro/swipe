@@ -33,6 +33,15 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     super.initState();
   }
 
+  String _priceFormat(String price) {
+    var value = price;
+    if (price.length > 2) {
+      value = value.replaceAll(RegExp(r'\D'), '');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ' ');
+    }
+    return value;
+  }
+
   void _showFullSizeImage(int index, File image) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -93,7 +102,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
               ),
               SizedBox(width: 10.0),
               Icon(
-                Icons.map,
+                Icons.map_outlined,
                 color: AppColors.accentColor,
               ),
             ],
@@ -264,9 +273,9 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   Widget _buildAgentCommission() {
     return ExpandableCardAddApartment(
-      title: "Коммисия агенту",
+      title: "Коммисия агенту (₽)",
       hintText: "Выбрать коммисию агенту",
-      children: ["100 000 ₽"],
+      children: ["100 000"],
       onChange: (String value) {
         _apartmentBuilder.agentCommission = value;
       },
@@ -309,7 +318,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       ],
       onChanged: (String value) {
-        _apartmentBuilder.price = value;
+        _apartmentBuilder.price = _priceFormat(value);
       },
       validator: (String value) {
         if (value.isEmpty) return '';
