@@ -15,11 +15,11 @@ class TimeFormat {
     final DateTime dateTime = timestamp.toDate();
 
     if (_calculateDifference(dateTime) == 0) {
-      return "Сегодня в ${DateFormat('Hm').format(dateTime)}";
+      return "Сегодня в ${DateFormat('Hm', 'ru').format(dateTime)}";
     } else if (_calculateDifference(dateTime) == -1) {
-      return "Вчера в ${DateFormat('Hm').format(dateTime)}";
+      return "Вчера в ${DateFormat('Hm', 'ru').format(dateTime)}";
     } else {
-      return "${DateFormat('dd MMMM').format(dateTime)}";
+      return "${DateFormat('dd MMMM', 'ru').format(dateTime)}";
     }
   }
 }

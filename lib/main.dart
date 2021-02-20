@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_style.dart';
 import 'package:swipe/screens/auth_screen/auth_screen.dart';
@@ -35,6 +36,14 @@ class SwipeApp extends StatelessWidget {
       statusBarColor: Colors.transparent,
     ));
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('ru', 'RU'),
+      ],
       debugShowCheckedModeBanner: false,
       title: 'Swipe',
       theme: AppTheme.light(),

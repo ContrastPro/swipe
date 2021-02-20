@@ -342,19 +342,63 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
       appBar: AppBarStyle2(
         backgroundColor: Colors.white,
         actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(45.0),
-              ),
-              child: Icon(
-                Icons.radio_button_off,
-                color: Colors.black26,
-                size: 25.0,
+          if (_isOwner() == true) ...[
+            Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: Colors.black38,
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  "23",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(width: 20.0),
+              ],
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(45.0),
+                    ),
+                    child: Icon(
+                      Icons.radio_button_off,
+                      color: Colors.black38,
+                      size: 25.0,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5.0),
+                Text(
+                  "6",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (_isOwner() == false) ...[
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(45.0),
+                ),
+                child: Icon(
+                  Icons.radio_button_off,
+                  color: Colors.black38,
+                  size: 25.0,
+                ),
               ),
             ),
-          ),
+          ]
         ],
       ),
       body: NetworkConnectivity(
