@@ -77,7 +77,7 @@ class AvatarPicker extends StatelessWidget {
           errorWidget: (context, url, error) => Container(
             width: radius,
             height: radius,
-            child: Icon(Icons.error_outline_outlined),
+            child: Icon(Icons.error_outline_rounded),
           ),
         ),
       );
