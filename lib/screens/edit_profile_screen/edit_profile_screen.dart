@@ -45,11 +45,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _editProfile() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState.validate() &&
+        _userBuilder.name.isNotEmpty &&
+        _userBuilder.lastName.isNotEmpty &&
+        _userBuilder.email.isNotEmpty) {
       setState(() => _startLoading = true);
       if (_userBuilder.phone != widget.userProfile.phone) {
-        // Обновить телефон в профиле FirebaseAuth
-        // и проверить зарегистрирован ли он в БД
+        // Проверить зарегистрирован ли он в БД
+        // и обновить телефон в профиле FirebaseAuth
       }
       if (_imageFile != null) {
         // Загрузить/Обновить изображение и вернуть ссылку
@@ -146,6 +149,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.name = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (String value) {
             if (value.isEmpty) return '';
             return null;
@@ -159,6 +165,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.lastName = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (String value) {
             if (value.isEmpty) return '';
             return null;
@@ -189,6 +198,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.email = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (value) {
             if (value.isEmpty ||
                 !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -219,6 +231,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.agentName = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (String value) {
             if (value.isEmpty) return '';
             return null;
@@ -232,6 +247,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.agentLastName = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (String value) {
             if (value.isEmpty) return '';
             return null;
@@ -261,6 +279,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onChanged: (String value) {
             _userBuilder.agentEmail = value;
           },
+          formatter: [
+            FilteringTextInputFormatter.deny(RegExp(' ')),
+          ],
           validator: (value) {
             if (value.isEmpty ||
                 !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")

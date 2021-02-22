@@ -24,12 +24,17 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   static const int _photoLength = 6;
 
   ApartmentBuilder _apartmentBuilder;
+  GlobalKey<FormState> _formKey;
   TextEditingController _addressController;
 
   @override
   void initState() {
     _apartmentBuilder = ApartmentBuilder();
+    _formKey = GlobalKey<FormState>();
     _addressController = TextEditingController();
+
+    // Временно
+    _addressController.text = "р-н Центральный ул. Темерязева";
     super.initState();
   }
 
@@ -61,7 +66,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   void _goToPromotionScreen(ApartmentImagePicker imagePicker) {
-    if (imagePicker.imageList.isNotEmpty) {
+    if (_formKey.currentState.validate() &&
+        imagePicker.imageList.isNotEmpty &&
+        _apartmentBuilder.numberOfRooms != null) {
+      // Временно
+      _apartmentBuilder.address = _addressController.text;
       _apartmentBuilder.promotionBuilder = PromotionBuilder();
       Navigator.push(
         context,
@@ -459,46 +468,50 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           onTapAction: () => Navigator.pop(context),
         ),
         body: NetworkConnectivity(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-            physics: BouncingScrollPhysics(),
-            child: Consumer<ApartmentImagePicker>(
-              builder: (context, imagePicker, child) {
-                return Column(
-                  children: [
-                    _buildAddress(),
-                    _buildApartmentComplex(),
-                    _buildFoundingDocument(),
-                    _buildAppointmentApartment(),
-                    _buildNumberOfRooms(),
-                    _buildApartmentLayout(),
-                    _buildApartmentCondition(),
-                    _buildTotalArea(),
-                    _buildKitchenArea(),
-                    _buildBalconyLoggia(),
-                    _buildHeatingType(),
-                    _buildTypeOfPayment(),
-                    _buildAgentCommission(),
-                    _buildCommunicationMethod(),
-                    _buildDescription(),
-                    _buildPrice(),
-                    _buildImagePicker(imagePicker),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 25.0,
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+              physics: BouncingScrollPhysics(),
+              child: Consumer<ApartmentImagePicker>(
+                builder: (context, imagePicker, child) {
+                  return Column(
+                    children: [
+                      _buildAddress(),
+                      _buildApartmentComplex(),
+                      _buildFoundingDocument(),
+                      _buildAppointmentApartment(),
+                      _buildNumberOfRooms(),
+                      _buildApartmentLayout(),
+                      _buildApartmentCondition(),
+                      _buildTotalArea(),
+                      _buildKitchenArea(),
+                      _buildBalconyLoggia(),
+                      _buildHeatingType(),
+                      _buildTypeOfPayment(),
+                      _buildAgentCommission(),
+                      _buildCommunicationMethod(),
+                      _buildDescription(),
+                      _buildPrice(),
+                      _buildImagePicker(imagePicker),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 25.0,
+                        ),
+                        child: GradientButton(
+                          title: "Продолжить",
+                          maxWidth: double.infinity,
+                          minHeight: 50.0,
+                          borderRadius: 10.0,
+                          onTap: () => _goToPromotionScreen(imagePicker),
+                        ),
                       ),
-                      child: GradientButton(
-                        title: "Продолжить",
-                        maxWidth: double.infinity,
-                        minHeight: 50.0,
-                        borderRadius: 10.0,
-                        onTap: () => _goToPromotionScreen(imagePicker),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

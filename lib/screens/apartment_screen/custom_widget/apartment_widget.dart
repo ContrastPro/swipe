@@ -179,6 +179,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_isOwner() == true) ...[
             GradientButton(
@@ -211,18 +212,21 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
             title: "Количество комнат",
             description: widget.apartmentBuilder.numberOfRooms,
           ),
-          ApartmentDetail(
-            title: "Назначение",
-            description: widget.apartmentBuilder.appointmentApartment,
-          ),
-          ApartmentDetail(
-            title: "Жилое состояние",
-            description: widget.apartmentBuilder.apartmentCondition,
-          ),
-          ApartmentDetail(
-            title: "Планировка",
-            description: widget.apartmentBuilder.apartmentLayout,
-          ),
+          if (widget.apartmentBuilder.appointmentApartment != null)
+            ApartmentDetail(
+              title: "Назначение",
+              description: widget.apartmentBuilder.appointmentApartment,
+            ),
+          if (widget.apartmentBuilder.apartmentCondition != null)
+            ApartmentDetail(
+              title: "Жилое состояние",
+              description: widget.apartmentBuilder.apartmentCondition,
+            ),
+          if (widget.apartmentBuilder.apartmentLayout != null)
+            ApartmentDetail(
+              title: "Планировка",
+              description: widget.apartmentBuilder.apartmentLayout,
+            ),
           ApartmentDetail(
             title: "Общая площадь",
             description: "${widget.apartmentBuilder.totalArea} м²",
@@ -231,22 +235,26 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
             title: "Площадь кухни",
             description: "${widget.apartmentBuilder.kitchenArea} м²",
           ),
-          ApartmentDetail(
-            title: "Балкон/лоджия",
-            description: widget.apartmentBuilder.balconyLoggia,
-          ),
-          ApartmentDetail(
-            title: "Отопление",
-            description: widget.apartmentBuilder.heatingType,
-          ),
-          ApartmentDetail(
-            title: "Варианты расчёта",
-            description: widget.apartmentBuilder.typeOfPayment,
-          ),
-          ApartmentDetail(
-            title: "Коммисия агенту",
-            description: "${widget.apartmentBuilder.agentCommission} ₽",
-          ),
+          if (widget.apartmentBuilder.balconyLoggia != null)
+            ApartmentDetail(
+              title: "Балкон/лоджия",
+              description: widget.apartmentBuilder.balconyLoggia,
+            ),
+          if (widget.apartmentBuilder.heatingType != null)
+            ApartmentDetail(
+              title: "Отопление",
+              description: widget.apartmentBuilder.heatingType,
+            ),
+          if (widget.apartmentBuilder.typeOfPayment != null)
+            ApartmentDetail(
+              title: "Варианты расчёта",
+              description: widget.apartmentBuilder.typeOfPayment,
+            ),
+          if (widget.apartmentBuilder.agentCommission != null)
+            ApartmentDetail(
+              title: "Коммисия агенту",
+              description: "${widget.apartmentBuilder.agentCommission} ₽",
+            ),
           SizedBox(height: 35.0),
           Text(
             "${widget.apartmentBuilder.description}",

@@ -169,6 +169,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               onChanged: (String value) {
                 _userBuilder.name = value;
               },
+              formatter: [
+                FilteringTextInputFormatter.deny(RegExp(' ')),
+              ],
               validator: (String value) {
                 if (value.isEmpty) return '';
                 return null;
@@ -183,6 +186,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               onChanged: (String value) {
                 _userBuilder.lastName = value;
               },
+              formatter: [
+                FilteringTextInputFormatter.deny(RegExp(' ')),
+              ],
               validator: (String value) {
                 if (value.isEmpty) return '';
                 return null;
@@ -214,6 +220,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               onChanged: (String value) {
                 _userBuilder.email = value;
               },
+              formatter: [
+                FilteringTextInputFormatter.deny(RegExp(' ')),
+              ],
               validator: (value) {
                 if (value.isEmpty ||
                     !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")

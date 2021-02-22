@@ -68,13 +68,12 @@ class _PromotionScreenState extends State<PromotionScreen> {
   }
 
   void _closeScreen() {
-    if(widget.imageList != null){
+    if (widget.imageList != null) {
       Navigator.pushAndRemoveUntil(
           context, FadeRoute(page: HomeScreen()), (route) => false);
-    } else{
+    } else {
       Navigator.pop(context);
     }
-
   }
 
   @override
@@ -200,7 +199,10 @@ class _PromotionScreenState extends State<PromotionScreen> {
           appBar: AppBarStyle1(
             title: "Продвижение",
             onTapLeading: () => Navigator.pop(context),
-            onTapAction: () => Navigator.pop(context),
+            onTapAction: () {
+              Navigator.pushAndRemoveUntil(
+                  context, FadeRoute(page: HomeScreen()), (route) => false);
+            },
           ),
           body: NetworkConnectivity(
             child: SingleChildScrollView(

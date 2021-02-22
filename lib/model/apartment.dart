@@ -110,7 +110,7 @@ class Apartment {
   Apartment({@required ApartmentBuilder apartmentBuilder})
       : id = apartmentBuilder.id,
         ownerUID = apartmentBuilder.ownerUID,
-        address = apartmentBuilder.address ?? "р-н Центральный ул. Темерязева",
+        address = apartmentBuilder.address,
         apartmentComplex = apartmentBuilder.apartmentComplex,
         foundingDocument = apartmentBuilder.foundingDocument,
         appointmentApartment = apartmentBuilder.appointmentApartment,
@@ -124,8 +124,7 @@ class Apartment {
         typeOfPayment = apartmentBuilder.typeOfPayment,
         agentCommission = apartmentBuilder.agentCommission,
         communicationMethod = apartmentBuilder.communicationMethod,
-        description = apartmentBuilder.description ??
-            "Особенная квартира в одном из самых престижных и закрытых элитных домов - Diadema Club House. Крестовский остров. Собственная терраса 109 кв. м с газонным покрытием. Прямой вид на воду, Среднюю Невку. Высокие потолки 3,4 м. Панорамные окна. Свободная планировка. Теплые водяные полы в санузлах. 2 машиноместа в подземном паркинге. Жилой комплекс располагается на Крестовском острове - сложившейся локации элитной недвижимости.",
+        description = apartmentBuilder.description?.trim(),
         price = apartmentBuilder.price,
         images = apartmentBuilder.images,
         promotion = Promotion(

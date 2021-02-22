@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 
@@ -83,7 +84,7 @@ class PromotionApartmentItem extends StatelessWidget {
                   children: [
                     SizedBox(height: 10.0),
                     Text(
-                      "3 400 000 ₽",
+                      "${apartmentBuilder.price} ₽",
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
@@ -91,7 +92,9 @@ class PromotionApartmentItem extends StatelessWidget {
                     ),
                     SizedBox(height: 2.0),
                     Text(
-                      "1-к квартира, 28.5 м², 1/8 эт.",
+                      "${apartmentBuilder.numberOfRooms}, "
+                      "${apartmentBuilder.totalArea} м², "
+                      "1/8 эт.",
                       style: TextStyle(
                         fontSize: 9.0,
                         fontWeight: FontWeight.w600,
@@ -101,7 +104,7 @@ class PromotionApartmentItem extends StatelessWidget {
                     ),
                     SizedBox(height: 2.0),
                     Text(
-                      "р-н Центральный ул. Темерязева",
+                      "${apartmentBuilder.address}",
                       style: TextStyle(
                         fontSize: 9.0,
                         fontWeight: FontWeight.w500,
@@ -109,7 +112,7 @@ class PromotionApartmentItem extends StatelessWidget {
                     ),
                     SizedBox(height: 2.0),
                     Text(
-                      "Сегодня в 15:00",
+                      "Сегодня в ${DateFormat('Hm').format(DateTime.now())}",
                       style: TextStyle(
                         color: AppColors.accentColor,
                         fontSize: 9.0,
