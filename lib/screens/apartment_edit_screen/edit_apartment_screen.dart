@@ -3,12 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/format/price_format.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/screens/home_screen/home_screen.dart';
 
+import 'api/apartment_edit_cloudstore_api.dart';
+import 'api/apartment_edit_firestore_api.dart';
 import 'api/apartment_edit_image_picker.dart';
 import 'custom_widget/expandable_card_apartment_edit.dart';
 import 'custom_widget/info_field_apartment_edit.dart';
@@ -27,6 +33,7 @@ class ApartmentEditScreen extends StatefulWidget {
 
 class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   static const int _photoLength = 6;
+  bool _startLoading = false;
 
   ApartmentBuilder _apartmentBuilder;
   GlobalKey<FormState> _formKey;
@@ -36,6 +43,11 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
     _apartmentBuilder = ApartmentBuilder();
     _formKey = GlobalKey<FormState>();
     super.initState();
+  }
+
+  void _goToHomeScreen() {
+    Navigator.pushAndRemoveUntil(
+        context, FadeRoute(page: HomeScreen()), (route) => false);
   }
 
   void _showFullSizeImage(int index, File image) {
@@ -56,10 +68,27 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
     );
   }
 
-  void _goToApartmentScreen(ApartmentEditImagePicker imagePicker) {
+  void _saveApartment(ApartmentEditImagePicker imagePicker) {
     if (_formKey.currentState.validate() &&
         imagePicker.imageList.isNotEmpty &&
         _apartmentBuilder.numberOfRooms != null) {}
+    //_goToHomeScreen();
+  }
+
+  void _deleteApartment() async {
+    setState(() => _startLoading = true);
+    // Удаляем все фото
+    await Future.wait(widget.apartmentBuilder.images.map((imageURL) {
+      return ApartmentEditCloudstoreAPI.deleteApartmentImages(
+        imageURL: imageURL,
+      );
+    }));
+
+    // Удаляем всю информацию
+    await ApartmentEditFirestoreAPI.deleteApartment(
+      apartment: Apartment(apartmentBuilder: widget.apartmentBuilder),
+    );
+    _goToHomeScreen();
   }
 
   Widget _buildAddress() {
@@ -391,59 +420,87 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ApartmentEditImagePicker>(
       create: (_) => ApartmentEditImagePicker(),
-      child: Scaffold(
-        appBar: AppBarStyle1(
-          title: "Редактирование",
-          onTapLeading: () => Navigator.pop(context),
-          onTapAction: () => Navigator.pop(context),
-        ),
-        body: NetworkConnectivity(
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-              physics: BouncingScrollPhysics(),
-              child: Consumer<ApartmentEditImagePicker>(
-                builder: (context, imagePicker, child) {
-                  return Column(
-                    children: [
-                      _buildAddress(),
-                      _buildFoundingDocument(),
-                      _buildAppointmentApartment(),
-                      _buildNumberOfRooms(),
-                      _buildApartmentLayout(),
-                      _buildApartmentCondition(),
-                      _buildTotalArea(),
-                      _buildKitchenArea(),
-                      _buildBalconyLoggia(),
-                      _buildHeatingType(),
-                      _buildTypeOfPayment(),
-                      _buildAgentCommission(),
-                      _buildCommunicationMethod(),
-                      _buildDescription(),
-                      _buildPrice(),
-                      _buildImagePicker(imagePicker),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 25.0,
-                        ),
-                        child: GradientButton(
-                          title: "Сохранить",
-                          maxWidth: double.infinity,
-                          minHeight: 50.0,
-                          borderRadius: 10.0,
-                          onTap: () => _goToApartmentScreen(imagePicker),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: AppBarStyle1(
+              title: "Редактирование",
+              onTapLeading: () => Navigator.pop(context),
+              onTapAction: () => Navigator.pop(context),
+            ),
+            body: NetworkConnectivity(
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+                  physics: BouncingScrollPhysics(),
+                  child: Consumer<ApartmentEditImagePicker>(
+                    builder: (context, imagePicker, child) {
+                      return Column(
+                        children: [
+                          _buildAddress(),
+                          _buildFoundingDocument(),
+                          _buildAppointmentApartment(),
+                          _buildNumberOfRooms(),
+                          _buildApartmentLayout(),
+                          _buildApartmentCondition(),
+                          _buildTotalArea(),
+                          _buildKitchenArea(),
+                          _buildBalconyLoggia(),
+                          _buildHeatingType(),
+                          _buildTypeOfPayment(),
+                          _buildAgentCommission(),
+                          _buildCommunicationMethod(),
+                          _buildDescription(),
+                          _buildPrice(),
+                          _buildImagePicker(imagePicker),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 25.0,
+                            ),
+                            child: GradientButton(
+                              title: "Сохранить",
+                              maxWidth: double.infinity,
+                              minHeight: 50.0,
+                              borderRadius: 10.0,
+                              onTap: () => _saveApartment(imagePicker),
+                            ),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ModalBottomSheet(
+                                    title: "Удалить объявление",
+                                    subtitle: "Действие нельзя будет отменить. "
+                                        "Продолжить?",
+                                    onAccept: () => _deleteApartment(),
+                                  );
+                                },
+                              );
+                            },
+                            highlightColor: Colors.transparent,
+                            child: Text(
+                              "Удалить объявление",
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          if (_startLoading == true) WaveIndicator(),
+        ],
       ),
     );
   }

@@ -21,5 +21,17 @@ class ApartmentEditFirestoreAPI {
   }
 
 
+  static Future<void> deleteApartment({
+    @required Apartment apartment,
+  }) {
+    final DocumentReference apartmentReference = FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Ads")
+        .doc(apartment.id);
 
+    return apartmentReference.delete()
+        .then((value) => print("Apartment Deleted"))
+        .catchError((error) => print("Failed to delete apartment: $error"));
+  }
 }

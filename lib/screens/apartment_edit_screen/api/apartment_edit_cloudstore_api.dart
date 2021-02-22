@@ -24,4 +24,10 @@ class ApartmentEditCloudstoreAPI {
 
     return photoURL;
   }
+
+  static Future<void> deleteApartmentImages({
+    @required String imageURL,
+  }) async {
+    await FirebaseStorage.instance.refFromURL(imageURL).delete();
+  }
 }
