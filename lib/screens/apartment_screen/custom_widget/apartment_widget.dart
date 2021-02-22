@@ -11,12 +11,13 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/apartment_screen/custom_widget/apartment_detail.dart';
-import 'package:swipe/screens/apartment_screen/custom_widget/owner_field.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
-import 'package:swipe/screens/edit_apartment_screen/edit_apartment_screen.dart';
+import 'package:swipe/screens/apartment_edit_screen/edit_apartment_screen.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'apartment_detail.dart';
+import 'owner_field.dart';
 
 class ApartmentWidget extends StatefulWidget {
   final ApartmentBuilder apartmentBuilder;
@@ -339,7 +340,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
           Navigator.push(
             context,
             FadeRoute(
-              page: EditApartmentScreen(
+              page: ApartmentEditScreen(
                 apartmentBuilder: widget.apartmentBuilder,
               ),
             ),

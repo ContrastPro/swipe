@@ -1,14 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
-import 'package:swipe/screens/promotion_screen/api/promotion_cloudstore_api.dart';
-import 'package:swipe/screens/promotion_screen/api/promotion_firestore_api.dart';
 import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
+
 import 'package:uuid/uuid.dart';
+import 'promotion_cloudstore_api.dart';
+import 'promotion_firestore_api.dart';
 
 class MakePayment {
   static Future<void> makePayment({

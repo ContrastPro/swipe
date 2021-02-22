@@ -1,22 +1,24 @@
 import 'dart:developer';
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swipe/custom_app_widget/gradient_switch.dart';
-import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/custom_app_widget/gradient_switch.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/edit_profile_screen/api/avatar_image_picker.dart';
-import 'package:swipe/screens/edit_profile_screen/api/edit_profile_cloudstore_api.dart';
-import 'package:swipe/screens/edit_profile_screen/api/edit_profile_firestore_api.dart';
-import 'package:swipe/screens/edit_profile_screen/custom_widget/avatar_picker.dart';
-import 'package:swipe/screens/edit_profile_screen/custom_widget/expandable_card_edit_profile.dart';
-import 'package:swipe/screens/edit_profile_screen/custom_widget/info_field_edit_profile.dart';
+import 'package:swipe/custom_app_widget/privacy_dialog.dart';
+
+import 'api/avatar_image_picker.dart';
+import 'api/edit_profile_cloudstore_api.dart';
+import 'api/edit_profile_firestore_api.dart';
+import 'custom_widget/avatar_picker.dart';
+import 'custom_widget/expandable_card_edit_profile.dart';
+import 'custom_widget/info_field_edit_profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserBuilder userProfile;

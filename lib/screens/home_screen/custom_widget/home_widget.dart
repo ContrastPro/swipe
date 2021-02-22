@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/filter_screen/filter_list.dart';
-import 'package:swipe/screens/home_screen/custom_widget/home_apartment_list_widget.dart';
-import 'package:swipe/screens/home_screen/custom_widget/drawer.dart';
-import 'package:swipe/screens/home_screen/custom_widget/home_map_widget.dart';
+
+import 'drawer.dart';
+import 'home_apartment_list_widget.dart';
+import 'home_map_widget.dart';
 
 class HomeWidget extends StatefulWidget {
   @override

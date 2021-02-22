@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EditApartmentImagePicker with ChangeNotifier {
+class ApartmentEditImagePicker with ChangeNotifier {
   List<File> _imageFileList = List<File>();
 
   List<File> get imageList => _imageFileList;

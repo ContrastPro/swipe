@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class ExpandableCardEditApartment extends StatefulWidget {
+class ExpandableCardApartmentAdd extends StatefulWidget {
   final String title;
   final String hintText;
   final List<String> children;
   final ValueChanged<String> onChange;
 
-  const ExpandableCardEditApartment({
+  const ExpandableCardApartmentAdd({
     Key key,
     this.title,
     @required this.hintText,
@@ -16,12 +16,11 @@ class ExpandableCardEditApartment extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ExpandableCardEditApartmentState createState() =>
-      _ExpandableCardEditApartmentState();
+  _ExpandableCardApartmentAddState createState() =>
+      _ExpandableCardApartmentAddState();
 }
 
-class _ExpandableCardEditApartmentState
-    extends State<ExpandableCardEditApartment>
+class _ExpandableCardApartmentAddState extends State<ExpandableCardApartmentAdd>
     with SingleTickerProviderStateMixin {
   String _cardTitle;
   bool _isExpanded = false;
@@ -48,22 +47,6 @@ class _ExpandableCardEditApartmentState
       _expandController.forward();
     } else {
       _expandController.reverse();
-    }
-  }
-
-  Color _buildColor(int index) {
-    if (_cardTitle != null) {
-      if (widget.children[index] == _cardTitle) {
-        return AppColors.accentColor;
-      } else {
-        return Colors.black.withAlpha(40);
-      }
-    } else {
-      if (widget.children[index] == widget.hintText) {
-        return AppColors.accentColor;
-      } else {
-        return Colors.black.withAlpha(40);
-      }
     }
   }
 
@@ -157,10 +140,11 @@ class _ExpandableCardEditApartmentState
                                 width: 18.0,
                                 height: 18.0,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(45.0),
-                                  ),
-                                  color: _buildColor(index),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(90.0)),
+                                  color: widget.children[index] == _cardTitle
+                                      ? AppColors.accentColor
+                                      : Colors.black.withAlpha(40),
                                 ),
                               ),
                             ],

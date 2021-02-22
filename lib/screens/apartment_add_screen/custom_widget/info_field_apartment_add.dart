@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/global/app_colors.dart';
 
-class InfoFieldEditApartment extends StatelessWidget {
+class InfoFieldApartmentAdd extends StatelessWidget {
   final String initialValue;
   final String title;
   final String hintText;
@@ -14,7 +14,7 @@ class InfoFieldEditApartment extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final FormFieldValidator<String> validator;
 
-  const InfoFieldEditApartment({
+  const InfoFieldApartmentAdd({
     Key key,
     this.initialValue,
     this.title,

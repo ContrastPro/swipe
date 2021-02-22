@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/screens/promotion_screen/custom_widget/promotion_apartment_item.dart';
 import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
+
+import 'promotion_apartment_item.dart';
 
 class PromotionCardMedium extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;

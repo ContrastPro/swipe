@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/screens/apartment_screen/api/apartment_firestore_api.dart';
-import 'package:swipe/screens/apartment_screen/custom_widget/apartment_widget.dart';
+
+import 'api/apartment_firestore_api.dart';
+import 'custom_widget/apartment_widget.dart';
 
 class ApartmentScreen extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;

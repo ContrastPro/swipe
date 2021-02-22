@@ -5,7 +5,8 @@ import 'package:swipe/format/time_format.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
-import 'package:swipe/screens/home_screen/custom_widget/items_widget/apartment_detail_dialog.dart';
+
+import 'apartment_detail_dialog.dart';
 
 class ApartmentItem extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;

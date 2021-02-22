@@ -8,11 +8,12 @@ import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
-import 'package:swipe/screens/promotion_screen/api/make_payment.dart';
-import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_medium.dart';
-import 'package:swipe/screens/promotion_screen/custom_widget/promotion_card_small.dart';
-import 'package:swipe/screens/promotion_screen/custom_widget/promotion_phrase_picker.dart';
-import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
+
+import 'api/make_payment.dart';
+import 'custom_widget/promotion_card_medium.dart';
+import 'custom_widget/promotion_card_small.dart';
+import 'custom_widget/promotion_phrase_picker.dart';
+import 'model/promotion_card.dart';
 
 class PromotionScreen extends StatefulWidget {
   final ApartmentBuilder apartmentBuilder;

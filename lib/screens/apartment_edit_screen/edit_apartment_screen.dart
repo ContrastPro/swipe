@@ -3,39 +3,38 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
-import 'package:swipe/custom_app_widget/fade_route.dart';
-import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/format/price_format.dart';
-import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/model/promotion.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/add_apartment_screen/api/add_apartment_image_picker.dart';
-import 'package:swipe/screens/add_apartment_screen/custom_widget/expandable_card_add_apartment.dart';
-import 'package:swipe/screens/add_apartment_screen/custom_widget/info_field_add_apartment.dart';
-import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
+import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/gradient_button.dart';
 
-class AddApartmentScreen extends StatefulWidget {
+import 'api/apartment_edit_image_picker.dart';
+import 'custom_widget/expandable_card_apartment_edit.dart';
+import 'custom_widget/info_field_apartment_edit.dart';
+
+class ApartmentEditScreen extends StatefulWidget {
+  final ApartmentBuilder apartmentBuilder;
+
+  const ApartmentEditScreen({
+    Key key,
+    @required this.apartmentBuilder,
+  }) : super(key: key);
+
   @override
-  _AddApartmentScreenState createState() => _AddApartmentScreenState();
+  _ApartmentEditScreenState createState() => _ApartmentEditScreenState();
 }
 
-class _AddApartmentScreenState extends State<AddApartmentScreen> {
+class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   static const int _photoLength = 6;
 
   ApartmentBuilder _apartmentBuilder;
   GlobalKey<FormState> _formKey;
-  TextEditingController _addressController;
 
   @override
   void initState() {
     _apartmentBuilder = ApartmentBuilder();
     _formKey = GlobalKey<FormState>();
-    _addressController = TextEditingController();
-
-    // Временно
-    _addressController.text = "р-н Центральный ул. Темерязева";
     super.initState();
   }
 
@@ -57,101 +56,29 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  void _goToPromotionScreen(AddApartmentImagePicker imagePicker) {
+  void _goToApartmentScreen(ApartmentEditImagePicker imagePicker) {
     if (_formKey.currentState.validate() &&
         imagePicker.imageList.isNotEmpty &&
-        _apartmentBuilder.numberOfRooms != null) {
-      // Временно
-      _apartmentBuilder.address = _addressController.text;
-      _apartmentBuilder.promotionBuilder = PromotionBuilder();
-      Navigator.push(
-        context,
-        FadeRoute(
-          page: PromotionScreen(
-            apartmentBuilder: _apartmentBuilder,
-            imageList: imagePicker.imageList,
-          ),
-        ),
-      );
-    }
+        _apartmentBuilder.numberOfRooms != null) {}
   }
 
   Widget _buildAddress() {
-    return Stack(
-      children: [
-        InfoFieldAddApartment(
-          title: "Адрес",
-          hintText: "Адрес",
-          readOnly: true,
-          controller: _addressController,
-          validator: (String value) {
-            if (value.isEmpty) return '';
-            return null;
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 28.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Указать на карте",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.accentColor,
-                ),
-              ),
-              SizedBox(width: 10.0),
-              Icon(
-                Icons.map_outlined,
-                color: AppColors.accentColor,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildApartmentComplex() {
-    return Stack(
-      children: [
-        ExpandableCardAddApartment(
-          title: "ЖК",
-          hintText: "Выбрать ЖК",
-          children: ["ЖК Радужный", "ЖК Острова"],
-          onChange: (String value) {
-            _apartmentBuilder.apartmentComplex = value;
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 28.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Добавиться в шахматку",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.accentColor,
-                ),
-              ),
-              SizedBox(width: 10.0),
-              Icon(
-                Icons.playlist_add,
-                color: AppColors.accentColor,
-              ),
-            ],
-          ),
-        ),
-      ],
+    return InfoFieldApartmentEdit(
+      title: "Адрес",
+      hintText: widget.apartmentBuilder.address,
+      readOnly: true,
+      validator: (String value) {
+        if (value.isEmpty) return '';
+        return null;
+      },
     );
   }
 
   Widget _buildFoundingDocument() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Документ основания",
-      hintText: "Выбрать документ",
+      hintText: widget.apartmentBuilder.foundingDocument ??
+          "Выбрать документ основания",
       children: ["Собственность"],
       onChange: (String value) {
         _apartmentBuilder.foundingDocument = value;
@@ -160,9 +87,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildAppointmentApartment() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Назначение",
-      hintText: "Выбрать назначение",
+      hintText:
+          widget.apartmentBuilder.appointmentApartment ?? "Выбрать назначение",
       children: ["Апартаменты"],
       onChange: (String value) {
         _apartmentBuilder.appointmentApartment = value;
@@ -171,9 +99,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildNumberOfRooms() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Количество комнат",
-      hintText: "Выбрать количество комнат",
+      hintText:
+          widget.apartmentBuilder.numberOfRooms ?? "Выбрать количество комнат",
       children: ["1-комнатная", "2-комнатная"],
       onChange: (String value) {
         _apartmentBuilder.numberOfRooms = value;
@@ -182,9 +111,9 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildApartmentLayout() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Планировка",
-      hintText: "Выбрать планировку",
+      hintText: widget.apartmentBuilder.apartmentLayout ?? "Выбрать планировку",
       children: ["Студия, санузел"],
       onChange: (String value) {
         _apartmentBuilder.apartmentLayout = value;
@@ -193,9 +122,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildApartmentCondition() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Жилое состояние",
-      hintText: "Выбрать жилое состояние",
+      hintText: widget.apartmentBuilder.apartmentCondition ??
+          "Выбрать жилое состояние",
       children: ["Требует ремонта"],
       onChange: (String value) {
         _apartmentBuilder.apartmentCondition = value;
@@ -204,9 +134,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildTotalArea() {
-    return InfoFieldAddApartment(
+    return InfoFieldApartmentEdit(
       title: "Общая площадь (м²)",
       hintText: "Общая площадь",
+      initialValue: widget.apartmentBuilder.totalArea,
       keyboardType: TextInputType.number,
       formatter: [
         FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
@@ -222,9 +153,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildKitchenArea() {
-    return InfoFieldAddApartment(
+    return InfoFieldApartmentEdit(
       title: "Площадь кухни (м²)",
       hintText: "Площадь кухни",
+      initialValue: widget.apartmentBuilder.kitchenArea,
       keyboardType: TextInputType.number,
       formatter: [
         FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
@@ -240,9 +172,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildBalconyLoggia() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Балкон/лоджия",
-      hintText: "Присутствует балкон/лоджия",
+      hintText:
+          widget.apartmentBuilder.balconyLoggia ?? "Присутствует балкон/лоджия",
       children: ["Да", "Нет"],
       onChange: (String value) {
         _apartmentBuilder.balconyLoggia = value;
@@ -251,9 +184,9 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildHeatingType() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Тип отопления",
-      hintText: "Выбрать тип отопления",
+      hintText: widget.apartmentBuilder.heatingType ?? "Выбрать тип отопления",
       children: ["Газовое отопление"],
       onChange: (String value) {
         _apartmentBuilder.heatingType = value;
@@ -262,9 +195,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildTypeOfPayment() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Варианты расчёта",
-      hintText: "Выбрать варианты расчёта",
+      hintText:
+          widget.apartmentBuilder.typeOfPayment ?? "Выбрать варианты расчёта",
       children: ["Мат. капитал"],
       onChange: (String value) {
         _apartmentBuilder.typeOfPayment = value;
@@ -273,9 +207,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildAgentCommission() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Коммисия агенту (₽)",
-      hintText: "Выбрать коммисию агенту",
+      hintText:
+          widget.apartmentBuilder.agentCommission ?? "Выбрать коммисию агенту",
       children: ["100 000"],
       onChange: (String value) {
         _apartmentBuilder.agentCommission = value;
@@ -284,9 +219,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildCommunicationMethod() {
-    return ExpandableCardAddApartment(
+    return ExpandableCardApartmentEdit(
       title: "Способ связи",
-      hintText: "Выбрать способ связи",
+      hintText:
+          widget.apartmentBuilder.communicationMethod ?? "Выбрать способ связи",
       children: ["Звонок + сообщение"],
       onChange: (String value) {
         _apartmentBuilder.communicationMethod = value;
@@ -295,9 +231,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildDescription() {
-    return InfoFieldAddApartment(
+    return InfoFieldApartmentEdit(
       title: "Описание",
       hintText: "Описание",
+      initialValue: widget.apartmentBuilder.description,
       keyboardType: TextInputType.multiline,
       maxLines: 8,
       onChanged: (String value) {
@@ -311,9 +248,10 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _buildPrice() {
-    return InfoFieldAddApartment(
+    return InfoFieldApartmentEdit(
       title: "Цена (₽)",
       hintText: "Цена",
+      initialValue: widget.apartmentBuilder.price,
       keyboardType: TextInputType.number,
       formatter: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -328,7 +266,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  Widget _buildImagePicker(AddApartmentImagePicker imagePicker) {
+  Widget _buildImagePicker(ApartmentEditImagePicker imagePicker) {
     double thickness = 30.0;
 
     return Stack(
@@ -451,11 +389,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AddApartmentImagePicker>(
-      create: (_) => AddApartmentImagePicker(),
+    return ChangeNotifierProvider<ApartmentEditImagePicker>(
+      create: (_) => ApartmentEditImagePicker(),
       child: Scaffold(
         appBar: AppBarStyle1(
-          title: "Новое объявление",
+          title: "Редактирование",
           onTapLeading: () => Navigator.pop(context),
           onTapAction: () => Navigator.pop(context),
         ),
@@ -466,12 +404,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
             child: SingleChildScrollView(
               padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
               physics: BouncingScrollPhysics(),
-              child: Consumer<AddApartmentImagePicker>(
+              child: Consumer<ApartmentEditImagePicker>(
                 builder: (context, imagePicker, child) {
                   return Column(
                     children: [
                       _buildAddress(),
-                      _buildApartmentComplex(),
                       _buildFoundingDocument(),
                       _buildAppointmentApartment(),
                       _buildNumberOfRooms(),
@@ -493,11 +430,11 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                           vertical: 25.0,
                         ),
                         child: GradientButton(
-                          title: "Продолжить",
+                          title: "Сохранить",
                           maxWidth: double.infinity,
                           minHeight: 50.0,
                           borderRadius: 10.0,
-                          onTap: () => _goToPromotionScreen(imagePicker),
+                          onTap: () => _goToApartmentScreen(imagePicker),
                         ),
                       ),
                     ],

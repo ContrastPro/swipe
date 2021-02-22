@@ -5,7 +5,7 @@ import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/screens/add_apartment_screen/add_apartment_screen.dart';
+import 'package:swipe/screens/apartment_add_screen/apartment_add_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
@@ -181,7 +181,7 @@ class GradientDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         FadeRoute(
-                          page: AddApartmentScreen(),
+                          page: ApartmentAddScreen(),
                         ),
                       );
                     },

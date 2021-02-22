@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:uuid/uuid.dart';
 
-class PromotionCloudstoreAPI {
-  PromotionCloudstoreAPI._();
+class ApartmentEditCloudstoreAPI {
+  ApartmentEditCloudstoreAPI._();
 
   static Future<String> uploadApartmentImage({
     @required File imageFile,
