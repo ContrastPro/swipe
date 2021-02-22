@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +10,7 @@ import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/screens/apartment_edit_screen/custom_widget/image_slider.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
 
 import 'api/apartment_edit_cloudstore_api.dart';
@@ -32,7 +32,6 @@ class ApartmentEditScreen extends StatefulWidget {
 }
 
 class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
-  static const int _photoLength = 6;
   bool _startLoading = false;
 
   ApartmentBuilder _apartmentBuilder;
@@ -50,27 +49,8 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
         context, FadeRoute(page: HomeScreen()), (route) => false);
   }
 
-  void _showFullSizeImage(int index, File image) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Scaffold(
-            body: Center(
-              child: Hero(
-                tag: index,
-                child: Image.file(image),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void _saveApartment(ApartmentEditImagePicker imagePicker) {
     if (_formKey.currentState.validate() &&
-        imagePicker.imageList.isNotEmpty &&
         _apartmentBuilder.numberOfRooms != null) {}
     //_goToHomeScreen();
   }
@@ -296,8 +276,6 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   }
 
   Widget _buildImagePicker(ApartmentEditImagePicker imagePicker) {
-    double thickness = 30.0;
-
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -310,108 +288,48 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
           ),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: imagePicker.imageList.length + 1,
+          itemCount: imagePicker.imageUrlList.length,
           padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 16.0),
           itemBuilder: (context, index) {
-            if (index == imagePicker.imageList.length && index < _photoLength) {
-              return GestureDetector(
-                onTap: () => imagePicker.getLocalImage(),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        border: Border.all(color: Colors.black38),
-                      ),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                    page: ImageSlider(
+                      imageList: imagePicker.imageUrlList,
                     ),
-                    Container(
-                      width: thickness,
-                      height: 1.0,
-                      color: Colors.black38,
-                    ),
-                    Container(
-                      width: 1.0,
-                      height: thickness,
-                      color: Colors.black38,
-                    ),
-                  ],
-                ),
-              );
-            } else if (index < _photoLength) {
-              return Stack(
-                children: [
-                  GestureDetector(
-                    onTap: () => _showFullSizeImage(
-                      index,
-                      imagePicker.imageList[index],
-                    ),
-                    child: Hero(
-                      tag: index,
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          image: DecorationImage(
-                            image: FileImage(
-                              imagePicker.imageList[index],
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                  ),
+                );
+              },
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: CachedNetworkImage(
+                  imageUrl: imagePicker.imageUrlList[index],
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () => imagePicker.deleteImage(index),
-                      child: Container(
-                        width: 32.0,
-                        height: 32.0,
-                        padding: const EdgeInsets.only(
-                          left: 3.0,
-                          bottom: 3.0,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15.0),
-                            bottomLeft: Radius.circular(30.0),
-                          ),
-                          color: Colors.red[900],
-                        ),
-                        child: Icon(
-                          Icons.delete_forever,
-                          color: Colors.white,
-                          size: 18.0,
-                        ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        strokeWidth: 2,
                       ),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return SizedBox();
-            }
-          },
-        ),
-        if (imagePicker.imageList.isNotEmpty)
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Главное фото",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    color: Colors.black54,
-                  ),
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
-              Expanded(child: SizedBox()),
-            ],
-          ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -419,7 +337,9 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ApartmentEditImagePicker>(
-      create: (_) => ApartmentEditImagePicker(),
+      create: (_) => ApartmentEditImagePicker(
+        imageUrlList: widget.apartmentBuilder.images,
+      ),
       child: Stack(
         children: [
           Scaffold(

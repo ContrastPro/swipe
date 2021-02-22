@@ -5,12 +5,14 @@ import 'package:image_picker/image_picker.dart';
 
 class ApartmentEditImagePicker with ChangeNotifier {
   List<File> _imageFileList = List<File>();
+  List<File> get imageFileList => _imageFileList;
 
-  List<File> get imageList => _imageFileList;
+  List<String> _imageUrlList = List<String>();
+  List<String> get imageUrlList => _imageUrlList;
 
-  /*EditApartmentImagePicker({@required List<File> imageList}){
-    _imageFileList.addAll(imageList);
-  }*/
+  ApartmentEditImagePicker({@required List<String> imageUrlList}){
+    _imageUrlList.addAll(imageUrlList);
+  }
 
   Future<void> getLocalImage() async {
     File imageFile;

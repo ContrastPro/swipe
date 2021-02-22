@@ -11,8 +11,10 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/apartment_edit_screen/custom_widget/image_slider.dart';
 import 'package:swipe/screens/apartment_edit_screen/edit_apartment_screen.dart';
+import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -69,28 +71,40 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
               setState(() => _currentIndex = index);
             },
             itemBuilder: (context, index) {
-              return Container(
-                height: double.infinity,
-                width: double.infinity,
-                child: CachedNetworkImage(
-                  imageUrl: widget.apartmentBuilder.images[index],
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: ImageSlider(
+                        imageList: widget.apartmentBuilder.images,
                       ),
                     ),
-                  ),
-                  progressIndicatorBuilder: (context, url, downloadProgress) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: downloadProgress.progress,
-                        strokeWidth: 2,
+                  );
+                },
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.apartmentBuilder.images[index],
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    );
-                  },
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    progressIndicatorBuilder: (context, url, downloadProgress) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                          strokeWidth: 2,
+                        ),
+                      );
+                    },
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 ),
               );
             },
