@@ -16,28 +16,31 @@ class ApartmentFABEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(45),
-        gradient: AppColors.buttonGradient,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            spreadRadius: 2.0,
-            blurRadius: 2.0,
-            offset: Offset(1, 2),
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(45),
+          gradient: AppColors.buttonGradient,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              spreadRadius: 2.0,
+              blurRadius: 2.0,
+              offset: Offset(1, 2),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          title ?? "Title",
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
-        ],
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        title ?? "Title",
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
         ),
       ),
     );

@@ -14,6 +14,7 @@ import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/apartment_screen/custom_widget/apartment_detail.dart';
 import 'package:swipe/screens/apartment_screen/custom_widget/owner_field.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/edit_apartment_screen/edit_apartment_screen.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -334,7 +335,16 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
     if (_isOwner() == true) {
       return ApartmentFABEdit(
         title: "Редактировать",
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: EditApartmentScreen(
+                apartmentBuilder: widget.apartmentBuilder,
+              ),
+            ),
+          );
+        },
       );
     } else {
       return ApartmentFABCall(

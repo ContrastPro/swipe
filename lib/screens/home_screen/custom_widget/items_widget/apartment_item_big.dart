@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/format/time_format.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
-import 'package:swipe/time_format/time_format.dart';
 
 class ApartmentItemBig extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;
@@ -114,7 +114,7 @@ class ApartmentItemBig extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "${TimeFormat.buildTime(apartmentBuilder.createdAt)}",
+                            "${TimeFormat.formatTime(apartmentBuilder.createdAt)}",
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               color: AppColors.accentColor,

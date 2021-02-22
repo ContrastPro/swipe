@@ -3,10 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ApartmentImagePicker with ChangeNotifier {
+class EditApartmentImagePicker with ChangeNotifier {
   List<File> _imageFileList = List<File>();
 
   List<File> get imageList => _imageFileList;
+
+  /*EditApartmentImagePicker({@required List<File> imageList}){
+    _imageFileList.addAll(imageList);
+  }*/
 
   Future<void> getLocalImage() async {
     File imageFile;

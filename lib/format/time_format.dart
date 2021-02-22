@@ -11,7 +11,7 @@ class TimeFormat {
         .inDays;
   }
 
-  static String buildTime(Timestamp timestamp) {
+  static String formatTime(Timestamp timestamp) {
     final DateTime dateTime = timestamp.toDate();
 
     if (_calculateDifference(dateTime) == 0) {
