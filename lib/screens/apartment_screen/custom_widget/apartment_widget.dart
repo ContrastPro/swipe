@@ -14,6 +14,7 @@ import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/apartment_edit_screen/custom_widget/image_slider.dart';
 import 'package:swipe/screens/apartment_edit_screen/edit_apartment_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/chat_screen/chat_screen.dart';
 
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -145,6 +146,8 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
                     fontSize: 22.0,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 5.0),
                 Text(
@@ -364,7 +367,16 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
     } else {
       return ApartmentFABCall(
         onLeftTap: () => _makePhoneCall(),
-        onRightTap: () {},
+        onRightTap: () {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: ChatScreen(
+                userBuilder: widget.userBuilder,
+              ),
+            ),
+          );
+        },
       );
     }
   }

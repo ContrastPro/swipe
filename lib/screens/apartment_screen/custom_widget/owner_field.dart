@@ -12,6 +12,41 @@ class OwnerInfoField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget _buildImage() {
+      String name = userBuilder.name[0].toUpperCase();
+      String lastName = userBuilder.lastName[0].toUpperCase();
+
+      if (userBuilder.photoURL != null) {
+        return CachedNetworkImage(
+          imageUrl: userBuilder.photoURL,
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundImage: imageProvider,
+            radius: 25.0,
+          ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Container(
+            width: 25.0,
+            height: 25.0,
+            child: Icon(
+              Icons.error_outline_outlined,
+              color: Colors.redAccent,
+            ),
+          ),
+        );
+      } else {
+        return CircleAvatar(
+          backgroundColor: Colors.black.withAlpha(50),
+          child: Text(
+            "$name$lastName",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          ),
+        );
+      }
+    }
+
     return Container(
       height: 75.0,
       decoration: BoxDecoration(
@@ -22,22 +57,7 @@ class OwnerInfoField extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CachedNetworkImage(
-            imageUrl: userBuilder.photoURL,
-            imageBuilder: (context, imageProvider) => CircleAvatar(
-              backgroundImage: imageProvider,
-              radius: 25,
-            ),
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Container(
-              width: 25,
-              height: 25,
-              child: Icon(
-                Icons.error_outline_outlined,
-                color: Colors.redAccent,
-              ),
-            ),
-          ),
+          _buildImage(),
           SizedBox(width: 20.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

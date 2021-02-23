@@ -47,18 +47,18 @@ class AppBarStyle1 extends PreferredSize {
                 ),
               ),
             ),
-            Transform.rotate(
-              angle: -3 / 4,
-              child: IconButton(
-                highlightColor: splashColor,
-                splashColor: splashColor,
-                icon: Icon(
+            IconButton(
+              highlightColor: splashColor,
+              splashColor: splashColor,
+              icon: Transform.rotate(
+                angle: -3 / 4,
+                child: Icon(
                   Icons.add_circle_outline,
                   color: Colors.red,
                   size: 28.0,
                 ),
-                onPressed: () => onTapAction(),
               ),
+              onPressed: () => onTapAction(),
             ),
           ],
         ),

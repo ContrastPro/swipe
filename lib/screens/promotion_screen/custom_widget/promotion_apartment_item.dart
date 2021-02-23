@@ -89,6 +89,8 @@ class PromotionApartmentItem extends StatelessWidget {
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 2.0),
                     Text(

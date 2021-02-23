@@ -8,11 +8,12 @@ import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/apartment_add_screen/apartment_add_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
+import 'package:swipe/screens/feedback_screen/feedback_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 class GradientDrawer extends StatelessWidget {
   Widget _buildListTile({String title, GestureTapCallback onTap}) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => onTap(),
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -186,19 +187,39 @@ class GradientDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildListTile(title: "Избранное", onTap: () {}),
-                  _buildListTile(title: "Сохраненные фильтры", onTap: () {}),
-                  _buildListTile(title: "Нотариусы", onTap: () {}),
+                  _buildListTile(
+                    title: "Избранное",
+                    onTap: () {
+                      //
+                    },
+                  ),
+                  _buildListTile(
+                    title: "Сохраненные фильтры",
+                    onTap: () {
+                      //
+                    },
+                  ),
+                  _buildListTile(
+                    title: "Нотариусы",
+                    onTap: () {
+                      //
+                    },
+                  ),
                   _buildListTile(
                     title: "МФЦ",
                     onTap: () {
-                      print("МФЦ");
+                      //
                     },
                   ),
                   _buildListTile(
                     title: "Обратная связь",
                     onTap: () {
-                      print("Обратная связь");
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: FeedbackScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildListTile(

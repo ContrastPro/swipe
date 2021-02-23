@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
 
   @override
   void initState() {
-    _apartmentBuilder = ApartmentBuilder();
+    _apartmentBuilder = widget.apartmentBuilder;
     _formKey = GlobalKey<FormState>();
     super.initState();
   }
@@ -49,10 +50,16 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
         context, FadeRoute(page: HomeScreen()), (route) => false);
   }
 
-  void _saveApartment(ApartmentEditImagePicker imagePicker) {
+  void _saveApartment(ApartmentEditImagePicker imagePicker) async {
     if (_formKey.currentState.validate() &&
-        _apartmentBuilder.numberOfRooms != null) {}
-    //_goToHomeScreen();
+        _apartmentBuilder.numberOfRooms != null) {
+      setState(() => _startLoading = true);
+      _apartmentBuilder.updatedAt = Timestamp.now();
+      await ApartmentEditFirestoreAPI.updateApartment(
+        apartment: Apartment(apartmentBuilder: _apartmentBuilder),
+      );
+      _goToHomeScreen();
+    }
   }
 
   void _deleteApartment() async {
@@ -74,7 +81,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
   Widget _buildAddress() {
     return InfoFieldApartmentEdit(
       title: "Адрес",
-      hintText: widget.apartmentBuilder.address,
+      initialValue: widget.apartmentBuilder.address,
       readOnly: true,
       validator: (String value) {
         if (value.isEmpty) return '';

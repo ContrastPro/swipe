@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/format/time_format.dart';
@@ -8,11 +9,13 @@ import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
 
 class ApartmentItemBig extends StatelessWidget {
   final ApartmentBuilder apartmentBuilder;
+  final DocumentSnapshot documentSnapshot;
   final VoidCallback onTap;
 
   const ApartmentItemBig({
     Key key,
     @required this.apartmentBuilder,
+    @required this.documentSnapshot,
     @required this.onTap,
   }) : super(key: key);
 
@@ -50,13 +53,18 @@ class ApartmentItemBig extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: GestureDetector(
+      child: InkWell(
+        splashColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onTap: () {
           Navigator.push(
             context,
             FadeRoute(
               page: ApartmentScreen(
-                apartmentBuilder: apartmentBuilder,
+                apartmentBuilder: ApartmentBuilder.fromMap(
+                  documentSnapshot.data(),
+                ),
               ),
             ),
           );
@@ -80,6 +88,8 @@ class ApartmentItemBig extends StatelessWidget {
                             fontSize: 23.0,
                             fontWeight: FontWeight.w600,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(width: 10.0),
                         Flexible(

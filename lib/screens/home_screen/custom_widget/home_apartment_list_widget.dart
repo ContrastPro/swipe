@@ -23,6 +23,7 @@ class HomeApartmentListWidget extends StatelessWidget {
         apartmentBuilder: ApartmentBuilder.fromMap(
           document.data(),
         ),
+        documentSnapshot: document,
         onTap: () {},
       );
     } else {
@@ -30,6 +31,7 @@ class HomeApartmentListWidget extends StatelessWidget {
         apartmentBuilder: ApartmentBuilder.fromMap(
           document.data(),
         ),
+        documentSnapshot: document,
         onTap: () {},
       );
     }

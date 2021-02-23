@@ -22,4 +22,16 @@ class TimeFormat {
       return "${DateFormat('dd MMMM', 'ru').format(dateTime)}";
     }
   }
+
+  static String formatTimeMessage(Timestamp timestamp) {
+    final DateTime dateTime = timestamp.toDate();
+
+    if (_calculateDifference(dateTime) == 0) {
+      return "${DateFormat('Hm', 'ru').format(dateTime)}";
+    } else if (_calculateDifference(dateTime) == -1) {
+      return "Вчера в ${DateFormat('Hm', 'ru').format(dateTime)}";
+    } else {
+      return "${DateFormat('dd MMMM', 'ru').format(dateTime)}";
+    }
+  }
 }
