@@ -33,6 +33,7 @@ class FeedbackScreen extends StatelessWidget {
           if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
+              physics: BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return PersonCardFeedback(
                   document: snapshot.data.docs[index],

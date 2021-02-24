@@ -31,7 +31,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
         onTapLeading: () => Navigator.pop(context),
         onTapAction: () => Navigator.pop(context),
       ),
-      body: Stack(
+      body: Column(
         children: [
           StreamBuilder<QuerySnapshot>(
             stream: ChatFirestoreAPI.getChat(
@@ -49,11 +49,12 @@ class _FeedbackScreenState extends State<ChatScreen> {
               }
 
               if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 75.0),
+                return Expanded(
                   child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
                     itemCount: snapshot.data.docs.length,
                     reverse: true,
+                    physics: BouncingScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return MassageItem(
                         document: snapshot.data.docs[index],

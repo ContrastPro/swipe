@@ -48,6 +48,7 @@ class InputFieldChat extends StatelessWidget {
                 controller: controller,
                 minLines: 1,
                 maxLines: 5,
+                maxLength: 650,
                 scrollPhysics: BouncingScrollPhysics(),
                 textInputAction: TextInputAction.newline,
                 decoration: InputDecoration(
@@ -55,6 +56,7 @@ class InputFieldChat extends StatelessWidget {
                     horizontal: 15.0,
                     vertical: 8.0,
                   ),
+                  counterText: "",
                   enabledBorder: border,
                   disabledBorder: border,
                   focusedBorder: border,

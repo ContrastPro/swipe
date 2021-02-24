@@ -40,7 +40,10 @@ class MassageItem extends StatelessWidget {
               ),
               child: Container(
                 padding: const EdgeInsets.all(8.0),
-                margin: const EdgeInsets.all(8.0),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 6.0,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   color: _isNotOwnerMassage()
