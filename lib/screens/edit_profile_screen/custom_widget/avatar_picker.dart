@@ -73,7 +73,11 @@ class AvatarPicker extends StatelessWidget {
             backgroundImage: imageProvider,
             radius: radius / 2,
           ),
-          placeholder: (context, url) => CircularProgressIndicator(),
+          placeholder: (context, url) => Container(
+            width: radius,
+            height: radius,
+            child: CircularProgressIndicator(),
+          ),
           errorWidget: (context, url, error) => Container(
             width: radius,
             height: radius,

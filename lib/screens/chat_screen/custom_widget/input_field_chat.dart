@@ -77,9 +77,10 @@ class InputFieldChat extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               onSend();
               controller.clear();
+              await Future.delayed(Duration(milliseconds: 180));
               FocusScope.of(context).unfocus();
             },
             child: Container(
