@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:swipe/custom_app_widget/shimmer/shimmer_feedback.dart';
 import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/apartment_screen/api/apartment_firestore_api.dart';
@@ -56,7 +57,7 @@ class PersonCardFeedback extends StatelessWidget {
         ownerUID: document.id,
       ),
       builder: (context, snapshot) {
-        /*if (snapshot.hasData) {
+        if (snapshot.hasData) {
           return ListTile(
             hoverColor: Colors.transparent,
             leading: buildImage(snapshot.data),
@@ -68,10 +69,8 @@ class PersonCardFeedback extends StatelessWidget {
             ),
             onTap: () => onTap(snapshot.data),
           );
-        }*/
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        }
+        return ShimmerFeedback();
       },
     );
   }

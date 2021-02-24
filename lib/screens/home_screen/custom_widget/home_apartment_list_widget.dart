@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
@@ -53,7 +54,9 @@ class HomeApartmentListWidget extends StatelessWidget {
         stream: HomeFirestoreAPI.getAds(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong'));
+            return Center(
+              child: Text('Something went wrong'),
+            );
           }
 
           if (snapshot.hasData) {
@@ -70,9 +73,7 @@ class HomeApartmentListWidget extends StatelessWidget {
               },
             );
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return ShimmerAds();
         },
       ),
     );

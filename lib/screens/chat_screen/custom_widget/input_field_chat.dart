@@ -44,7 +44,10 @@ class InputFieldChat extends StatelessWidget {
               ),
               margin: const EdgeInsets.symmetric(vertical: 14.0),
               child: TextFormField(
-                style: TextStyle(color: Colors.black.withAlpha(150)),
+                style: TextStyle(
+                  color: Colors.black.withAlpha(150),
+                  fontWeight: FontWeight.w600,
+                ),
                 controller: controller,
                 minLines: 1,
                 maxLines: 5,
@@ -63,7 +66,10 @@ class InputFieldChat extends StatelessWidget {
                   errorBorder: border,
                   border: border,
                   hintText: "Собщение",
-                  hintStyle: TextStyle(color: Colors.black38),
+                  hintStyle: TextStyle(
+                    color: Colors.black26,
+                    fontWeight: FontWeight.w500,
+                  ),
                   errorStyle: TextStyle(height: 0),
                 ),
                 onChanged: (String massage) => onChanged(massage),

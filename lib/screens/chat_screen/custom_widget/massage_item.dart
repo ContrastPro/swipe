@@ -36,10 +36,10 @@ class MassageItem extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: 70.0,
-                maxWidth: MediaQuery.of(context).size.width * 0.75,
+                maxWidth: MediaQuery.of(context).size.width * 0.80,
               ),
               child: Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                 margin: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                   vertical: 6.0,
@@ -52,33 +52,48 @@ class MassageItem extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, right: 8.0),
+                      child: RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: "${document["message"]}     ",
+                              style: TextStyle(
+                                color: _isNotOwnerMassage()
+                                    ? Colors.white
+                                    : Colors.black.withAlpha(180),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                            TextSpan(
+                              text: TimeFormat.formatTimeMessage(
+                                  document["createAt"]),
+                              style: TextStyle(
+                                color: Colors.transparent,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     Positioned(
-                      bottom: 0,
-                      right: 0,
+                      right: 8.0,
+                      bottom: 4.0,
                       child: Text(
-                        "${TimeFormat.formatTimeMessage(document["createAt"])}",
+                        TimeFormat.formatTimeMessage(document["createAt"]),
                         style: TextStyle(
                           color: _isNotOwnerMassage()
                               ? Colors.white
                               : Colors.black.withAlpha(100),
                           fontWeight: FontWeight.w500,
-                          fontSize: 11.0,
+                          fontSize: 12.0,
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 15.0),
-                      child: Text(
-                        "${document["message"]}",
-                        style: TextStyle(
-                          color: _isNotOwnerMassage()
-                              ? Colors.white
-                              : Colors.black.withAlpha(180),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
+                    )
                   ],
                 ),
               ),
