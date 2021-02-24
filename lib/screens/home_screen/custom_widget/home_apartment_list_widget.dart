@@ -5,8 +5,8 @@ import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
-import 'items_widget/apartment_item.dart';
-import 'items_widget/apartment_item_big.dart';
+import 'items_list_widget/apartment_item.dart';
+import 'items_list_widget/apartment_item_big.dart';
 
 class HomeApartmentListWidget extends StatelessWidget {
   Widget _buildAds(DocumentSnapshot document) {

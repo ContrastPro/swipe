@@ -6,7 +6,6 @@ class HomeMapWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      key: UniqueKey(),
       child: Image.asset(
         "assets/images/map.png",
         fit: BoxFit.cover,
