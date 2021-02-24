@@ -56,7 +56,7 @@ class PersonCardFeedback extends StatelessWidget {
         ownerUID: document.id,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        /*if (snapshot.hasData) {
           return ListTile(
             hoverColor: Colors.transparent,
             leading: buildImage(snapshot.data),
@@ -68,7 +68,7 @@ class PersonCardFeedback extends StatelessWidget {
             ),
             onTap: () => onTap(snapshot.data),
           );
-        }
+        }*/
         return Center(
           child: CircularProgressIndicator(),
         );

@@ -70,6 +70,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
                             context: context,
                             builder: (BuildContext context) {
                               return ModalBottomSheetChat(
+                                username: widget.userBuilder.name,
                                 deleteFromMe: () {
                                   ChatFirestoreAPI.deleteFromMe(
                                     ownerUID: widget.userBuilder.uid,
