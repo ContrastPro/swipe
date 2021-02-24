@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatFirestoreAPI {
   static User _user = AuthFirebaseAPI.getCurrentUser();
@@ -25,32 +26,35 @@ class ChatFirestoreAPI {
     @required String ownerUID,
     @required String message,
   }) async {
-    final CollectionReference referenceUser = FirebaseFirestore.instance
+    final String key = Uuid().v1();
+    final Timestamp timestamp = Timestamp.now();
+
+    final DocumentReference referenceUser = FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
         .doc(_user.uid)
         .collection("Chats")
         .doc(ownerUID)
-        .collection("Chat");
+        .collection("Chat")
+        .doc(key);
 
-    final CollectionReference referenceOwner = FirebaseFirestore.instance
+    final DocumentReference referenceOwner = FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
         .doc(ownerUID)
         .collection("Chats")
         .doc(_user.uid)
-        .collection("Chat");
-
-    Timestamp timestamp = Timestamp.now();
+        .collection("Chat")
+        .doc(key);
 
     // Отправляем сообщение себе
-    await referenceUser.add({
+    await referenceUser.set({
       "ownerUID": _user.uid,
       "message": message,
       "createAt": timestamp,
-    }).then((DocumentReference document) {
+    }).then((value) {
       // Обновляем информацию чата
       FirebaseFirestore.instance
           .collection("Swipe")
@@ -60,17 +64,16 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(ownerUID)
           .set({
-        "lastMessage": message,
         "lastActivity": timestamp,
       });
     });
 
     // Отправляем сообщение собеседнику
-    await referenceOwner.add({
+    await referenceOwner.set({
       "ownerUID": _user.uid,
       "message": message,
       "createAt": timestamp,
-    }).then((DocumentReference document) {
+    }).then((value) {
       // Обновляем информацию чата
       FirebaseFirestore.instance
           .collection("Swipe")
@@ -80,9 +83,54 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(_user.uid)
           .set({
-        "lastMessage": message,
         "lastActivity": timestamp,
       });
     });
+  }
+
+  static Future<void> deleteFromMe({
+    @required String ownerUID,
+    @required String documentID,
+  }) async {
+    // Удаляем сообщение у себя
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(_user.uid)
+        .collection("Chats")
+        .doc(ownerUID)
+        .collection("Chat")
+        .doc(documentID)
+        .delete();
+  }
+
+  static Future<void> deleteEverywhere({
+    @required String ownerUID,
+    @required String documentID,
+  }) async {
+    // Удаляем сообщение у себя
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(_user.uid)
+        .collection("Chats")
+        .doc(ownerUID)
+        .collection("Chat")
+        .doc(documentID)
+        .delete();
+
+    // Удаляем сообщение у собеседника
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(ownerUID)
+        .collection("Chats")
+        .doc(_user.uid)
+        .collection("Chat")
+        .doc(documentID)
+        .delete();
   }
 }

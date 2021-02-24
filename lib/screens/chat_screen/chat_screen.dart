@@ -4,6 +4,7 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/massage_item.dart';
+import 'package:swipe/screens/chat_screen/custom_widget/modal_bottom_sheet_chat.dart';
 
 import 'api/chat_firestore_api.dart';
 
@@ -57,6 +58,27 @@ class _FeedbackScreenState extends State<ChatScreen> {
                       return MassageItem(
                         document: snapshot.data.docs[index],
                         userBuilder: widget.userBuilder,
+                        onLongPress: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ModalBottomSheetChat(
+                                deleteFromMe: () {
+                                  ChatFirestoreAPI.deleteFromMe(
+                                    ownerUID: widget.userBuilder.uid,
+                                    documentID: snapshot.data.docs[index].id,
+                                  );
+                                },
+                                deleteEverywhere: () {
+                                  ChatFirestoreAPI.deleteEverywhere(
+                                    ownerUID: widget.userBuilder.uid,
+                                    documentID: snapshot.data.docs[index].id,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
                       );
                     },
                   ),

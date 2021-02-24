@@ -36,6 +36,7 @@ class OwnerInfoField extends StatelessWidget {
       } else {
         return CircleAvatar(
           backgroundColor: Colors.black.withAlpha(50),
+          radius: 25.0,
           child: Text(
             "$name$lastName",
             style: TextStyle(

@@ -1,33 +1,14 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/chat_screen/chat_screen.dart';
+import 'package:swipe/screens/feedback_screen/custom_widget/person_card_feedback.dart';
 
 import 'api/feedback_firestore_api.dart';
 
-class FeedbackScreen extends StatefulWidget {
-  @override
-  _FeedbackScreenState createState() => _FeedbackScreenState();
-}
-
-class _FeedbackScreenState extends State<FeedbackScreen> {
-  Widget _buildItem(DocumentSnapshot document) {
-    return ListTile(
-      title: Text("${document.id}"),
-      subtitle: Text(
-        document["lastMessage"],
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      onTap: () {
-        log("${document.id}");
-      },
-    );
-  }
-
+class FeedbackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +34,19 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                return _buildItem(snapshot.data.docs[index]);
+                return PersonCardFeedback(
+                  document: snapshot.data.docs[index],
+                  onTap: (UserBuilder userBuilder) {
+                    Navigator.push(
+                      context,
+                      FadeRoute(
+                        page: ChatScreen(
+                          userBuilder: userBuilder,
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             );
           } else {

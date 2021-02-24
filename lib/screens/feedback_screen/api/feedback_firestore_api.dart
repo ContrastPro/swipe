@@ -11,6 +11,7 @@ class FeedbackFirestoreAPI {
         .collection("Users")
         .doc(user.uid)
         .collection("Chats")
+        .orderBy('lastActivity', descending: true)
         .snapshots();
   }
 }
