@@ -39,12 +39,18 @@ class _FeedbackScreenState extends State<ChatScreen> {
             ),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Center(child: Text('Something went wrong'));
+                return Expanded(
+                  child: Center(
+                    child: Text('Something went wrong'),
+                  ),
+                );
               }
 
               if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
+                return Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               }
 
@@ -85,8 +91,10 @@ class _FeedbackScreenState extends State<ChatScreen> {
                   ),
                 );
               } else {
-                return Center(
-                  child: Text("Здесь пока ничего нет..."),
+                return Expanded(
+                  child: Center(
+                    child: Text("Здесь пока ничего нет..."),
+                  ),
                 );
               }
             },
