@@ -28,7 +28,6 @@ class ApartmentBuilder {
 
   ApartmentBuilder();
 
-  // .cast<String>()
   ApartmentBuilder.fromMap(Map<String, dynamic> map)
       : id = map["id"],
         ownerUID = map["ownerUID"],

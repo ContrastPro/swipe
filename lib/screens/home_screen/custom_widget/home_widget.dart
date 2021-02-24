@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
+import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
+import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/filter_screen/filter_list.dart';
+import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
 import 'drawer.dart';
 import 'home_apartment_list_widget.dart';
@@ -16,25 +20,47 @@ class _HomeWidgetState extends State<HomeWidget> {
   static const int _duration = 300;
   bool _isMapWidget = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+  List<ApartmentBuilder> _convertList(List<DocumentSnapshot> documentList) {
+    return documentList.map<ApartmentBuilder>((element) {
+      return ApartmentBuilder.fromMap(
+        element.data(),
+      );
+    }).toList();
   }
 
   Widget _buildScreen() {
-    return Stack(
-      children: [
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: _duration),
-          child: _isMapWidget ? HomeMapWidget() : HomeApartmentListWidget(),
-        ),
-        FilterList(),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: HomeFirestoreAPI.getAds(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Something went wrong'),
+          );
+        }
+
+        if (snapshot.hasData) {
+          List<ApartmentBuilder> apartmentList =
+              _convertList(snapshot.data.docs);
+
+          if (apartmentList.isNotEmpty) {
+            return Stack(
+              children: [
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: _duration),
+                  child: _isMapWidget
+                      ? HomeMapWidget()
+                      : HomeApartmentListWidget(
+                          documentList: snapshot.data.docs,
+                          apartmentList: apartmentList,
+                        ),
+                ),
+                FilterList(),
+              ],
+            );
+          }
+        }
+        return ShimmerAds();
+      },
     );
   }
 
