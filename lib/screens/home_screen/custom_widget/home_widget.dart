@@ -49,6 +49,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   duration: Duration(milliseconds: _duration),
                   child: _isMapWidget
                       ? HomeMapWidget(
+                          documentList: snapshot.data.docs,
                           apartmentList: apartmentList,
                         )
                       : HomeApartmentListWidget(
