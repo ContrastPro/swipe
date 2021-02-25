@@ -15,12 +15,30 @@ class SearchAddressScreen extends StatefulWidget {
 }
 
 class _SearchAddressScreenState extends State<SearchAddressScreen> {
+  double _latitude;
+  double _longitude;
   AddressBuilder _addressBuilder;
+  List<Marker> _markerList = List<Marker>();
 
   @override
   void initState() {
     _addressBuilder = AddressBuilder();
+    _getAddress();
     super.initState();
+  }
+
+  void _getAddress() {
+    _latitude = double.parse("46.${Random().nextInt(9999) + 100}");
+    _longitude = double.parse("30.${Random().nextInt(9999) + 100}");
+
+    _addressBuilder.address = "р-н Центральный ул. Темерязева";
+    _addressBuilder.geo = GeoPoint(_latitude, _longitude);
+    _markerList.add(
+      Marker(
+        markerId: MarkerId(_addressBuilder.address),
+        position: LatLng(_latitude, _longitude),
+      ),
+    );
   }
 
   void _onMapCreated(GoogleMapController controller) async {
@@ -29,18 +47,14 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
         "assets/map/map_style.json",
       ),
     );
-  }
-
-  void _getAddress() {
-    String latitude = "46.${Random().nextInt(9999) + 100}";
-    String longitude = "30.${Random().nextInt(9999) + 100}";
-
-    _addressBuilder.address = "р-н Центральный ул. Темерязева";
-    _addressBuilder.geo = GeoPoint(
-      double.parse(latitude),
-      double.parse(longitude),
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(_latitude, _longitude),
+          zoom: 13.0,
+        ),
+      ),
     );
-    Navigator.pop(context, _addressBuilder);
   }
 
   @override
@@ -54,11 +68,11 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
       body: Column(
         children: [
           Container(
-            height: 85,
+            height: 85.0,
             alignment: Alignment.center,
             child: TextFieldSearchAddress(
               hintText: "Адрес",
-              onChanged: (String value){},
+              onChanged: (String value) {},
             ),
           ),
           Expanded(
@@ -69,6 +83,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
                 target: LatLng(46.47747, 30.73262),
                 zoom: 15.0,
               ),
+              markers: Set.from(_markerList),
             ),
           ),
         ],
@@ -76,7 +91,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ApartmentFABEdit(
         title: "Подтвердить адрес",
-        onTap: () => _getAddress(),
+        onTap: () => Navigator.pop(context, _addressBuilder),
       ),
     );
   }

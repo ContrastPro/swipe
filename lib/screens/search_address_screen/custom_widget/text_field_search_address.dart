@@ -47,7 +47,12 @@ class TextFieldSearchAddress extends StatelessWidget {
                 readOnly: true,
                 initialValue: "р-н Центральный ул. Темерязева",
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(16.0),
+                  contentPadding: const EdgeInsets.fromLTRB(
+                    12.0,
+                    16.0,
+                    16.0,
+                    16.0,
+                  ),
                   enabledBorder: border,
                   disabledBorder: border,
                   focusedBorder: border,
