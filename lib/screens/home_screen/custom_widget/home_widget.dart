@@ -48,7 +48,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                 AnimatedSwitcher(
                   duration: Duration(milliseconds: _duration),
                   child: _isMapWidget
-                      ? HomeMapWidget()
+                      ? HomeMapWidget(
+                          apartmentList: apartmentList,
+                        )
                       : HomeApartmentListWidget(
                           documentList: snapshot.data.docs,
                           apartmentList: apartmentList,

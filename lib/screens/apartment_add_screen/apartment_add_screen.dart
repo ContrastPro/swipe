@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/format/price_format.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/address.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/promotion.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
@@ -12,6 +14,7 @@ import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
+import 'package:swipe/screens/search_address_screen/search_address_screen.dart';
 
 import 'api/apartment_add_image_picker.dart';
 import 'custom_widget/expandable_card_apartment_add.dart';
@@ -27,6 +30,7 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
 
   ApartmentBuilder _apartmentBuilder;
   GlobalKey<FormState> _formKey;
+
   TextEditingController _addressController;
 
   @override
@@ -34,9 +38,6 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
     _apartmentBuilder = ApartmentBuilder();
     _formKey = GlobalKey<FormState>();
     _addressController = TextEditingController();
-
-    // Временно
-    _addressController.text = "р-н Центральный ул. Темерязева";
     super.initState();
   }
 
@@ -61,9 +62,8 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
   void _goToPromotionScreen(ApartmentAddImagePicker imagePicker) {
     if (_formKey.currentState.validate() &&
         imagePicker.imageList.isNotEmpty &&
+        _apartmentBuilder.address != null &&
         _apartmentBuilder.numberOfRooms != null) {
-      // Временно
-      _apartmentBuilder.address = _addressController.text;
       _apartmentBuilder.promotionBuilder = PromotionBuilder();
       Navigator.push(
         context,
@@ -74,6 +74,23 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
           ),
         ),
       );
+    }
+  }
+
+  void _searchAddress() async {
+    AddressBuilder addressBuilder;
+
+    addressBuilder = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchAddressScreen(),
+      ),
+    );
+    if (addressBuilder != null && addressBuilder.address != null) {
+      _addressController.text = addressBuilder.address;
+      _apartmentBuilder.address = addressBuilder.address;
+      _apartmentBuilder.geo = addressBuilder.geo;
+      log("$addressBuilder");
     }
   }
 
@@ -92,22 +109,28 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 28.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Указать на карте",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
+          child: InkWell(
+            splashColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () => _searchAddress(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "Указать на карте",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.accentColor,
+                  ),
+                ),
+                SizedBox(width: 10.0),
+                Icon(
+                  Icons.map_outlined,
                   color: AppColors.accentColor,
                 ),
-              ),
-              SizedBox(width: 10.0),
-              Icon(
-                Icons.map_outlined,
-                color: AppColors.accentColor,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

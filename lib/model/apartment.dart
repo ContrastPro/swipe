@@ -23,6 +23,8 @@ class ApartmentBuilder {
   String price;
   List<String> images;
   PromotionBuilder promotionBuilder;
+
+  GeoPoint geo;
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -49,6 +51,7 @@ class ApartmentBuilder {
         price = map["price"],
         images = List<String>.from(map["images"]),
         promotionBuilder = PromotionBuilder.fromMap(map["promotion"]),
+        geo = map["geo"],
         createdAt = map["createdAt"],
         updatedAt = map["updatedAt"];
 
@@ -76,6 +79,7 @@ class ApartmentBuilder {
         '\n>> price: $price'
         '\n>> images: $images'
         '\n>> promotionBuilder: $promotionBuilder'
+        '\n>> geo: $geo'
         '\n>> createdAt: ${createdAt?.toDate()}'
         '\n>> updatedAt: ${updatedAt?.toDate()}'
         '\n********************************\n';
@@ -103,6 +107,7 @@ class Apartment {
   final String price;
   final List<String> images;
   final Promotion promotion;
+  final GeoPoint geo;
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
@@ -129,6 +134,7 @@ class Apartment {
         promotion = Promotion(
           promotionBuilder: apartmentBuilder.promotionBuilder,
         ),
+        geo = apartmentBuilder.geo,
         createdAt = apartmentBuilder.createdAt,
         updatedAt = apartmentBuilder.updatedAt;
 
@@ -154,6 +160,7 @@ class Apartment {
       "price": price,
       "images": images,
       "promotion": promotion.toMap(),
+      "geo": geo,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
     };

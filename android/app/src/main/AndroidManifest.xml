@@ -11,6 +11,14 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Swipe"
         android:icon="@mipmap/ic_launcher">
+        <!-- Google Map API Key -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDq6CdOzj5nraRtjPFn03y2N9Yi1HPmY9Y"/>
+        <!-- Image Cropper Activity-->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -40,10 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
