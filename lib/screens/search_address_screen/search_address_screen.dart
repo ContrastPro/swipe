@@ -78,6 +78,8 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
           Expanded(
             child: GoogleMap(
               zoomControlsEnabled: false,
+              mapToolbarEnabled: false,
+              compassEnabled: false,
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: LatLng(46.47747, 30.73262),

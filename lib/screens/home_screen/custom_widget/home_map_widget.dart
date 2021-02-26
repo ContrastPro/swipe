@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,9 +10,11 @@ import 'items_list_widget/apartment_detail_dialog.dart';
 class HomeMapWidget extends StatefulWidget {
   final List<DocumentSnapshot> documentList;
   final List<ApartmentBuilder> apartmentList;
+  final BitmapDescriptor mapIcon;
 
   const HomeMapWidget({
     Key key,
+    @required this.mapIcon,
     @required this.documentList,
     @required this.apartmentList,
   }) : super(key: key);
@@ -25,6 +25,7 @@ class HomeMapWidget extends StatefulWidget {
 
 class _HomeMapWidgetState extends State<HomeMapWidget> {
   List<Marker> _markerList = List<Marker>();
+
 
   @override
   void initState() {
@@ -54,48 +55,24 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
             widget.apartmentList[i].geo.latitude,
             widget.apartmentList[i].geo.longitude,
           ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return ApartmentDetailDialog(
-                  apartmentBuilder: widget.apartmentList[i],
-                  onTap: () => _goToApartmentScreen(i),
+          icon: widget.mapIcon,
+          infoWindow: InfoWindow(
+              title: "${widget.apartmentList[i].price} ₽",
+              snippet: widget.apartmentList[i].address,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ApartmentDetailDialog(
+                      apartmentBuilder: widget.apartmentList[i],
+                      onTap: () => _goToApartmentScreen(i),
+                    );
+                  },
                 );
-              },
-            );
-          },
+              }),
         ),
       );
     }
-
-    /*widget.apartmentList.forEach((apartment) {
-      _markerList.add(
-        Marker(
-          markerId: MarkerId(apartment.id),
-          position: LatLng(
-            apartment.geo.latitude,
-            apartment.geo.longitude,
-          ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return ApartmentDetailDialog(
-                  apartmentBuilder: apartment,
-                  onTap: (){
-                    log("${widget.apartmentList.indexOf(apartment)}");
-                  },
-                  */ /*onTap: () => _goToApartmentScreen(
-                    widget.apartmentList.indexOf(apartment),
-                  ),*/ /*
-                );
-              },
-            );
-          },
-        ),
-      );
-    });*/
   }
 
   void _onMapCreated(GoogleMapController controller) async {
@@ -110,6 +87,8 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
   Widget build(BuildContext context) {
     return GoogleMap(
       //zoomControlsEnabled: false,
+      mapToolbarEnabled: false,
+      compassEnabled: false,
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
         target: LatLng(46.47747, 30.73262),

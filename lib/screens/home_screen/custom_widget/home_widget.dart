@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
 import 'package:swipe/model/apartment.dart';
@@ -16,9 +17,29 @@ class HomeWidget extends StatefulWidget {
   _HomeWidgetState createState() => _HomeWidgetState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> {
-  static const int _duration = 300;
+class _HomeWidgetState extends State<HomeWidget>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  static const int _duration = 400;
+
+  int _currentIndex = 0;
   bool _isMapWidget = false;
+  BitmapDescriptor _mapIcon;
+
+  @override
+  void initState() {
+    _setMapIcon();
+    super.initState();
+  }
+
+  void _setMapIcon() async {
+    _mapIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      "assets/images/map_icon.png",
+    );
+  }
 
   List<ApartmentBuilder> _convertList(List<DocumentSnapshot> documentList) {
     return documentList.map<ApartmentBuilder>((element) {
@@ -45,17 +66,19 @@ class _HomeWidgetState extends State<HomeWidget> {
           if (apartmentList.isNotEmpty) {
             return Stack(
               children: [
-                AnimatedSwitcher(
-                  duration: Duration(milliseconds: _duration),
-                  child: _isMapWidget
-                      ? HomeMapWidget(
-                          documentList: snapshot.data.docs,
-                          apartmentList: apartmentList,
-                        )
-                      : HomeApartmentListWidget(
-                          documentList: snapshot.data.docs,
-                          apartmentList: apartmentList,
-                        ),
+                IndexedStack(
+                  index: _currentIndex,
+                  children: [
+                    HomeApartmentListWidget(
+                      documentList: snapshot.data.docs,
+                      apartmentList: apartmentList,
+                    ),
+                    HomeMapWidget(
+                      documentList: snapshot.data.docs,
+                      apartmentList: apartmentList,
+                      mapIcon: _mapIcon,
+                    ),
+                  ],
                 ),
                 FilterList(),
               ],
@@ -69,6 +92,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       drawer: GradientDrawer(),
       appBar: AppBar(
@@ -129,11 +153,13 @@ class _HomeWidgetState extends State<HomeWidget> {
         onLeftTap: () {
           setState(() {
             _isMapWidget = false;
+            _currentIndex = 0;
           });
         },
         onRightTap: () {
           setState(() {
             _isMapWidget = true;
+            _currentIndex = 1;
           });
         },
       ),
