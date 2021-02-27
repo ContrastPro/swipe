@@ -24,10 +24,8 @@ class HomeMapWidget extends StatefulWidget {
 }
 
 class _HomeMapWidgetState extends State<HomeMapWidget> {
-
   MapNotifier _mapNotifier;
   List<Marker> _markerList = List<Marker>();
-
 
   @override
   void initState() {
@@ -79,11 +77,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
   }
 
   void _onMapCreated(GoogleMapController controller) async {
-    controller.setMapStyle(
-      await DefaultAssetBundle.of(context).loadString(
-        "assets/map/map_style.json",
-      ),
-    );
+    controller.setMapStyle(_mapNotifier.mapStyle);
   }
 
   @override

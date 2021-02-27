@@ -20,17 +20,17 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget>
     with AutomaticKeepAliveClientMixin {
+  // Keep State
   @override
   bool get wantKeepAlive => true;
 
   static const int _duration = 400;
-
   int _currentIndex = 0;
   bool _isMapWidget = false;
 
   @override
   void initState() {
-    Provider.of<MapNotifier>(context, listen: false)..setMapIcon();
+    Provider.of<MapNotifier>(context, listen: false)..mapInitialize();
     super.initState();
   }
 

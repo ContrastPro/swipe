@@ -19,6 +19,7 @@ class SearchAddressScreen extends StatefulWidget {
 class _SearchAddressScreenState extends State<SearchAddressScreen> {
   double _latitude;
   double _longitude;
+  MapNotifier _mapNotifier;
   AddressBuilder _addressBuilder;
   List<Marker> _markerList = List<Marker>();
 
@@ -29,7 +30,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
   }
 
   void _getAddress() {
-    MapNotifier mapNotifier = Provider.of<MapNotifier>(context, listen: false);
+    _mapNotifier = Provider.of<MapNotifier>(context, listen: false);
     _addressBuilder = AddressBuilder();
     _latitude = double.parse("46.${Random().nextInt(9999) + 100}");
     _longitude = double.parse("30.${Random().nextInt(9999) + 100}");
@@ -41,7 +42,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
       Marker(
         markerId: MarkerId(_addressBuilder.address),
         position: LatLng(_latitude, _longitude),
-        icon: mapNotifier.mapIcon,
+        icon: _mapNotifier.mapIcon,
         draggable: true,
         onDragEnd: (LatLng positionParam) {
           _addressBuilder.geo = GeoPoint(
@@ -54,11 +55,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
   }
 
   void _onMapCreated(GoogleMapController controller) async {
-    controller.setMapStyle(
-      await DefaultAssetBundle.of(context).loadString(
-        "assets/map/map_style.json",
-      ),
-    );
+    controller.setMapStyle(_mapNotifier.mapStyle);
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -89,7 +86,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
           ),
           Expanded(
             child: GoogleMap(
-              zoomControlsEnabled: false,
+              //zoomControlsEnabled: false,
               mapToolbarEnabled: false,
               compassEnabled: false,
               onMapCreated: _onMapCreated,
