@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fab/apartment_fab_edit.dart';
+import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/address.dart';
 
 import 'custom_widget/text_field_search_address.dart';
@@ -22,21 +24,31 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
 
   @override
   void initState() {
-    _addressBuilder = AddressBuilder();
     _getAddress();
     super.initState();
   }
 
   void _getAddress() {
+    MapNotifier mapNotifier = Provider.of<MapNotifier>(context, listen: false);
+    _addressBuilder = AddressBuilder();
     _latitude = double.parse("46.${Random().nextInt(9999) + 100}");
     _longitude = double.parse("30.${Random().nextInt(9999) + 100}");
 
     _addressBuilder.address = "р-н Центральный ул. Темерязева";
     _addressBuilder.geo = GeoPoint(_latitude, _longitude);
+
     _markerList.add(
       Marker(
         markerId: MarkerId(_addressBuilder.address),
         position: LatLng(_latitude, _longitude),
+        icon: mapNotifier.mapIcon,
+        draggable: true,
+        onDragEnd: (LatLng positionParam) {
+          _addressBuilder.geo = GeoPoint(
+            positionParam.latitude,
+            positionParam.longitude,
+          );
+        },
       ),
     );
   }

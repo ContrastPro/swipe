@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
 
@@ -10,11 +12,9 @@ import 'items_list_widget/apartment_detail_dialog.dart';
 class HomeMapWidget extends StatefulWidget {
   final List<DocumentSnapshot> documentList;
   final List<ApartmentBuilder> apartmentList;
-  final BitmapDescriptor mapIcon;
 
   const HomeMapWidget({
     Key key,
-    @required this.mapIcon,
     @required this.documentList,
     @required this.apartmentList,
   }) : super(key: key);
@@ -24,6 +24,8 @@ class HomeMapWidget extends StatefulWidget {
 }
 
 class _HomeMapWidgetState extends State<HomeMapWidget> {
+
+  MapNotifier _mapNotifier;
   List<Marker> _markerList = List<Marker>();
 
 
@@ -47,6 +49,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
   }
 
   void _addMarkers() {
+    _mapNotifier = Provider.of<MapNotifier>(context, listen: false);
     for (int i = 0; i < widget.apartmentList.length; i++) {
       _markerList.add(
         Marker(
@@ -55,7 +58,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
             widget.apartmentList[i].geo.latitude,
             widget.apartmentList[i].geo.longitude,
           ),
-          icon: widget.mapIcon,
+          icon: _mapNotifier.mapIcon,
           infoWindow: InfoWindow(
               title: "${widget.apartmentList[i].price} ₽",
               snippet: widget.apartmentList[i].address,

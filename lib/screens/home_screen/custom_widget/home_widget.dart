@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
+import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/filter_screen/filter_list.dart';
@@ -26,19 +27,11 @@ class _HomeWidgetState extends State<HomeWidget>
 
   int _currentIndex = 0;
   bool _isMapWidget = false;
-  BitmapDescriptor _mapIcon;
 
   @override
   void initState() {
-    _setMapIcon();
+    Provider.of<MapNotifier>(context, listen: false)..setMapIcon();
     super.initState();
-  }
-
-  void _setMapIcon() async {
-    _mapIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(),
-      "assets/images/map_icon.png",
-    );
   }
 
   List<ApartmentBuilder> _convertList(List<DocumentSnapshot> documentList) {
@@ -76,7 +69,6 @@ class _HomeWidgetState extends State<HomeWidget>
                     HomeMapWidget(
                       documentList: snapshot.data.docs,
                       apartmentList: apartmentList,
-                      mapIcon: _mapIcon,
                     ),
                   ],
                 ),

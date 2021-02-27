@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_style.dart';
+import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/screens/auth_screen/auth_screen.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
@@ -21,6 +22,9 @@ void main() {
         ),
         StreamProvider<ConnectivityResult>(
           create: (_) => Connectivity().onConnectivityChanged,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MapNotifier(),
         ),
       ],
       child: SwipeApp(),
