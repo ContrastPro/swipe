@@ -34,7 +34,7 @@ class Message {
 
   Message(MessageBuilder messageBuilder)
       : ownerUID = messageBuilder.ownerUID,
-        message = messageBuilder.message,
+        message = messageBuilder.message?.trim(),
         attachFile = messageBuilder.attachFile,
         createAt = messageBuilder.createAt;
 

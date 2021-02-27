@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/model/message.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/chat_screen/api/chat_image_picker.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/massage_item.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/modal_bottom_sheet_chat.dart';
@@ -23,6 +26,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<ChatScreen> {
+  File _imageFile;
   MessageBuilder _messageBuilder;
   ScrollController _scrollController;
 
@@ -33,9 +37,17 @@ class _FeedbackScreenState extends State<ChatScreen> {
     super.initState();
   }
 
+  void _attachFile() async {
+    File file = await ChatImagePicker.getLocalImage();
+    setState(() => _imageFile = file);
+  }
+
   void _sendMessage() async {
-    if (_messageBuilder.message != null && _messageBuilder.message.isNotEmpty) {
+    if (_imageFile != null || _messageBuilder.message != null) {
+      File imageFile = _imageFile;
+      setState(() => _imageFile = null);
       await ChatFirestoreAPI.sendMassage(
+        imageFile: imageFile,
         ownerUID: widget.userBuilder.uid,
         messageBuilder: _messageBuilder,
       );
@@ -46,7 +58,10 @@ class _FeedbackScreenState extends State<ChatScreen> {
           duration: const Duration(milliseconds: 1000),
         );
       }
-      setState(() => _messageBuilder.message = null);
+      setState(() {
+        _messageBuilder.message = null;
+        _messageBuilder.attachFile = null;
+      });
     }
   }
 
@@ -60,12 +75,14 @@ class _FeedbackScreenState extends State<ChatScreen> {
             ChatFirestoreAPI.deleteFromMe(
               ownerUID: widget.userBuilder.uid,
               documentID: document.id,
+              attachFile: document["attachFile"],
             );
           },
           deleteEverywhere: () {
             ChatFirestoreAPI.deleteEverywhere(
               ownerUID: widget.userBuilder.uid,
               documentID: document.id,
+              attachFile: document["attachFile"],
             );
           },
         );
@@ -138,11 +155,18 @@ class _FeedbackScreenState extends State<ChatScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: InputFieldChat(
-                onAttach: () {},
+                imageFile: _imageFile,
                 onChanged: (String message) {
                   setState(() => _messageBuilder.message = message);
                 },
                 onSend: () => _sendMessage(),
+                onAttach: () => _attachFile(),
+                onDeleteAttach: () {
+                  setState(() {
+                    _imageFile = null;
+                    _messageBuilder.attachFile = null;
+                  });
+                },
               ),
             ),
           ],

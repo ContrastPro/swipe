@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
@@ -11,8 +11,8 @@ class MassageItem extends StatelessWidget {
 
   const MassageItem({
     Key key,
-    @required this.messageBuilder,
     @required this.userBuilder,
+    @required this.messageBuilder,
     @required this.onLongPress,
   }) : super(key: key);
 
@@ -20,6 +20,96 @@ class MassageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool _isNotOwnerMassage() {
       return userBuilder.uid != messageBuilder.ownerUID;
+    }
+
+    Widget buildAttachFile() {
+      if (messageBuilder.attachFile == "loading") {
+        return Container(
+          width: double.infinity,
+          height: 180,
+          margin: const EdgeInsets.only(
+            left: 2.0,
+            top: 2.0,
+            right: 2.0,
+          ),
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              backgroundColor: Colors.white,
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          width: double.infinity,
+          height: 180,
+          margin: const EdgeInsets.only(
+            left: 2.0,
+            top: 2.0,
+            right: 2.0,
+          ),
+          child: CachedNetworkImage(
+            imageUrl: messageBuilder.attachFile,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(3.0),
+                  topRight: Radius.circular(8.0),
+                  bottomRight: Radius.circular(3.0),
+                ),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            progressIndicatorBuilder: (context, url, downloadProgress) {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: downloadProgress.progress,
+                  strokeWidth: 2,
+                  backgroundColor: Colors.white,
+                ),
+              );
+            },
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        );
+      }
+    }
+
+    Widget buildMessage() {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              if (messageBuilder.message != null)
+                TextSpan(
+                  text: "${messageBuilder.message}     ",
+                  style: TextStyle(
+                    color: _isNotOwnerMassage()
+                        ? Colors.white
+                        : Colors.black.withAlpha(180),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15.0,
+                  ),
+                ),
+              TextSpan(
+                text: TimeFormat.formatTimeMessage(
+                  messageBuilder.createAt,
+                ),
+                style: TextStyle(
+                  color: Colors.transparent,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return Column(
@@ -40,7 +130,6 @@ class MassageItem extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.80,
               ),
               child: Container(
-                padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                 margin: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                   vertical: 6.0,
@@ -53,34 +142,13 @@ class MassageItem extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0, right: 8.0),
-                      child: RichText(
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "${messageBuilder.message}     ",
-                              style: TextStyle(
-                                color: _isNotOwnerMassage()
-                                    ? Colors.white
-                                    : Colors.black.withAlpha(180),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                            TextSpan(
-                              text: TimeFormat.formatTimeMessage(
-                                messageBuilder.createAt,
-                              ),
-                              style: TextStyle(
-                                color: Colors.transparent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (messageBuilder.attachFile != null)
+                          buildAttachFile(),
+                        buildMessage(),
+                      ],
                     ),
                     Positioned(
                       right: 8.0,

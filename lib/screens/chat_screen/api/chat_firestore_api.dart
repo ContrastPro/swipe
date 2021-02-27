@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/model/message.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/chat_screen/api/chat_cloudstore_api.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatFirestoreAPI {
@@ -26,13 +28,17 @@ class ChatFirestoreAPI {
   }
 
   static Future<void> sendMassage({
+    @required File imageFile,
     @required String ownerUID,
     @required MessageBuilder messageBuilder,
   }) async {
     final String key = Uuid().v1();
-
     messageBuilder.ownerUID = _user.uid;
     messageBuilder.createAt = Timestamp.now();
+
+    if (imageFile != null) {
+      messageBuilder.attachFile = "loading";
+    }
 
     final Message message = Message(messageBuilder);
 
@@ -57,9 +63,21 @@ class ChatFirestoreAPI {
         .doc(key);
 
     // Отправляем сообщение себе
-    await referenceUser.set(message.toMap()).then((value) {
+    await referenceUser.set(message.toMap()).then((value) async {
+      // Публикуем изображение для себя
+      if (imageFile != null) {
+        String image = await ChatCloudstoreAPI.uploadChatImage(
+          userUID: _user.uid,
+          imageFile: imageFile,
+        );
+
+        await referenceUser.update({
+          "attachFile": image,
+        });
+      }
+
       // Обновляем информацию чата
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
@@ -72,9 +90,22 @@ class ChatFirestoreAPI {
     });
 
     // Отправляем сообщение собеседнику
-    await referenceOwner.set(message.toMap()).then((value) {
+    await referenceOwner.set(message.toMap()).then((value) async {
+      if (imageFile != null) {
+        // Публикуем изображение для собеседника
+        if (imageFile != null) {
+          String image = await ChatCloudstoreAPI.uploadChatImage(
+            userUID: ownerUID,
+            imageFile: imageFile,
+          );
+
+          await referenceOwner.update({
+            "attachFile": image,
+          });
+        }
+      }
       // Обновляем информацию чата
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
@@ -91,6 +122,7 @@ class ChatFirestoreAPI {
   static Future<void> deleteFromMe({
     @required String ownerUID,
     @required String documentID,
+    @required String attachFile,
   }) async {
     // Удаляем сообщение у себя
     await FirebaseFirestore.instance
@@ -103,11 +135,18 @@ class ChatFirestoreAPI {
         .collection("Chat")
         .doc(documentID)
         .delete();
+
+    if (attachFile != null) {
+      await ChatCloudstoreAPI.deleteChatImage(
+        attachFile: attachFile,
+      );
+    }
   }
 
   static Future<void> deleteEverywhere({
     @required String ownerUID,
     @required String documentID,
+    @required String attachFile,
   }) async {
     // Удаляем сообщение у себя
     await FirebaseFirestore.instance
@@ -121,16 +160,38 @@ class ChatFirestoreAPI {
         .doc(documentID)
         .delete();
 
-    // Удаляем сообщение у собеседника
-    await FirebaseFirestore.instance
-        .collection("Swipe")
-        .doc("Database")
-        .collection("Users")
-        .doc(ownerUID)
-        .collection("Chats")
-        .doc(_user.uid)
-        .collection("Chat")
-        .doc(documentID)
-        .delete();
+    if (attachFile != null) {
+      // Удаляем изображение у себя
+      await ChatCloudstoreAPI.deleteChatImage(attachFile: attachFile);
+
+      // Удаляем изображение у собеседника
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection("Swipe")
+          .doc("Database")
+          .collection("Users")
+          .doc(ownerUID)
+          .collection("Chats")
+          .doc(_user.uid)
+          .collection("Chat")
+          .doc(documentID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        await ChatCloudstoreAPI.deleteChatImage(
+          attachFile: documentSnapshot["attachFile"],
+        );
+      }
+    } else {
+      await FirebaseFirestore.instance
+          .collection("Swipe")
+          .doc("Database")
+          .collection("Users")
+          .doc(ownerUID)
+          .collection("Chats")
+          .doc(_user.uid)
+          .collection("Chat")
+          .doc(documentID)
+          .delete();
+    }
   }
 }
