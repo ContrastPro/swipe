@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swipe/model/message.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,10 +27,14 @@ class ChatFirestoreAPI {
 
   static Future<void> sendMassage({
     @required String ownerUID,
-    @required String message,
+    @required MessageBuilder messageBuilder,
   }) async {
     final String key = Uuid().v1();
-    final Timestamp timestamp = Timestamp.now();
+
+    messageBuilder.ownerUID = _user.uid;
+    messageBuilder.createAt = Timestamp.now();
+
+    final Message message = Message(messageBuilder);
 
     final DocumentReference referenceUser = FirebaseFirestore.instance
         .collection("Swipe")
@@ -50,11 +57,7 @@ class ChatFirestoreAPI {
         .doc(key);
 
     // Отправляем сообщение себе
-    await referenceUser.set({
-      "ownerUID": _user.uid,
-      "message": message,
-      "createAt": timestamp,
-    }).then((value) {
+    await referenceUser.set(message.toMap()).then((value) {
       // Обновляем информацию чата
       FirebaseFirestore.instance
           .collection("Swipe")
@@ -64,16 +67,12 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(ownerUID)
           .set({
-        "lastActivity": timestamp,
+        "lastActivity": message.createAt,
       });
     });
 
     // Отправляем сообщение собеседнику
-    await referenceOwner.set({
-      "ownerUID": _user.uid,
-      "message": message,
-      "createAt": timestamp,
-    }).then((value) {
+    await referenceOwner.set(message.toMap()).then((value) {
       // Обновляем информацию чата
       FirebaseFirestore.instance
           .collection("Swipe")
@@ -83,9 +82,10 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(_user.uid)
           .set({
-        "lastActivity": timestamp,
+        "lastActivity": message.createAt,
       });
     });
+    log("$messageBuilder");
   }
 
   static Future<void> deleteFromMe({

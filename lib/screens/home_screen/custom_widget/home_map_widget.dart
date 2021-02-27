@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:swipe/custom_app_widget/current_location.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
@@ -25,11 +27,12 @@ class HomeMapWidget extends StatefulWidget {
 
 class _HomeMapWidgetState extends State<HomeMapWidget> {
   MapNotifier _mapNotifier;
+  GoogleMapController _mapController;
   List<Marker> _markerList = List<Marker>();
 
   @override
   void initState() {
-    _addMarkers();
+    _loadMarkers();
     super.initState();
   }
 
@@ -46,7 +49,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
     );
   }
 
-  void _addMarkers() {
+  void _loadMarkers() {
     _mapNotifier = Provider.of<MapNotifier>(context, listen: false);
     for (int i = 0; i < widget.apartmentList.length; i++) {
       _markerList.add(
@@ -56,42 +59,74 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
             widget.apartmentList[i].geo.latitude,
             widget.apartmentList[i].geo.longitude,
           ),
-          icon: _mapNotifier.mapIcon,
+          icon: _mapNotifier.adMapIcon,
           infoWindow: InfoWindow(
-              title: "${widget.apartmentList[i].price} ₽",
-              snippet: widget.apartmentList[i].address,
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return ApartmentDetailDialog(
-                      apartmentBuilder: widget.apartmentList[i],
-                      onTap: () => _goToApartmentScreen(i),
-                    );
-                  },
-                );
-              }),
+            title: "${widget.apartmentList[i].price} ₽",
+            snippet: widget.apartmentList[i].address,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ApartmentDetailDialog(
+                    apartmentBuilder: widget.apartmentList[i],
+                    onTap: () => _goToApartmentScreen(i),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  void _updateUserLocation() async {
+    await _mapNotifier.loadUserLocation();
+    if (_mapNotifier.userLocation != null) {
+      if (!_markerList.contains(_mapNotifier.userMarker)) {
+        setState(() {
+          _markerList.add(_mapNotifier.userMarker);
+        });
+      }
+      _mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: _mapNotifier.userLocation,
+            zoom: 16.0,
+          ),
         ),
       );
     }
   }
 
   void _onMapCreated(GoogleMapController controller) async {
-    controller.setMapStyle(_mapNotifier.mapStyle);
+    _mapController = controller;
+    _mapController.setMapStyle(_mapNotifier.mapStyle);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      //zoomControlsEnabled: false,
-      mapToolbarEnabled: false,
-      compassEnabled: false,
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: CameraPosition(
-        target: LatLng(46.47747, 30.73262),
-        zoom: 15.0,
-      ),
-      markers: Set.from(_markerList),
+    return Stack(
+      children: [
+        GoogleMap(
+          //zoomControlsEnabled: false,
+          mapToolbarEnabled: false,
+          compassEnabled: false,
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _mapNotifier.initialLocation,
+            zoom: 15.0,
+          ),
+          markers: Set.from(_markerList),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: CurrentLocation(
+            isLocated: _mapNotifier.userLocation != null ? true : false,
+            onTap: () => _updateUserLocation(),
+          ),
+        )
+      ],
     );
   }
 }

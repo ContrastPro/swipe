@@ -42,7 +42,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
       Marker(
         markerId: MarkerId(_addressBuilder.address),
         position: LatLng(_latitude, _longitude),
-        icon: _mapNotifier.mapIcon,
+        icon: _mapNotifier.adMapIcon,
         draggable: true,
         onDragEnd: (LatLng positionParam) {
           _addressBuilder.geo = GeoPoint(
@@ -91,7 +91,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
               compassEnabled: false,
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
-                target: LatLng(46.47747, 30.73262),
+                target: _mapNotifier.initialLocation,
                 zoom: 15.0,
               ),
               markers: Set.from(_markerList),

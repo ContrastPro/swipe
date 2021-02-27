@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/model/message.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/massage_item.dart';
@@ -22,17 +23,22 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<ChatScreen> {
-  String _message;
+  MessageBuilder _messageBuilder;
   ScrollController _scrollController;
 
   @override
   void initState() {
+    _messageBuilder = MessageBuilder();
     _scrollController = ScrollController();
     super.initState();
   }
 
-  void _sendMessage() {
-    if (_message != null && _message.isNotEmpty) {
+  void _sendMessage() async {
+    if (_messageBuilder.message != null && _messageBuilder.message.isNotEmpty) {
+      await ChatFirestoreAPI.sendMassage(
+        ownerUID: widget.userBuilder.uid,
+        messageBuilder: _messageBuilder,
+      );
       if (_scrollController.position.pixels != 0.0) {
         _scrollController.animateTo(
           0.0,
@@ -40,12 +46,31 @@ class _FeedbackScreenState extends State<ChatScreen> {
           duration: const Duration(milliseconds: 1000),
         );
       }
-      ChatFirestoreAPI.sendMassage(
-        ownerUID: widget.userBuilder.uid,
-        message: _message.trim(),
-      );
-      setState(() => _message = null);
+      setState(() => _messageBuilder.message = null);
     }
+  }
+
+  void _deleteMessage(DocumentSnapshot document) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalBottomSheetChat(
+          username: widget.userBuilder.name,
+          deleteFromMe: () {
+            ChatFirestoreAPI.deleteFromMe(
+              ownerUID: widget.userBuilder.uid,
+              documentID: document.id,
+            );
+          },
+          deleteEverywhere: () {
+            ChatFirestoreAPI.deleteEverywhere(
+              ownerUID: widget.userBuilder.uid,
+              documentID: document.id,
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -90,30 +115,13 @@ class _FeedbackScreenState extends State<ChatScreen> {
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         return MassageItem(
-                          document: snapshot.data.docs[index],
+                          messageBuilder: MessageBuilder.fromMap(
+                            snapshot.data.docs[index].data(),
+                          ),
                           userBuilder: widget.userBuilder,
-                          onLongPress: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ModalBottomSheetChat(
-                                  username: widget.userBuilder.name,
-                                  deleteFromMe: () {
-                                    ChatFirestoreAPI.deleteFromMe(
-                                      ownerUID: widget.userBuilder.uid,
-                                      documentID: snapshot.data.docs[index].id,
-                                    );
-                                  },
-                                  deleteEverywhere: () {
-                                    ChatFirestoreAPI.deleteEverywhere(
-                                      ownerUID: widget.userBuilder.uid,
-                                      documentID: snapshot.data.docs[index].id,
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
+                          onLongPress: () => _deleteMessage(
+                            snapshot.data.docs[index],
+                          ),
                         );
                       },
                     ),
@@ -132,7 +140,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
               child: InputFieldChat(
                 onAttach: () {},
                 onChanged: (String message) {
-                  setState(() => _message = message);
+                  setState(() => _messageBuilder.message = message);
                 },
                 onSend: () => _sendMessage(),
               ),

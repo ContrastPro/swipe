@@ -2,15 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/model/message.dart';
 
 class MassageItem extends StatelessWidget {
   final UserBuilder userBuilder;
-  final DocumentSnapshot document;
+  final MessageBuilder messageBuilder;
   final VoidCallback onLongPress;
 
   const MassageItem({
     Key key,
-    @required this.document,
+    @required this.messageBuilder,
     @required this.userBuilder,
     @required this.onLongPress,
   }) : super(key: key);
@@ -18,7 +19,7 @@ class MassageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool _isNotOwnerMassage() {
-      return userBuilder.uid != document["ownerUID"];
+      return userBuilder.uid != messageBuilder.ownerUID;
     }
 
     return Column(
@@ -58,7 +59,7 @@ class MassageItem extends StatelessWidget {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: "${document["message"]}     ",
+                              text: "${messageBuilder.message}     ",
                               style: TextStyle(
                                 color: _isNotOwnerMassage()
                                     ? Colors.white
@@ -69,7 +70,8 @@ class MassageItem extends StatelessWidget {
                             ),
                             TextSpan(
                               text: TimeFormat.formatTimeMessage(
-                                  document["createAt"]),
+                                messageBuilder.createAt,
+                              ),
                               style: TextStyle(
                                 color: Colors.transparent,
                                 fontWeight: FontWeight.w500,
@@ -84,7 +86,9 @@ class MassageItem extends StatelessWidget {
                       right: 8.0,
                       bottom: 4.0,
                       child: Text(
-                        TimeFormat.formatTimeMessage(document["createAt"]),
+                        TimeFormat.formatTimeMessage(
+                          messageBuilder.createAt,
+                        ),
                         style: TextStyle(
                           color: _isNotOwnerMassage()
                               ? Colors.white

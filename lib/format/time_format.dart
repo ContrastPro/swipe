@@ -31,7 +31,7 @@ class TimeFormat {
     } else if (_calculateDifference(dateTime) == -1) {
       return "Вчера в ${DateFormat('Hm', 'ru').format(dateTime)}";
     } else {
-      return "${DateFormat('dd MMMM', 'ru').format(dateTime)}";
+      return "${DateFormat('dd MMM', 'ru').format(dateTime)}";
     }
   }
 }
