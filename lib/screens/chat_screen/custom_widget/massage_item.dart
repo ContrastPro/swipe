@@ -22,6 +22,40 @@ class MassageItem extends StatelessWidget {
       return userBuilder.uid != messageBuilder.ownerUID;
     }
 
+    void showFullSizeImage() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            body: Stack(children: [
+              InteractiveViewer(
+                panEnabled: true,
+                child: CachedNetworkImage(
+                  imageUrl: messageBuilder.attachFile,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close_rounded),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              )
+            ]),
+          ),
+        ),
+      );
+    }
+
     Widget buildAttachFile() {
       if (messageBuilder.attachFile == "loading") {
         return Container(
@@ -40,40 +74,43 @@ class MassageItem extends StatelessWidget {
           ),
         );
       } else {
-        return Container(
-          width: double.infinity,
-          height: 180,
-          margin: const EdgeInsets.only(
-            left: 2.0,
-            top: 2.0,
-            right: 2.0,
-          ),
-          child: CachedNetworkImage(
-            imageUrl: messageBuilder.attachFile,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8.0),
-                  bottomLeft: Radius.circular(3.0),
-                  topRight: Radius.circular(8.0),
-                  bottomRight: Radius.circular(3.0),
-                ),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: () => showFullSizeImage(),
+          child: Container(
+            width: double.infinity,
+            height: 180,
+            margin: const EdgeInsets.only(
+              left: 2.0,
+              top: 2.0,
+              right: 2.0,
+            ),
+            child: CachedNetworkImage(
+              imageUrl: messageBuilder.attachFile,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                    bottomLeft: Radius.circular(3.0),
+                    topRight: Radius.circular(8.0),
+                    bottomRight: Radius.circular(3.0),
+                  ),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    strokeWidth: 2,
+                    backgroundColor: Colors.white,
+                  ),
+                );
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
-            progressIndicatorBuilder: (context, url, downloadProgress) {
-              return Center(
-                child: CircularProgressIndicator(
-                  value: downloadProgress.progress,
-                  strokeWidth: 2,
-                  backgroundColor: Colors.white,
-                ),
-              );
-            },
-            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         );
       }

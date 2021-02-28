@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 
@@ -28,24 +29,37 @@ class AvatarPicker extends StatelessWidget {
         alignment: Alignment.bottomRight,
         children: [
           child,
-          GestureDetector(
-            onTap: () => onTap(),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(90.0)),
-                color: AppColors.accentColor,
-              ),
-              width: 19.0,
-              height: 19.0,
-              child: Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.add,
-                  size: 15.0,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 23.0,
+                height: 23.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(45.0),
                   color: Colors.white,
                 ),
               ),
-            ),
+              GestureDetector(
+                onTap: () => onTap(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(45.0),
+                    color: AppColors.accentColor,
+                  ),
+                  width: 19.0,
+                  height: 19.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.add,
+                      size: 15.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );

@@ -43,7 +43,9 @@ class _FeedbackScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() async {
-    if (_imageFile != null || _messageBuilder.message != null) {
+    if (_imageFile != null ||
+        _messageBuilder.message != null &&
+            _messageBuilder.message.trim() != "") {
       File imageFile = _imageFile;
       setState(() => _imageFile = null);
       await ChatFirestoreAPI.sendMassage(

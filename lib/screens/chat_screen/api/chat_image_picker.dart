@@ -10,6 +10,6 @@ class ChatImagePicker {
       source: ImageSource.gallery,
     );
 
-    return File(pickedFile.path) ?? null;
+    return pickedFile != null ? File(pickedFile.path) : null;
   }
 }

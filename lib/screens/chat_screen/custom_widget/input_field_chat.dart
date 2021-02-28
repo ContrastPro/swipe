@@ -56,7 +56,7 @@ class InputFieldChat extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Text(
-                    "${path.basename(imageFile.path)}",
+                    "${path.basename(imageFile?.path)}",
                     textAlign: TextAlign.center,
                   ),
                 ),

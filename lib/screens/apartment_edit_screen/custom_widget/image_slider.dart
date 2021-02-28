@@ -58,7 +58,7 @@ class _ImageSliderState extends State<ImageSlider> {
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 75,
-              margin: const EdgeInsets.only(bottom: 80.0),
+              margin: const EdgeInsets.only(bottom: 30.0),
               child: PageView.builder(
                 controller: _smallPageController,
                 itemCount: widget.imageList.length,
@@ -102,7 +102,7 @@ class _ImageSliderState extends State<ImageSlider> {
                 onPressed: () => Navigator.pop(context),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

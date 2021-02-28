@@ -181,6 +181,18 @@ class ChatFirestoreAPI {
           attachFile: documentSnapshot["attachFile"],
         );
       }
+
+      // Удаляем сообщение у собеседника
+      await FirebaseFirestore.instance
+          .collection("Swipe")
+          .doc("Database")
+          .collection("Users")
+          .doc(ownerUID)
+          .collection("Chats")
+          .doc(_user.uid)
+          .collection("Chat")
+          .doc(documentID)
+          .delete();
     } else {
       await FirebaseFirestore.instance
           .collection("Swipe")
