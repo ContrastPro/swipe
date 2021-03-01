@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: HomeFirestoreAPI.getUserProfile(
+      future: HomeFirestoreAPI.getUserInfo(
         userNotifier: Provider.of<UserNotifier>(context, listen: false),
       ),
       builder: (context, snapshot) {

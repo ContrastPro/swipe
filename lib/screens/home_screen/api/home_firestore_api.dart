@@ -8,10 +8,12 @@ import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 class HomeFirestoreAPI {
   HomeFirestoreAPI._();
 
-  static Future<void> getUserProfile({
+  static User user = AuthFirebaseAPI.getCurrentUser();
+
+  static Future<void> getUserInfo({
     @required UserNotifier userNotifier,
   }) async {
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    // Загружаем профиль пользователя
     await FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
@@ -24,6 +26,7 @@ class HomeFirestoreAPI {
       );
     });
 
+    // Проверяем есть ли доступ к админке
     await FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
@@ -31,15 +34,16 @@ class HomeFirestoreAPI {
         .doc(user.uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
-      if(documentSnapshot.exists){
+      if (documentSnapshot.exists) {
         userNotifier.setAccess(documentSnapshot["accessIsAllowed"]);
+      } else {
+        userNotifier.setAccess(null);
       }
     });
   }
 
   static Future<UserBuilder> updateUserProfile() async {
     UserBuilder userBuilder;
-    final User user = AuthFirebaseAPI.getCurrentUser();
     await FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
@@ -62,9 +66,9 @@ class HomeFirestoreAPI {
         .snapshots();
   }
 
-  static Future<void> getAccess({
-    @required UserBuilder userBuilder,
+  static void getAccess({
     @required UserNotifier userNotifier,
+    @required UserBuilder userBuilder,
   }) async {
     await FirebaseFirestore.instance
         .collection("Swipe")

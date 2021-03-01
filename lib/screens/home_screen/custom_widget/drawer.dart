@@ -15,13 +15,6 @@ import 'package:swipe/screens/mfc_screen/mfc_screen.dart';
 import 'package:swipe/screens/notary_screen/notary_screen.dart';
 
 class GradientDrawer extends StatelessWidget {
-  void _getAccess(UserBuilder userProfile, UserNotifier userNotifier) async {
-    await HomeFirestoreAPI.getAccess(
-      userBuilder: userProfile,
-      userNotifier: userNotifier,
-    );
-  }
-
   Widget _buildListTile({String title, GestureTapCallback onTap}) {
     return InkWell(
       onTap: () => onTap(),
@@ -73,35 +66,51 @@ class GradientDrawer extends StatelessWidget {
     }
   }
 
-  Widget _buildAccess(UserNotifier userNotifier) {
+  Widget _buildAccess(UserNotifier userNotifier, BuildContext context) {
+    String title;
+
     switch (userNotifier.accessIsAllowed) {
       case true:
-        return Text(
-          "Перейти в админку",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        );
+        title = "Доступ получен";
         break;
       case false:
-        return Text(
-          "Доступ запрошен",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        );
+        title = "Доступ запрошен";
         break;
       default:
-        return Text(
-          "Получить доступ",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        );
+        title = "Получить доступ";
     }
+
+    return OutlineButton(
+      padding: EdgeInsets.all(20.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      highlightElevation: 0.0,
+      borderSide: BorderSide(color: Colors.white70),
+      highlightedBorderColor: Colors.white,
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      onPressed: () async {
+        if (userNotifier.accessIsAllowed == null) {
+          HomeFirestoreAPI.getAccess(
+            userNotifier: userNotifier,
+            userBuilder: userNotifier.userProfile,
+          );
+        } else if (userNotifier.accessIsAllowed == true) {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: ApartmentAddScreen(),
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -174,20 +183,7 @@ class GradientDrawer extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 70,
-                          child: OutlineButton(
-                            padding: EdgeInsets.all(20.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            highlightElevation: 0.0,
-                            borderSide: BorderSide(color: Colors.white70),
-                            highlightedBorderColor: Colors.white,
-                            child: _buildAccess(userNotifier),
-                            onPressed: () => _getAccess(
-                              userProfile,
-                              userNotifier,
-                            ),
-                          ),
+                          child: _buildAccess(userNotifier, context),
                         ),
                         Expanded(
                           flex: 30,

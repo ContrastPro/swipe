@@ -10,7 +10,8 @@ import 'package:swipe/screens/chat_screen/api/chat_cloudstore_api.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatFirestoreAPI {
-  static User _user = AuthFirebaseAPI.getCurrentUser();
+  ChatFirestoreAPI._();
+  static User user = AuthFirebaseAPI.getCurrentUser();
 
   static Stream<QuerySnapshot> getChat({
     @required String ownerUID,
@@ -19,7 +20,7 @@ class ChatFirestoreAPI {
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
-        .doc(_user.uid)
+        .doc(user.uid)
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
@@ -33,7 +34,7 @@ class ChatFirestoreAPI {
     @required MessageBuilder messageBuilder,
   }) async {
     final String key = Uuid().v1();
-    messageBuilder.ownerUID = _user.uid;
+    messageBuilder.ownerUID = user.uid;
     messageBuilder.createAt = Timestamp.now();
 
     if (imageFile != null) {
@@ -46,7 +47,7 @@ class ChatFirestoreAPI {
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
-        .doc(_user.uid)
+        .doc(user.uid)
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
@@ -58,7 +59,7 @@ class ChatFirestoreAPI {
         .collection("Users")
         .doc(ownerUID)
         .collection("Chats")
-        .doc(_user.uid)
+        .doc(user.uid)
         .collection("Chat")
         .doc(key);
 
@@ -67,7 +68,7 @@ class ChatFirestoreAPI {
       // Публикуем изображение для себя
       if (imageFile != null) {
         String image = await ChatCloudstoreAPI.uploadChatImage(
-          userUID: _user.uid,
+          userUID: user.uid,
           imageFile: imageFile,
         );
 
@@ -81,7 +82,7 @@ class ChatFirestoreAPI {
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
-          .doc(_user.uid)
+          .doc(user.uid)
           .collection("Chats")
           .doc(ownerUID)
           .set({
@@ -111,7 +112,7 @@ class ChatFirestoreAPI {
           .collection("Users")
           .doc(ownerUID)
           .collection("Chats")
-          .doc(_user.uid)
+          .doc(user.uid)
           .set({
         "lastActivity": message.createAt,
       });
@@ -129,7 +130,7 @@ class ChatFirestoreAPI {
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
-        .doc(_user.uid)
+        .doc(user.uid)
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
@@ -157,7 +158,7 @@ class ChatFirestoreAPI {
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
-          .doc(_user.uid)
+          .doc(user.uid)
           .collection("Chats")
           .doc(ownerUID)
           .collection("Chat")
@@ -170,7 +171,7 @@ class ChatFirestoreAPI {
           .collection("Users")
           .doc(ownerUID)
           .collection("Chats")
-          .doc(_user.uid)
+          .doc(user.uid)
           .collection("Chat")
           .doc(documentID)
           .get()
@@ -188,7 +189,7 @@ class ChatFirestoreAPI {
               .collection("Users")
               .doc(ownerUID)
               .collection("Chats")
-              .doc(_user.uid)
+              .doc(user.uid)
               .collection("Chat")
               .doc(documentID)
               .delete();
@@ -200,7 +201,7 @@ class ChatFirestoreAPI {
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
-          .doc(_user.uid)
+          .doc(user.uid)
           .collection("Chats")
           .doc(ownerUID)
           .collection("Chat")
@@ -214,7 +215,7 @@ class ChatFirestoreAPI {
           .collection("Users")
           .doc(ownerUID)
           .collection("Chats")
-          .doc(_user.uid)
+          .doc(user.uid)
           .collection("Chat")
           .doc(documentID)
           .delete();
