@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -119,7 +118,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
     return Stack(
       children: [
         GoogleMap(
-          //zoomControlsEnabled: false,
+          zoomControlsEnabled: false,
           mapToolbarEnabled: false,
           compassEnabled: false,
           onMapCreated: _onMapCreated,
@@ -130,7 +129,7 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
           markers: Set.from(_markerList),
         ),
         Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.bottomRight,
           child: CurrentLocation(
             isLocated:
                 _markerList.contains(_mapNotifier.userMarker) ? true : false,

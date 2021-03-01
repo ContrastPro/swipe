@@ -16,14 +16,16 @@ class ImageSlider extends StatefulWidget {
 }
 
 class _ImageSliderState extends State<ImageSlider> {
+  bool _isSized = false;
   PageController _controller;
+  TransformationController _transformationController;
 
   @override
   void initState() {
     _controller = PageController(initialPage: widget.initialPage ?? 0);
+    _transformationController = TransformationController();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,19 @@ class _ImageSliderState extends State<ImageSlider> {
           PageView.builder(
             controller: _controller,
             itemCount: widget.imageList.length,
-            physics: BouncingScrollPhysics(),
+            physics: _isSized
+                ? NeverScrollableScrollPhysics()
+                : BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return InteractiveViewer(
+                transformationController: _transformationController,
+                onInteractionStart: (ScaleStartDetails value) {
+                  setState(() => _isSized = true);
+                },
+                onInteractionEnd: (ScaleEndDetails value) {
+                  setState(() => _isSized = false);
+                  _transformationController.value = Matrix4.identity();
+                },
                 child: CachedNetworkImage(
                   imageUrl: widget.imageList[index],
                   imageBuilder: (context, imageProvider) => Container(

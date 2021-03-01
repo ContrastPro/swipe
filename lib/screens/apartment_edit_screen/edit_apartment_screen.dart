@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/custom_app_widget/image_slider.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/format/price_format.dart';
@@ -11,7 +12,6 @@ import 'package:swipe/model/apartment.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
-import 'package:swipe/screens/apartment_edit_screen/custom_widget/image_slider.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
 
 import 'api/apartment_edit_cloudstore_api.dart';

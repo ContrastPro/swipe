@@ -86,7 +86,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
           ),
           Expanded(
             child: GoogleMap(
-              //zoomControlsEnabled: false,
+              zoomControlsEnabled: false,
               mapToolbarEnabled: false,
               compassEnabled: false,
               onMapCreated: _onMapCreated,
