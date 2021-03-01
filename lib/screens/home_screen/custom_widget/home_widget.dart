@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fab/home_gradient_fab.dart';
+import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
@@ -9,6 +10,7 @@ import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/filter_screen/filter_list.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
+import '../home_screen.dart';
 import 'drawer.dart';
 import 'home_apartment_list_widget.dart';
 import 'home_map_widget.dart';
@@ -57,23 +59,33 @@ class _HomeWidgetState extends State<HomeWidget>
               _convertList(snapshot.data.docs);
 
           if (apartmentList.isNotEmpty) {
-            return Stack(
-              children: [
-                IndexedStack(
-                  index: _currentIndex,
-                  children: [
-                    HomeApartmentListWidget(
-                      documentList: snapshot.data.docs,
-                      apartmentList: apartmentList,
-                    ),
-                    HomeMapWidget(
-                      documentList: snapshot.data.docs,
-                      apartmentList: apartmentList,
-                    ),
-                  ],
-                ),
-                FilterList(),
-              ],
+            return RefreshIndicator(
+              onRefresh: () async {
+                await Future.delayed(
+                  Duration(milliseconds: 800),
+                ).then((value) {
+                  return Navigator.pushAndRemoveUntil(
+                      context, FadeRoute(page: HomeScreen()), (route) => false);
+                });
+              },
+              child: Stack(
+                children: [
+                  IndexedStack(
+                    index: _currentIndex,
+                    children: [
+                      HomeApartmentListWidget(
+                        documentList: snapshot.data.docs,
+                        apartmentList: apartmentList,
+                      ),
+                      HomeMapWidget(
+                        documentList: snapshot.data.docs,
+                        apartmentList: apartmentList,
+                      ),
+                    ],
+                  ),
+                  FilterList(),
+                ],
+              ),
             );
           }
         }

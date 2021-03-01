@@ -27,12 +27,11 @@ class ChatScreen extends StatefulWidget {
 
 class _FeedbackScreenState extends State<ChatScreen> {
   File _imageFile;
-  MessageBuilder _messageBuilder;
+  String _message;
   ScrollController _scrollController;
 
   @override
   void initState() {
-    _messageBuilder = MessageBuilder();
     _scrollController = ScrollController();
     super.initState();
   }
@@ -43,15 +42,19 @@ class _FeedbackScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() async {
-    if (_imageFile != null ||
-        _messageBuilder.message != null &&
-            _messageBuilder.message.trim() != "") {
+    if (_imageFile != null || _message != null && _message.trim() != "") {
+      MessageBuilder messageBuilder = MessageBuilder();
       File imageFile = _imageFile;
-      setState(() => _imageFile = null);
+      messageBuilder.message = _message;
+
+      setState(() {
+        _message = null;
+        _imageFile = null;
+      });
       await ChatFirestoreAPI.sendMassage(
         imageFile: imageFile,
         ownerUID: widget.userBuilder.uid,
-        messageBuilder: _messageBuilder,
+        messageBuilder: messageBuilder,
       );
       if (_scrollController.position.pixels != 0.0) {
         _scrollController.animateTo(
@@ -60,10 +63,6 @@ class _FeedbackScreenState extends State<ChatScreen> {
           duration: const Duration(milliseconds: 1000),
         );
       }
-      setState(() {
-        _messageBuilder.message = null;
-        _messageBuilder.attachFile = null;
-      });
     }
   }
 
@@ -159,15 +158,12 @@ class _FeedbackScreenState extends State<ChatScreen> {
               child: InputFieldChat(
                 imageFile: _imageFile,
                 onChanged: (String message) {
-                  setState(() => _messageBuilder.message = message);
+                  setState(() => _message = message);
                 },
                 onSend: () => _sendMessage(),
                 onAttach: () => _attachFile(),
                 onDeleteAttach: () {
-                  setState(() {
-                    _imageFile = null;
-                    _messageBuilder.attachFile = null;
-                  });
+                  setState(() => _imageFile = null);
                 },
               ),
             ),

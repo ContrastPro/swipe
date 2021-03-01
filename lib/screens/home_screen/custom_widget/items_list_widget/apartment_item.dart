@@ -158,19 +158,16 @@ class ApartmentItem extends StatelessWidget {
                 height: 18.0,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
+                  horizontal: 6.0,
                 ),
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 9.0,
-                ),
+                margin: const EdgeInsets.all(8.0),
                 child: Text(
                   "${apartmentBuilder.promotionBuilder.phrase}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 9.5,
+                    fontSize: 8.5,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -6,9 +6,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapNotifier with ChangeNotifier {
+  // Private
   String _mapStyle;
 
   BitmapDescriptor _adMapIcon;
+
+  BitmapDescriptor _adMapOwnerIcon;
+
+  BitmapDescriptor _userIcon;
 
   Marker _userMarker;
 
@@ -16,9 +21,14 @@ class MapNotifier with ChangeNotifier {
 
   LatLng _userLocation;
 
+  Location _locationTracker = Location();
+
+  // Getters
   String get mapStyle => _mapStyle;
 
   BitmapDescriptor get adMapIcon => _adMapIcon;
+
+  BitmapDescriptor get adMapOwnerIcon => _adMapOwnerIcon;
 
   Marker get userMarker => _userMarker;
 
@@ -26,13 +36,10 @@ class MapNotifier with ChangeNotifier {
 
   LatLng get userLocation => _userLocation;
 
-  // Private
-  Location _locationTracker = Location();
-  BitmapDescriptor _userIcon;
-
   void mapInitialize() {
     _loadMapStyle();
     _loadMapIcon();
+    _loadMapOwnerIcon();
     _loadUserIcon();
   }
 
@@ -64,6 +71,13 @@ class MapNotifier with ChangeNotifier {
     _adMapIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
       "assets/images/map_icon.png",
+    );
+  }
+
+  void _loadMapOwnerIcon() async {
+    _adMapOwnerIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      "assets/images/owner_icon.png",
     );
   }
 

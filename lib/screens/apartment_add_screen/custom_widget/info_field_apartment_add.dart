@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swipe/global/app_colors.dart';
 
 class InfoFieldApartmentAdd extends StatelessWidget {
   final String initialValue;
@@ -37,7 +36,7 @@ class InfoFieldApartmentAdd extends StatelessWidget {
 
     final InputBorder errorBorder = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      borderSide: BorderSide(color: AppColors.accentColor),
+      borderSide: BorderSide(color: Colors.red),
     );
 
     return Padding(

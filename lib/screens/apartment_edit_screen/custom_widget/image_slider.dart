@@ -14,15 +14,6 @@ class ImageSlider extends StatefulWidget {
 }
 
 class _ImageSliderState extends State<ImageSlider> {
-  int _currentIndex = 0;
-  PageController _smallPageController;
-
-  @override
-  void initState() {
-    _smallPageController = PageController(viewportFraction: 0.34);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,69 +21,32 @@ class _ImageSliderState extends State<ImageSlider> {
         children: [
           PageView.builder(
             itemCount: widget.imageList.length,
-            physics: NeverScrollableScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl: widget.imageList[_currentIndex],
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                progressIndicatorBuilder: (context, url, downloadProgress) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: downloadProgress.progress,
-                      strokeWidth: 2,
-                    ),
-                  );
-                },
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              );
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 75,
-              margin: const EdgeInsets.only(bottom: 30.0),
-              child: PageView.builder(
-                controller: _smallPageController,
-                itemCount: widget.imageList.length,
-                itemBuilder: (context, index) {
-                  return Transform.scale(
-                    scale: _currentIndex == index ? 1.0 : 0.9,
-                    child: GestureDetector(
-                      onTap: () => setState(() => _currentIndex = index),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.imageList[index],
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: downloadProgress.progress,
-                              strokeWidth: 2,
-                            ),
-                          );
-                        },
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+              return InteractiveViewer(
+                panEnabled: false,
+                child: CachedNetworkImage(
+                  imageUrl: widget.imageList[index],
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              );
+            },
           ),
           SafeArea(
             child: Align(

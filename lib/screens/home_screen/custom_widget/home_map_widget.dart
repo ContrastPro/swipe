@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
+import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
 import 'items_list_widget/apartment_detail_dialog.dart';
 
@@ -26,12 +28,14 @@ class HomeMapWidget extends StatefulWidget {
 }
 
 class _HomeMapWidgetState extends State<HomeMapWidget> {
+  User _user;
   MapNotifier _mapNotifier;
   GoogleMapController _mapController;
   List<Marker> _markerList = List<Marker>();
 
   @override
   void initState() {
+    _user = AuthFirebaseAPI.getCurrentUser();
     _loadMarkers();
     super.initState();
   }
@@ -49,6 +53,10 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
     );
   }
 
+  bool _isOwner(int index) {
+    return _user.uid == widget.apartmentList[index].ownerUID;
+  }
+
   void _loadMarkers() {
     _mapNotifier = Provider.of<MapNotifier>(context, listen: false);
     for (int i = 0; i < widget.apartmentList.length; i++) {
@@ -59,7 +67,9 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
             widget.apartmentList[i].geo.latitude,
             widget.apartmentList[i].geo.longitude,
           ),
-          icon: _mapNotifier.adMapIcon,
+          icon: _isOwner(i)
+              ? _mapNotifier.adMapOwnerIcon
+              : _mapNotifier.adMapIcon,
           infoWindow: InfoWindow(
             title: "${widget.apartmentList[i].price} ₽",
             snippet: widget.apartmentList[i].address,

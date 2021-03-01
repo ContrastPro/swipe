@@ -26,46 +26,44 @@ class MassageItem extends StatelessWidget {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Scaffold(
-            body: Stack(children: [
-              InteractiveViewer(
-                panEnabled: true,
-                child: CachedNetworkImage(
-                  imageUrl: messageBuilder.attachFile,
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
+            body: Stack(
+              children: [
+                InteractiveViewer(
+                  panEnabled: true,
+                  child: CachedNetworkImage(
+                    imageUrl: messageBuilder.attachFile,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                        ),
                       ),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.close_rounded),
-                    onPressed: () => Navigator.pop(context),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
-              )
-            ]),
+                SafeArea(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Icon(Icons.close_rounded),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
     }
 
-    Widget buildAttachFile() {
+    Widget buildAttachFile(double radius) {
       if (messageBuilder.attachFile == "loading") {
         return Container(
           width: double.infinity,
           height: 180,
-          margin: const EdgeInsets.only(
-            left: 2.0,
-            top: 2.0,
-            right: 2.0,
-          ),
+          margin: const EdgeInsets.all(2.0),
           child: Center(
             child: CircularProgressIndicator(
               strokeWidth: 2,
@@ -79,20 +77,16 @@ class MassageItem extends StatelessWidget {
           child: Container(
             width: double.infinity,
             height: 180,
-            margin: const EdgeInsets.only(
-              left: 2.0,
-              top: 2.0,
-              right: 2.0,
-            ),
+            margin: const EdgeInsets.all(2.0),
             child: CachedNetworkImage(
               imageUrl: messageBuilder.attachFile,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8.0),
-                    bottomLeft: Radius.circular(3.0),
                     topRight: Radius.circular(8.0),
-                    bottomRight: Radius.circular(3.0),
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius),
                   ),
                   image: DecorationImage(
                     image: imageProvider,
@@ -122,17 +116,16 @@ class MassageItem extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             children: <TextSpan>[
-              if (messageBuilder.message != null)
-                TextSpan(
-                  text: "${messageBuilder.message}     ",
-                  style: TextStyle(
-                    color: _isNotOwnerMassage()
-                        ? Colors.white
-                        : Colors.black.withAlpha(180),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15.0,
-                  ),
+              TextSpan(
+                text: "${messageBuilder.message}     ",
+                style: TextStyle(
+                  color: _isNotOwnerMassage()
+                      ? Colors.white
+                      : Colors.black.withAlpha(180),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15.0,
                 ),
+              ),
               TextSpan(
                 text: TimeFormat.formatTimeMessage(
                   messageBuilder.createAt,
@@ -140,13 +133,108 @@ class MassageItem extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.transparent,
                   fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
+                  fontSize: 11.0,
                 ),
               ),
             ],
           ),
         ),
       );
+    }
+
+    Widget buildMassageItem() {
+      if (messageBuilder.attachFile != null && messageBuilder.message != null) {
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildAttachFile(3.0),
+                buildMessage(),
+              ],
+            ),
+            Positioned(
+              right: 8.0,
+              bottom: 4.0,
+              child: Text(
+                TimeFormat.formatTimeMessage(
+                  messageBuilder.createAt,
+                ),
+                style: TextStyle(
+                  color: _isNotOwnerMassage()
+                      ? Colors.white
+                      : Colors.black.withAlpha(100),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 11.0,
+                ),
+              ),
+            )
+          ],
+        );
+      } else if (messageBuilder.attachFile != null &&
+          messageBuilder.message == null) {
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildAttachFile(8.0),
+              ],
+            ),
+            Positioned(
+              right: 8.0,
+              bottom: 4.0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6.0,
+                  vertical: 1.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black38,
+                  borderRadius: BorderRadius.circular(3.0),
+                ),
+                child: Text(
+                  TimeFormat.formatTimeMessage(
+                    messageBuilder.createAt,
+                  ),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 11.0,
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      } else {
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildMessage(),
+              ],
+            ),
+            Positioned(
+              right: 8.0,
+              bottom: 4.0,
+              child: Text(
+                TimeFormat.formatTimeMessage(
+                  messageBuilder.createAt,
+                ),
+                style: TextStyle(
+                  color: _isNotOwnerMassage()
+                      ? Colors.white
+                      : Colors.black.withAlpha(100),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 11.0,
+                ),
+              ),
+            )
+          ],
+        );
+      }
     }
 
     return Column(
@@ -177,34 +265,7 @@ class MassageItem extends StatelessWidget {
                       ? Color(0xFF41BFB5)
                       : Color(0xFFECECEC),
                 ),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (messageBuilder.attachFile != null)
-                          buildAttachFile(),
-                        buildMessage(),
-                      ],
-                    ),
-                    Positioned(
-                      right: 8.0,
-                      bottom: 4.0,
-                      child: Text(
-                        TimeFormat.formatTimeMessage(
-                          messageBuilder.createAt,
-                        ),
-                        style: TextStyle(
-                          color: _isNotOwnerMassage()
-                              ? Colors.white
-                              : Colors.black.withAlpha(100),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                child: buildMassageItem(),
               ),
             ),
           ),

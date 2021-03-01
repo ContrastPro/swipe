@@ -44,15 +44,28 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
   void _showFullSizeImage(int index, File image) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Scaffold(
-            body: Center(
-              child: Hero(
-                tag: index,
-                child: Image.file(image),
+        builder: (context) => Scaffold(
+          body: Stack(
+            children: [
+              Center(
+                child: Hero(
+                  tag: index,
+                  child: InteractiveViewer(
+                    panEnabled: true,
+                    child: Image.file(image),
+                  ),
+                ),
               ),
-            ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close_rounded),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

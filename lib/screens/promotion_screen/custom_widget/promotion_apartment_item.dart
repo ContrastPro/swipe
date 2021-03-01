@@ -134,10 +134,10 @@ class PromotionApartmentItem extends StatelessWidget {
                 height: 15.0,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 5.0,
+                  horizontal: 4.0,
                 ),
                 margin: const EdgeInsets.symmetric(
-                  horizontal: 7.0,
+                  horizontal: 5.0,
                   vertical: 9.0,
                 ),
                 child: Text(
@@ -146,7 +146,7 @@ class PromotionApartmentItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 8,
+                    fontSize: 7.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
+import 'package:swipe/custom_app_widget/shimmer/shimmer_feedback.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/chat_screen/chat_screen.dart';
@@ -27,9 +28,7 @@ class FeedbackScreen extends StatelessWidget {
             }
 
             if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return ShimmerFeedback();
             }
 
             if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {

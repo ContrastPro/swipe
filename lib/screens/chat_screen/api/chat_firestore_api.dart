@@ -148,41 +148,22 @@ class ChatFirestoreAPI {
     @required String documentID,
     @required String attachFile,
   }) async {
-    // Удаляем сообщение у себя
-    await FirebaseFirestore.instance
-        .collection("Swipe")
-        .doc("Database")
-        .collection("Users")
-        .doc(_user.uid)
-        .collection("Chats")
-        .doc(ownerUID)
-        .collection("Chat")
-        .doc(documentID)
-        .delete();
-
     if (attachFile != null) {
       // Удаляем изображение у себя
       await ChatCloudstoreAPI.deleteChatImage(attachFile: attachFile);
 
-      // Удаляем изображение у собеседника
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      // Удаляем сообщение у себя
+      await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
-          .doc(ownerUID)
-          .collection("Chats")
           .doc(_user.uid)
+          .collection("Chats")
+          .doc(ownerUID)
           .collection("Chat")
           .doc(documentID)
-          .get();
+          .delete();
 
-      if (documentSnapshot.exists) {
-        await ChatCloudstoreAPI.deleteChatImage(
-          attachFile: documentSnapshot["attachFile"],
-        );
-      }
-
-      // Удаляем сообщение у собеседника
       await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
@@ -192,8 +173,41 @@ class ChatFirestoreAPI {
           .doc(_user.uid)
           .collection("Chat")
           .doc(documentID)
-          .delete();
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          // Удаляем изображение у собеседника
+          await ChatCloudstoreAPI.deleteChatImage(
+            attachFile: documentSnapshot["attachFile"],
+          );
+
+          // Удаляем сообщение у собеседника
+          await FirebaseFirestore.instance
+              .collection("Swipe")
+              .doc("Database")
+              .collection("Users")
+              .doc(ownerUID)
+              .collection("Chats")
+              .doc(_user.uid)
+              .collection("Chat")
+              .doc(documentID)
+              .delete();
+        }
+      });
     } else {
+      // Удаляем сообщение у себя
+      await FirebaseFirestore.instance
+          .collection("Swipe")
+          .doc("Database")
+          .collection("Users")
+          .doc(_user.uid)
+          .collection("Chats")
+          .doc(ownerUID)
+          .collection("Chat")
+          .doc(documentID)
+          .delete();
+
+      // Удаляем сообщение у собеседника
       await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")

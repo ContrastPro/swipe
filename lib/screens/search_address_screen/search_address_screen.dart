@@ -42,7 +42,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
       Marker(
         markerId: MarkerId(_addressBuilder.address),
         position: LatLng(_latitude, _longitude),
-        icon: _mapNotifier.adMapIcon,
+        icon: _mapNotifier.adMapOwnerIcon,
         draggable: true,
         onDragEnd: (LatLng positionParam) {
           _addressBuilder.geo = GeoPoint(
