@@ -5,7 +5,7 @@ class NotaryFirestoreAPI {
     return FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
-        .collection("Notary")
+        .collection("Notaries")
         .snapshots();
   }
 
@@ -13,13 +13,15 @@ class NotaryFirestoreAPI {
     await FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
-        .collection("Notary")
+        .collection("Notaries")
         .add({
-      "name": "Alex",
-      "lastName": "Blake",
-      "phone": "+38 099 510 63 03",
+      "name": "Valio",
+      "lastName": "Oltermanni",
+      "phone": "+38 055 610 61 03",
       "email": "swipe@gmail.com",
-      "photoURL": "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200",
+      "photoURL":
+          "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200",
+      "createAt": Timestamp.now(),
     });
   }
 }

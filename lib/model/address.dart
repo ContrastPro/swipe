@@ -6,7 +6,6 @@ class AddressBuilder {
 
   @override
   String toString() {
-    return 'AddressBuilder {address: $address, '
-        'geo: ${geo.latitude} ${geo.longitude}}';
+    return 'AddressBuilder {address: $address, geo: ${geo.latitude} ${geo.longitude}}';
   }
 }

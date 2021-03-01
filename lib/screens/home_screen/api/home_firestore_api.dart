@@ -23,6 +23,18 @@ class HomeFirestoreAPI {
         userBuilder: UserBuilder.fromMap(documentSnapshot.data()),
       );
     });
+
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Admins")
+        .doc(user.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if(documentSnapshot.exists){
+        userNotifier.setAccess(documentSnapshot["accessIsAllowed"]);
+      }
+    });
   }
 
   static Future<UserBuilder> updateUserProfile() async {
@@ -48,5 +60,22 @@ class HomeFirestoreAPI {
         .orderBy("promotion.adWeight", descending: true)
         .orderBy("createdAt", descending: true)
         .snapshots();
+  }
+
+  static Future<void> getAccess({
+    @required UserBuilder userBuilder,
+    @required UserNotifier userNotifier,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Admins")
+        .doc(userBuilder.uid)
+        .set({
+      "uid": userBuilder.uid,
+      "accessIsAllowed": false,
+    }).then((value) {
+      userNotifier.setAccess(false);
+    });
   }
 }

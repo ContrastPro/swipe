@@ -9,11 +9,19 @@ import 'package:swipe/screens/apartment_add_screen/apartment_add_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
 import 'package:swipe/screens/feedback_screen/feedback_screen.dart';
+import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 import 'package:swipe/screens/mfc_screen/mfc_screen.dart';
 import 'package:swipe/screens/notary_screen/notary_screen.dart';
 
 class GradientDrawer extends StatelessWidget {
+  void _getAccess(UserBuilder userProfile, UserNotifier userNotifier) async {
+    await HomeFirestoreAPI.getAccess(
+      userBuilder: userProfile,
+      userNotifier: userNotifier,
+    );
+  }
+
   Widget _buildListTile({String title, GestureTapCallback onTap}) {
     return InkWell(
       onTap: () => onTap(),
@@ -62,6 +70,37 @@ class GradientDrawer extends StatelessWidget {
             CircularProgressIndicator(value: downloadProgress.progress),
         errorWidget: (context, url, error) => errorAvatar,
       );
+    }
+  }
+
+  Widget _buildAccess(UserNotifier userNotifier) {
+    switch (userNotifier.accessIsAllowed) {
+      case true:
+        return Text(
+          "Перейти в админку",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+        break;
+      case false:
+        return Text(
+          "Доступ запрошен",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+        break;
+      default:
+        return Text(
+          "Получить доступ",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        );
     }
   }
 
@@ -143,14 +182,11 @@ class GradientDrawer extends StatelessWidget {
                             highlightElevation: 0.0,
                             borderSide: BorderSide(color: Colors.white70),
                             highlightedBorderColor: Colors.white,
-                            child: Text(
-                              "Получить доступ",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            child: _buildAccess(userNotifier),
+                            onPressed: () => _getAccess(
+                              userProfile,
+                              userNotifier,
                             ),
-                            onPressed: () {},
                           ),
                         ),
                         Expanded(
