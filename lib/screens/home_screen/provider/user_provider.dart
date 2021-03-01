@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
@@ -15,9 +16,9 @@ class UserNotifier with ChangeNotifier {
 
   UserBuilder get userProfile => _userBuilder;
 
-  void setUserProfile({@required UserBuilder userBuilder}) {
+  void setUserProfile({@required UserBuilder userBuilder}) async {
     _userBuilder = userBuilder;
-    _isRegularScreen = false;
+    await _setRegularScreen();
     log("$_userBuilder");
     notifyListeners();
   }
@@ -33,8 +34,20 @@ class UserNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeRegularScreen({bool isRegularScreen}) {
+  void changeRegularScreen({bool isRegularScreen}) async {
     _isRegularScreen = isRegularScreen;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isRegularScreen', isRegularScreen);
     notifyListeners();
+  }
+
+  Future<void> _setRegularScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('isRegularScreen') == true) {
+      _isRegularScreen = prefs.getBool('isRegularScreen');
+    } else {
+      _isRegularScreen = true;
+      prefs.setBool('isRegularScreen', _isRegularScreen);
+    }
   }
 }
