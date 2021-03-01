@@ -79,6 +79,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
                     FadeRoute(
                       page: ImageSlider(
                         imageList: widget.apartmentBuilder.images,
+                        initialPage: _currentIndex,
                       ),
                     ),
                   );

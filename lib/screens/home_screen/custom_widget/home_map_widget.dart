@@ -132,7 +132,8 @@ class _HomeMapWidgetState extends State<HomeMapWidget> {
         Align(
           alignment: Alignment.bottomLeft,
           child: CurrentLocation(
-            isLocated: _mapNotifier.userLocation != null ? true : false,
+            isLocated:
+                _markerList.contains(_mapNotifier.userMarker) ? true : false,
             onTap: () => _updateUserLocation(),
           ),
         )

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<String> imageList;
+  final int initialPage;
 
   const ImageSlider({
     Key key,
     @required this.imageList,
+    this.initialPage,
   }) : super(key: key);
 
   @override
@@ -14,17 +16,26 @@ class ImageSlider extends StatefulWidget {
 }
 
 class _ImageSliderState extends State<ImageSlider> {
+  PageController _controller;
+
+  @override
+  void initState() {
+    _controller = PageController(initialPage: widget.initialPage ?? 0);
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           PageView.builder(
+            controller: _controller,
             itemCount: widget.imageList.length,
             physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return InteractiveViewer(
-                panEnabled: false,
                 child: CachedNetworkImage(
                   imageUrl: widget.imageList[index],
                   imageBuilder: (context, imageProvider) => Container(
