@@ -40,6 +40,8 @@ class HomeFirestoreAPI {
         userNotifier.setAccess(null);
       }
     });
+
+    //await Future.delayed(Duration(seconds: 5));
   }
 
   static Future<UserBuilder> updateUserProfile() async {

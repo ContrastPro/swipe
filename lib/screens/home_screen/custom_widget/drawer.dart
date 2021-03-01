@@ -5,6 +5,7 @@ import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/admin_panel/admin_home_screen/admin_home_screen.dart';
 import 'package:swipe/screens/apartment_add_screen/apartment_add_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
@@ -102,11 +103,8 @@ class GradientDrawer extends StatelessWidget {
             userBuilder: userNotifier.userProfile,
           );
         } else if (userNotifier.accessIsAllowed == true) {
-          Navigator.push(
-            context,
-            FadeRoute(
-              page: ApartmentAddScreen(),
-            ),
+          userNotifier.changeRegularScreen(
+            isRegularScreen: false,
           );
         }
       },
