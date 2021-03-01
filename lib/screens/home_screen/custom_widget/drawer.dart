@@ -10,6 +10,8 @@ import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/edit_profile_screen/edit_profile_screen.dart';
 import 'package:swipe/screens/feedback_screen/feedback_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
+import 'package:swipe/screens/mfc_screen/mfc_screen.dart';
+import 'package:swipe/screens/notary_screen/notary_screen.dart';
 
 class GradientDrawer extends StatelessWidget {
   Widget _buildListTile({String title, GestureTapCallback onTap}) {
@@ -202,13 +204,23 @@ class GradientDrawer extends StatelessWidget {
                   _buildListTile(
                     title: "Нотариусы",
                     onTap: () {
-                      //
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: NotaryScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildListTile(
                     title: "МФЦ",
                     onTap: () {
-                      //
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: MFCScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildListTile(

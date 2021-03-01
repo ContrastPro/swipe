@@ -15,6 +15,8 @@ class MapNotifier with ChangeNotifier {
 
   BitmapDescriptor _userIcon;
 
+  BitmapDescriptor _mfcIcon;
+
   Marker _userMarker;
 
   LatLng _initialLocation = LatLng(46.48, 30.73);
@@ -30,6 +32,8 @@ class MapNotifier with ChangeNotifier {
 
   BitmapDescriptor get adMapOwnerIcon => _adMapOwnerIcon;
 
+  BitmapDescriptor get mfcIcon => _mfcIcon;
+
   Marker get userMarker => _userMarker;
 
   LatLng get initialLocation => _initialLocation;
@@ -41,6 +45,7 @@ class MapNotifier with ChangeNotifier {
     _loadMapIcon();
     _loadMapOwnerIcon();
     _loadUserIcon();
+    _loadMFCIcon();
   }
 
   Future<void> loadUserLocation() async {
@@ -85,6 +90,13 @@ class MapNotifier with ChangeNotifier {
     _userIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
       "assets/images/user_icon.png",
+    );
+  }
+
+  void _loadMFCIcon() async {
+    _mfcIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      "assets/images/mfc_icon.png",
     );
   }
 }

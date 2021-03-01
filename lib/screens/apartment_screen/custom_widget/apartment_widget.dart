@@ -62,7 +62,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
     );
   }
 
-  _makePhoneCall() async {
+  void _makePhoneCall() async {
     String phone = "tel:${widget.userBuilder.phone}";
     if (await canLaunch(phone)) {
       await launch(phone);
