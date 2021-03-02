@@ -3,22 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_feedback.dart';
-import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/notary_screen/api/notary_firestore_api.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class NotaryScreen extends StatelessWidget {
-  void _makePhoneCall(String phoneNumber) async {
-    String phone = "tel:$phoneNumber";
-    if (await canLaunch(phone)) {
-      await launch(phone);
-    } else {
-      throw 'Could not launch $phone';
-    }
-  }
+import 'api/notary_firestore_admin_api.dart';
 
+class AdminNotaryScreen extends StatelessWidget {
   Widget _buildImage(NotaryBuilder notaryBuilder) {
     if (notaryBuilder.photoURL != null) {
       return CachedNetworkImage(
@@ -41,7 +31,7 @@ class NotaryScreen extends StatelessWidget {
         backgroundColor: Colors.black.withAlpha(50),
         child: Text(
           "${notaryBuilder.name[0].toUpperCase()}"
-          "${notaryBuilder.lastName[0].toUpperCase()}",
+              "${notaryBuilder.lastName[0].toUpperCase()}",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
@@ -81,10 +71,10 @@ class NotaryScreen extends StatelessWidget {
         ),
         trailing: IconButton(
           icon: Icon(
-            Icons.phone_rounded,
-            color: AppColors.accentColor,
+            Icons.edit_outlined,
+            color: Colors.black,
           ),
-          onPressed: () => _makePhoneCall(notaryBuilder.phone),
+          onPressed: () {},
         ),
       ),
     );
@@ -100,7 +90,7 @@ class NotaryScreen extends StatelessWidget {
       ),
       body: NetworkConnectivity(
         child: StreamBuilder<QuerySnapshot>(
-          stream: NotaryFirestoreAPI.getNotary(),
+          stream: NotaryFirestoreAdminApi.getNotary(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Something went wrong'));

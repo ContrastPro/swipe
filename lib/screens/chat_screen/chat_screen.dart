@@ -66,7 +66,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
     }
   }
 
-  void _deleteMessage(DocumentSnapshot document) {
+  void _deleteMessage({MessageBuilder messageBuilder}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -75,15 +75,13 @@ class _FeedbackScreenState extends State<ChatScreen> {
           deleteFromMe: () {
             ChatFirestoreAPI.deleteFromMe(
               ownerUID: widget.userBuilder.uid,
-              documentID: document.id,
-              attachFile: document["attachFile"],
+              messageBuilder: messageBuilder,
             );
           },
           deleteEverywhere: () {
             ChatFirestoreAPI.deleteEverywhere(
               ownerUID: widget.userBuilder.uid,
-              documentID: document.id,
-              attachFile: document["attachFile"],
+              messageBuilder: messageBuilder,
             );
           },
         );
@@ -138,7 +136,9 @@ class _FeedbackScreenState extends State<ChatScreen> {
                           ),
                           userBuilder: widget.userBuilder,
                           onLongPress: () => _deleteMessage(
-                            snapshot.data.docs[index],
+                            messageBuilder: MessageBuilder.fromMap(
+                              snapshot.data.docs[index].data(),
+                            ),
                           ),
                         );
                       },

@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 
 class ChatFirestoreAPI {
   ChatFirestoreAPI._();
+
   static User user = AuthFirebaseAPI.getCurrentUser();
 
   static Stream<QuerySnapshot> getChat({
@@ -33,7 +34,8 @@ class ChatFirestoreAPI {
     @required String ownerUID,
     @required MessageBuilder messageBuilder,
   }) async {
-    final String key = Uuid().v1();
+    final String uuid = Uuid().v1();
+    messageBuilder.id = uuid;
     messageBuilder.ownerUID = user.uid;
     messageBuilder.createAt = Timestamp.now();
 
@@ -51,7 +53,7 @@ class ChatFirestoreAPI {
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
-        .doc(key);
+        .doc(uuid);
 
     final DocumentReference referenceOwner = FirebaseFirestore.instance
         .collection("Swipe")
@@ -61,7 +63,7 @@ class ChatFirestoreAPI {
         .collection("Chats")
         .doc(user.uid)
         .collection("Chat")
-        .doc(key);
+        .doc(uuid);
 
     // Отправляем сообщение себе
     await referenceUser.set(message.toMap()).then((value) async {
@@ -122,9 +124,13 @@ class ChatFirestoreAPI {
 
   static Future<void> deleteFromMe({
     @required String ownerUID,
-    @required String documentID,
-    @required String attachFile,
+    @required MessageBuilder messageBuilder,
   }) async {
+    if (messageBuilder.attachFile != null) {
+      await ChatCloudstoreAPI.deleteChatImage(
+        attachFile: messageBuilder.attachFile,
+      );
+    }
     // Удаляем сообщение у себя
     await FirebaseFirestore.instance
         .collection("Swipe")
@@ -134,24 +140,19 @@ class ChatFirestoreAPI {
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
-        .doc(documentID)
+        .doc(messageBuilder.id)
         .delete();
-
-    if (attachFile != null) {
-      await ChatCloudstoreAPI.deleteChatImage(
-        attachFile: attachFile,
-      );
-    }
   }
 
   static Future<void> deleteEverywhere({
     @required String ownerUID,
-    @required String documentID,
-    @required String attachFile,
+    @required MessageBuilder messageBuilder,
   }) async {
-    if (attachFile != null) {
+    if (messageBuilder.attachFile != null) {
       // Удаляем изображение у себя
-      await ChatCloudstoreAPI.deleteChatImage(attachFile: attachFile);
+      await ChatCloudstoreAPI.deleteChatImage(
+        attachFile: messageBuilder.attachFile,
+      );
 
       // Удаляем сообщение у себя
       await FirebaseFirestore.instance
@@ -162,7 +163,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(ownerUID)
           .collection("Chat")
-          .doc(documentID)
+          .doc(messageBuilder.id)
           .delete();
 
       await FirebaseFirestore.instance
@@ -173,7 +174,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(user.uid)
           .collection("Chat")
-          .doc(documentID)
+          .doc(messageBuilder.id)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
@@ -191,7 +192,7 @@ class ChatFirestoreAPI {
               .collection("Chats")
               .doc(user.uid)
               .collection("Chat")
-              .doc(documentID)
+              .doc(messageBuilder.id)
               .delete();
         }
       });
@@ -205,7 +206,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(ownerUID)
           .collection("Chat")
-          .doc(documentID)
+          .doc(messageBuilder.id)
           .delete();
 
       // Удаляем сообщение у собеседника
@@ -217,7 +218,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(user.uid)
           .collection("Chat")
-          .doc(documentID)
+          .doc(messageBuilder.id)
           .delete();
     }
   }
