@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/model/notary.dart';
@@ -16,10 +18,15 @@ class NotaryFirestoreAdminApi {
 
   static Future<void> addNotary({
     @required NotaryBuilder notaryBuilder,
+    @required File imageFile,
   }) async {
     final String uuid = Uuid().v1();
-
     notaryBuilder.id = uuid;
+
+    if (imageFile != null) {
+      //notaryBuilder.photoURL = await ;
+    }
+
     notaryBuilder.createAt = Timestamp.now();
 
     await FirebaseFirestore.instance

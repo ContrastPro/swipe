@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
-import 'package:swipe/custom_app_widget/shimmer/shimmer_feedback.dart';
+import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
@@ -107,7 +107,7 @@ class NotaryScreen extends StatelessWidget {
             }
 
             if (!snapshot.hasData) {
-              return ShimmerFeedback();
+              return ShimmerUsers();
             }
 
             if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {

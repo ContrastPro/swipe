@@ -21,6 +21,21 @@ class NotaryBuilder {
         photoURL = map["photoURL"],
         createAt = map["createAt"],
         updateAt = map["updateAt"];
+
+  @override
+  String toString() {
+    return '\n********************************\n'
+        '--- NotaryBuilder ---'
+        '\n>> id: $id'
+        '\n>> name: $name'
+        '\n>> lastName: $lastName'
+        '\n>> phone: $phone'
+        '\n>> email: $email'
+        '\n>> photoURL: $photoURL'
+        '\n>> createAt: $createAt'
+        '\n>> updateAt: $updateAt'
+        '\n********************************\n';
+  }
 }
 
 class Notary {

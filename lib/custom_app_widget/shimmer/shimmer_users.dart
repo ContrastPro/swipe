@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ShimmerFeedback extends StatelessWidget {
+class ShimmerUsers extends StatelessWidget {
   static const Color _color = Colors.white24;
 
   @override
