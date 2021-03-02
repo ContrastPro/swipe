@@ -1,84 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_feedback.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/admin_panel/admin_notary_screen/custom_widget/notary_item_admin.dart';
 
 import 'api/notary_firestore_admin_api.dart';
 
 class AdminNotaryScreen extends StatelessWidget {
-  Widget _buildImage(NotaryBuilder notaryBuilder) {
-    if (notaryBuilder.photoURL != null) {
-      return CachedNetworkImage(
-        imageUrl: notaryBuilder.photoURL,
-        imageBuilder: (context, imageProvider) => CircleAvatar(
-          backgroundImage: imageProvider,
-        ),
-        placeholder: (context, url) => CircularProgressIndicator(),
-        errorWidget: (context, url, error) => Container(
-          width: 20.0,
-          height: 20.0,
-          child: Icon(
-            Icons.error_outline_outlined,
-            color: Colors.redAccent,
-          ),
-        ),
-      );
-    } else {
-      return CircleAvatar(
-        backgroundColor: Colors.black.withAlpha(50),
-        child: Text(
-          "${notaryBuilder.name[0].toUpperCase()}"
-              "${notaryBuilder.lastName[0].toUpperCase()}",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-          ),
-        ),
-      );
-    }
-  }
-
-  Widget _notaryItem(NotaryBuilder notaryBuilder) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: ListTile(
-        leading: _buildImage(notaryBuilder),
-        title: Text(
-          "${notaryBuilder.name} ${notaryBuilder.lastName}",
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              notaryBuilder.phone,
-              style: TextStyle(
-                fontSize: 12.0,
-              ),
-            ),
-            Text(
-              notaryBuilder.email,
-              style: TextStyle(
-                fontSize: 12.0,
-              ),
-            ),
-          ],
-        ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.edit_outlined,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
-      ),
-    );
-  }
+  void _editNotary(NotaryBuilder notaryBuilder) {}
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +37,17 @@ class AdminNotaryScreen extends StatelessWidget {
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(vertical: 11.0),
                 itemBuilder: (BuildContext context, int index) {
-                  return _notaryItem(
-                    NotaryBuilder.fromMap(
+                  return NotaryItemAdmin(
+                    notaryBuilder: NotaryBuilder.fromMap(
                       snapshot.data.docs[index].data(),
                     ),
+                    onTap: () {
+                      _editNotary(
+                        NotaryBuilder.fromMap(
+                          snapshot.data.docs[index].data(),
+                        ),
+                      );
+                    },
                   );
                 },
               );
