@@ -73,7 +73,11 @@ class SwipeApp extends StatelessWidget {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Scaffold();
+                  return Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 }
                 return ChangeNotifierProvider<AuthModeNotifier>(
                   create: (_) => AuthModeNotifier(),
@@ -83,7 +87,11 @@ class SwipeApp extends StatelessWidget {
             );
           }
 
-          return Scaffold();
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         },
       ),
     );

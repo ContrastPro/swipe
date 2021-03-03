@@ -52,7 +52,9 @@ class UsersItemAdmin extends StatelessWidget {
       if (ownerUID != userBuilder.uid) {
         return IconButton(
           icon: Icon(
-            Icons.block_rounded,
+            userBuilder.isBanned == true
+                ? Icons.close_rounded
+                : Icons.block_rounded,
             color: Colors.black,
           ),
           onPressed: () => onTap(),

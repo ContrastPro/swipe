@@ -66,7 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
       _userBuilder.updatedAt = Timestamp.now();
       await EditProfileFirestoreAPI.editUserProfile(
-        customUser: CustomUser(builder: _userBuilder),
+        customUser: CustomUser(userBuilder: _userBuilder),
       );
       Navigator.pop(context);
     }

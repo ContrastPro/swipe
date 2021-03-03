@@ -6,6 +6,8 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
 
+import 'api/banned_firestore_api.dart';
+
 class BannedScreen extends StatelessWidget {
   final String userUID;
 
@@ -16,15 +18,8 @@ class BannedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream _isBannedStream = FirebaseFirestore.instance
-        .collection("Swipe")
-        .doc("Database")
-        .collection("Users")
-        .doc(userUID)
-        .snapshots();
-
     return StreamBuilder<DocumentSnapshot>(
-      stream: _isBannedStream,
+      stream: BannedFirestoreApi.isBannedStream(userUID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data["isBanned"] != true) {
@@ -67,7 +62,11 @@ class BannedScreen extends StatelessWidget {
             );
           }
         }
-        return Scaffold();
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       },
     );
   }

@@ -100,7 +100,7 @@ class AuthFirebaseAPI {
     userBuilder.uid = user.uid;
     userBuilder.createdAt = Timestamp.now();
     await AuthFirestoreAPI.addUser(
-      customUser: CustomUser(builder: userBuilder),
+      customUser: CustomUser(userBuilder: userBuilder),
       user: user,
     );
   }

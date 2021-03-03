@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/screens/admin_panel/admin_blacklist_screen/admin_blacklist_screen.dart';
 import 'package:swipe/screens/admin_panel/admin_home_screen/custom_widget/list_item_admin.dart';
 import 'package:swipe/screens/admin_panel/admin_notary_screen/admin_notary_screen.dart';
 import 'package:swipe/screens/admin_panel/admin_users_screen/admin_users_screen.dart';
@@ -66,7 +67,14 @@ class AdminHomeScreen extends StatelessWidget {
                     ),
                     ListItemAdmin(
                       title: "Blacklist",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          FadeRoute(
+                            page: AdminBlacklistScreen(),
+                          ),
+                        );
+                      },
                     ),
                     ListItemAdmin(
                       title: "Управление Нотариусы",

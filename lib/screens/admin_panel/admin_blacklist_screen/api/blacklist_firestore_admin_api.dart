@@ -1,29 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class UsersFirestoreAdminApi {
-  UsersFirestoreAdminApi._();
+class BlacklistFirestoreAdminApi {
+  BlacklistFirestoreAdminApi._();
 
-  static Stream<QuerySnapshot> getUsers() {
+  static Stream<QuerySnapshot> getBlacklist() {
     return FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
-        .orderBy("createdAt", descending: true)
+        .where("isBanned", isEqualTo: true)
         .snapshots();
-  }
-
-  static Future<void> blockUser({
-    @required String uid,
-  }) async {
-    await FirebaseFirestore.instance
-        .collection("Swipe")
-        .doc("Database")
-        .collection("Users")
-        .doc(uid)
-        .update({
-      "isBanned": true,
-    });
   }
 
   static Future<void> unblockUser({

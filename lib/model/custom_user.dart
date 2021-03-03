@@ -95,26 +95,26 @@ class CustomUser {
   final Subscription subscription;
   final bool isBanned;
 
-  CustomUser({@required UserBuilder builder})
-      : uid = builder.uid,
-        name = builder.name,
-        lastName = builder.lastName,
-        phone = builder.phone,
-        email = builder.email?.toLowerCase(),
-        photoURL = builder.photoURL,
-        createdAt = builder.createdAt,
-        updatedAt = builder.updatedAt,
+  CustomUser({@required UserBuilder userBuilder})
+      : uid = userBuilder.uid,
+        name = userBuilder.name,
+        lastName = userBuilder.lastName,
+        phone = userBuilder.phone,
+        email = userBuilder.email?.toLowerCase(),
+        photoURL = userBuilder.photoURL,
+        createdAt = userBuilder.createdAt,
+        updatedAt = userBuilder.updatedAt,
 
         //
-        agentName = builder.agentName,
-        agentLastName = builder.agentLastName,
-        agentPhone = builder.agentPhone,
-        agentEmail = builder.agentEmail?.toLowerCase(),
+        agentName = userBuilder.agentName,
+        agentLastName = userBuilder.agentLastName,
+        agentPhone = userBuilder.agentPhone,
+        agentEmail = userBuilder.agentEmail?.toLowerCase(),
 
         //
-        subscription = builder.subscription ?? Subscription(),
-        notification = builder.notification ?? [true, false, false, false],
-        isBanned = builder.isBanned ?? false;
+        subscription = userBuilder.subscription ?? Subscription(),
+        notification = userBuilder.notification ?? [true, false, false, false],
+        isBanned = userBuilder.isBanned ?? false;
 
   Map<String, dynamic> toMap() {
     return {

@@ -5,33 +5,29 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
+import 'package:swipe/screens/admin_panel/admin_users_screen/custom_widget/users_item_admin.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
-import 'api/users_firestore_admin_api.dart';
-import 'custom_widget/users_item_admin.dart';
+import 'api/blacklist_firestore_admin_api.dart';
 
-class AdminUsersScreen extends StatelessWidget {
+class AdminBlacklistScreen extends StatelessWidget {
   final User _user = AuthFirebaseAPI.getCurrentUser();
 
-  void _blockUnblockUser({DocumentSnapshot document}) {
-    if (document["isBanned"] == true) {
-      UsersFirestoreAdminApi.unblockUser(uid: document.id);
-    } else {
-      UsersFirestoreAdminApi.blockUser(uid: document.id);
-    }
+  void _unblockUser({DocumentSnapshot document}) {
+    BlacklistFirestoreAdminApi.unblockUser(uid: document.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarStyle1(
-        title: "Пользователи",
+        title: "Blacklist",
         onTapLeading: () => Navigator.pop(context),
         onTapAction: () => Navigator.pop(context),
       ),
       body: NetworkConnectivity(
         child: StreamBuilder<QuerySnapshot>(
-          stream: UsersFirestoreAdminApi.getUsers(),
+          stream: BlacklistFirestoreAdminApi.getBlacklist(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Something went wrong'));
@@ -54,7 +50,7 @@ class AdminUsersScreen extends StatelessWidget {
                           snapshot.data.docs[index].data(),
                         ),
                         ownerUID: _user.uid,
-                        onTap: () => _blockUnblockUser(
+                        onTap: () => _unblockUser(
                           document: snapshot.data.docs[index],
                         ),
                       );
