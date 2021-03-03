@@ -42,7 +42,10 @@ class PromotionCardMedium extends StatelessWidget {
     }
 
     Widget colored() {
-      return GestureDetector(
+      return InkWell(
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         onTap: () => changeColor(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -90,7 +93,10 @@ class PromotionCardMedium extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            return GestureDetector(
+            return InkWell(
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
               onTap: () => colorPicked(AppColors.promotionColors[index].value),
               child: Container(
                 width: 30,
@@ -113,7 +119,10 @@ class PromotionCardMedium extends StatelessWidget {
     }
 
     Widget phrase() {
-      return GestureDetector(
+      return InkWell(
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         onTap: () => changePhrase(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

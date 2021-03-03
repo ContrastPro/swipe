@@ -110,7 +110,7 @@ class PromotionPhrasePicker extends StatelessWidget {
                     "Выбор фразы",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                     ),
                   ),
                   SizedBox(height: 35.0),

@@ -83,11 +83,14 @@ class _PromotionScreenState extends State<PromotionScreen> {
       return Stack(
         alignment: Alignment.topRight,
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
-                child: PromotionCardMedium(
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              children: [
+                PromotionCardMedium(
                   apartmentBuilder: _apartmentBuilder,
                   imageFile: widget.imageList,
                   promotionList: _promotionList,
@@ -109,67 +112,67 @@ class _PromotionScreenState extends State<PromotionScreen> {
                     _setBasicPosition(_promotionList[0].price);
                   },
                 ),
-              ),
-              ListView.builder(
-                itemCount: 3,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => _setPremiumPosition(index),
-                    child: PromotionCardSmall(
-                      promotionList: _promotionList,
-                      index: index,
-                      currentIndex: _currentIndex,
-                    ),
-                  );
-                },
-              ),
-              if (_totalPrice != 0)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32.0, 22.0, 32.0, 8.0),
-                  child: GradientButton(
-                    title: "Оплатить $_totalPrice₽",
-                    maxWidth: double.infinity,
-                    minHeight: 60.0,
-                    borderRadius: 45.0,
-                    onTap: () async {
-                      setState(() => _startLoading = true);
-                      await MakePayment.makePayment(
-                        apartmentBuilder: _apartmentBuilder,
-                        list: _promotionList,
-                        imageList: widget.imageList,
-                        price: _totalPrice,
-                      );
-                      _closeScreen();
-                    },
-                  ),
+                ListView.builder(
+                  itemCount: 3,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () => _setPremiumPosition(index),
+                      child: PromotionCardSmall(
+                        promotionList: _promotionList,
+                        index: index,
+                        currentIndex: _currentIndex,
+                      ),
+                    );
+                  },
                 ),
-              if (_apartmentBuilder.promotionBuilder.adWeight == null)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 32.0,
-                    bottom: 42.0,
+                if (_totalPrice != 0)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(32.0, 22.0, 32.0, 8.0),
+                    child: GradientButton(
+                      title: "Оплатить $_totalPrice₽",
+                      maxWidth: double.infinity,
+                      minHeight: 60.0,
+                      borderRadius: 45.0,
+                      onTap: () async {
+                        setState(() => _startLoading = true);
+                        await MakePayment.makePayment(
+                          apartmentBuilder: _apartmentBuilder,
+                          list: _promotionList,
+                          imageList: widget.imageList,
+                          price: _totalPrice,
+                        );
+                        _closeScreen();
+                      },
+                    ),
                   ),
-                  child: GestureDetector(
-                    onTap: () async {
-                      setState(() => _startLoading = true);
-                      await MakePayment.uploadWithoutPayment(
-                        apartmentBuilder: _apartmentBuilder,
-                        imageList: widget.imageList,
-                      );
-                      _closeScreen();
-                    },
-                    child: Text(
-                      "Разместить без оплаты",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
+                if (_apartmentBuilder.promotionBuilder.adWeight == null)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 32.0,
+                      bottom: 42.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        setState(() => _startLoading = true);
+                        await MakePayment.uploadWithoutPayment(
+                          apartmentBuilder: _apartmentBuilder,
+                          imageList: widget.imageList,
+                        );
+                        _closeScreen();
+                      },
+                      child: Text(
+                        "Разместить без оплаты",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           AnimatedContainer(
             width: _addPhrase ? MediaQuery.of(context).size.width : 0,
@@ -207,10 +210,6 @@ class _PromotionScreenState extends State<PromotionScreen> {
           ),
           body: NetworkConnectivity(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 16.0,
-              ),
               physics: BouncingScrollPhysics(),
               child: _buildScreen(),
             ),

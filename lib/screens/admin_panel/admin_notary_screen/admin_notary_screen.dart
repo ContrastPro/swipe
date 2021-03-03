@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
@@ -36,16 +34,22 @@ class _AdminNotaryScreenState extends State<AdminNotaryScreen> {
 
   Widget _buildAddEditNotary() {
     return AnimatedContainer(
-      width: _isOpen ? MediaQuery.of(context).size.width : 0,
-      height: _isOpen ? 400 : 0,
+      width: MediaQuery.of(context).size.width,
+      height: _isOpen ? MediaQuery.of(context).size.height : 0,
       duration: Duration(milliseconds: 1500),
       curve: Curves.fastOutSlowIn,
-      child: AddEditNotaryAdmin(
-        isOpen: _isOpen,
-        notaryBuilder: _notaryBuilder,
-        switchState: () {
-          setState(() => _isOpen = false);
-        },
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 800),
+        switchOutCurve: Curves.fastOutSlowIn,
+        child: _isOpen
+            ? AddEditNotaryAdmin(
+                isOpen: _isOpen,
+                notaryBuilder: _notaryBuilder,
+                switchState: () {
+                  setState(() => _isOpen = false);
+                },
+              )
+            : SizedBox(),
       ),
     );
   }
@@ -60,7 +64,7 @@ class _AdminNotaryScreenState extends State<AdminNotaryScreen> {
       ),
       body: NetworkConnectivity(
         child: Stack(
-          alignment: Alignment.topRight,
+          alignment: Alignment.topCenter,
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: NotaryFirestoreAdminApi.getNotary(),
@@ -110,8 +114,9 @@ class _AdminNotaryScreenState extends State<AdminNotaryScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AnimatedSwitcher(
-        duration: Duration(milliseconds: 1500),
+        duration: Duration(milliseconds: 1000),
         switchOutCurve: Curves.fastOutSlowIn,
+        switchInCurve: Curves.easeInBack,
         child: _isOpen
             ? SizedBox()
             : ApartmentFABEdit(

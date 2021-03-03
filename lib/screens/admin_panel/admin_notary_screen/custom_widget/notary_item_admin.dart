@@ -65,12 +65,14 @@ class NotaryItemAdmin extends StatelessWidget {
                 fontSize: 12.0,
               ),
             ),
-            Text(
-              notaryBuilder.email,
-              style: TextStyle(
-                fontSize: 12.0,
+            if(notaryBuilder.email != null)...[
+              Text(
+                notaryBuilder.email,
+                style: TextStyle(
+                  fontSize: 12.0,
+                ),
               ),
-            ),
+            ],
           ],
         ),
         trailing: IconButton(

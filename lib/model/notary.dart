@@ -32,8 +32,8 @@ class NotaryBuilder {
         '\n>> phone: $phone'
         '\n>> email: $email'
         '\n>> photoURL: $photoURL'
-        '\n>> createAt: $createAt'
-        '\n>> updateAt: $updateAt'
+        '\n>> createAt: ${createAt?.toDate()}'
+        '\n>> updateAt: ${updateAt?.toDate()}'
         '\n********************************\n';
   }
 }

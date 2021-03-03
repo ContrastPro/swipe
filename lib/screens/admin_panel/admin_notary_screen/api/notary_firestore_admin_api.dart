@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:uuid/uuid.dart';
 
+import 'notary_cloudstore_admin_api.dart';
+
 class NotaryFirestoreAdminApi {
   NotaryFirestoreAdminApi._();
 
@@ -21,12 +23,16 @@ class NotaryFirestoreAdminApi {
     @required File imageFile,
   }) async {
     final String uuid = Uuid().v1();
-    notaryBuilder.id = uuid;
 
     if (imageFile != null) {
-      //notaryBuilder.photoURL = await ;
+      notaryBuilder.photoURL = await NotaryCloudstoreAdminAPI.uploadNotaryImage(
+        imageFile: imageFile,
+        photoURL: notaryBuilder.photoURL,
+        uuid: uuid,
+      );
     }
 
+    notaryBuilder.id = uuid;
     notaryBuilder.createAt = Timestamp.now();
 
     await FirebaseFirestore.instance
@@ -39,7 +45,15 @@ class NotaryFirestoreAdminApi {
 
   static Future<void> editNotary({
     @required NotaryBuilder notaryBuilder,
+    @required File imageFile,
   }) async {
+    if (imageFile != null) {
+      notaryBuilder.photoURL = await NotaryCloudstoreAdminAPI.uploadNotaryImage(
+        imageFile: imageFile,
+        photoURL: notaryBuilder.photoURL,
+        uuid: notaryBuilder.id,
+      );
+    }
     notaryBuilder.updateAt = Timestamp.now();
 
     await FirebaseFirestore.instance
@@ -48,5 +62,21 @@ class NotaryFirestoreAdminApi {
         .collection("Notaries")
         .doc(notaryBuilder.id)
         .update(Notary(notaryBuilder).toMap());
+  }
+
+  static Future<void> deleteNotary({
+    @required NotaryBuilder notaryBuilder,
+  }) async {
+    if (notaryBuilder.photoURL != null) {
+      await NotaryCloudstoreAdminAPI.deleteNotaryImage(
+        photoURL: notaryBuilder.photoURL,
+      );
+    }
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Notaries")
+        .doc(notaryBuilder.id)
+        .delete();
   }
 }
