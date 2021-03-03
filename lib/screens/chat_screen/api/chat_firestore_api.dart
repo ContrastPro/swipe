@@ -25,7 +25,7 @@ class ChatFirestoreAPI {
         .collection("Chats")
         .doc(ownerUID)
         .collection("Chat")
-        .orderBy('createAt', descending: true)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 

@@ -203,10 +203,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
           appBar: AppBarStyle1(
             title: "Продвижение",
             onTapLeading: () => Navigator.pop(context),
-            onTapAction: () {
-              Navigator.pushAndRemoveUntil(
-                  context, FadeRoute(page: HomeScreen()), (route) => false);
-            },
+            onTapAction: () => Navigator.pop(context),
           ),
           body: NetworkConnectivity(
             child: SingleChildScrollView(

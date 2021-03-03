@@ -92,9 +92,7 @@ class AdminHomeScreen extends StatelessWidget {
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       hoverColor: Colors.transparent,
-                      onTap: () => userNotifier.changeRegularScreen(
-                        isRegularScreen: true,
-                      ),
+                      onTap: () => Navigator.pop(context),
                       child: Text(
                         "обычная версия",
                         style: TextStyle(

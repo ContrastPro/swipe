@@ -9,7 +9,7 @@ import 'package:swipe/global/app_style.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/screens/auth_screen/auth_screen.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
-import 'package:swipe/screens/banned_screen/banned_screen.dart';
+import 'package:swipe/screens/home_screen/home_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 void main() {
@@ -66,17 +66,17 @@ class SwipeApp extends StatelessWidget {
             return StreamBuilder<User>(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                if (snapshot.hasData) {
+                  return HomeScreen(
+                    userUID: snapshot.data.uid,
+                  );
+                }
+
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Scaffold(
                     body: Center(
                       child: CircularProgressIndicator(),
                     ),
-                  );
-                }
-
-                if (snapshot.hasData) {
-                  return BannedScreen(
-                    userUID: snapshot.data.uid,
                   );
                 }
 

@@ -23,7 +23,10 @@ import 'custom_widget/info_field_edit_profile.dart';
 class EditProfileScreen extends StatefulWidget {
   final UserBuilder userProfile;
 
-  const EditProfileScreen({Key key, this.userProfile}) : super(key: key);
+  const EditProfileScreen({
+    Key key,
+    this.userProfile,
+  }) : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
