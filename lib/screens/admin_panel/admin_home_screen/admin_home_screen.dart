@@ -73,6 +73,9 @@ class AdminHomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 62.0),
                     InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
                       onTap: () => userNotifier.changeRegularScreen(
                         isRegularScreen: true,
                       ),

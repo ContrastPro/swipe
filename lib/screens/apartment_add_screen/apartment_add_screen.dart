@@ -75,7 +75,6 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
   void _goToPromotionScreen(ApartmentAddImagePicker imagePicker) {
     if (_formKey.currentState.validate() &&
         imagePicker.imageList.isNotEmpty &&
-        _apartmentBuilder.address != null &&
         _apartmentBuilder.numberOfRooms != null) {
       _apartmentBuilder.promotionBuilder = PromotionBuilder();
       Navigator.push(

@@ -34,11 +34,6 @@ class InfoFieldApartmentAdd extends StatelessWidget {
       borderSide: BorderSide(color: Colors.transparent),
     );
 
-    final InputBorder errorBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      borderSide: BorderSide(color: Colors.red),
-    );
-
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0),
       child: Column(
@@ -77,7 +72,6 @@ class InfoFieldApartmentAdd extends StatelessWidget {
                 enabledBorder: border,
                 disabledBorder: border,
                 focusedBorder: border,
-                errorBorder: errorBorder,
                 border: border,
                 hintText: hintText ?? "TextField",
                 hintStyle: TextStyle(color: Colors.black38),
