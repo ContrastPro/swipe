@@ -46,7 +46,7 @@ class _HomeWidgetState extends State<HomeWidget>
 
   Widget _buildScreen() {
     return StreamBuilder<QuerySnapshot>(
-      stream: HomeFirestoreAPI.getAds(),
+      stream: HomeFirestoreAPI.streamAds(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(

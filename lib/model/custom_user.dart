@@ -23,6 +23,7 @@ class UserBuilder {
   List notification;
   Subscription subscription;
   bool isBanned;
+  bool accessIsAllowed;
 
   UserBuilder();
 
@@ -44,7 +45,8 @@ class UserBuilder {
         //
         notification = map["notification"],
         subscription = Subscription.fromMap(map["subscription"]),
-        isBanned = map["isBanned"];
+        isBanned = map["isBanned"],
+        accessIsAllowed = map["accessIsAllowed"];
 
   @override
   String toString() {
@@ -68,7 +70,8 @@ class UserBuilder {
         //
         '\n>> subscription: $subscription'
         '\n>> notification: $notification'
-        '\n>> notification: $isBanned'
+        '\n>> isBanned: $isBanned'
+        '\n>> accessIsAllowed: $accessIsAllowed'
         '\n********************************\n';
   }
 }
@@ -94,6 +97,7 @@ class CustomUser {
   final List notification;
   final Subscription subscription;
   final bool isBanned;
+  final bool accessIsAllowed;
 
   CustomUser({@required UserBuilder userBuilder})
       : uid = userBuilder.uid,
@@ -114,7 +118,8 @@ class CustomUser {
         //
         subscription = userBuilder.subscription ?? Subscription(),
         notification = userBuilder.notification ?? [true, false, false, false],
-        isBanned = userBuilder.isBanned ?? false;
+        isBanned = userBuilder.isBanned ?? false,
+        accessIsAllowed = userBuilder.accessIsAllowed;
 
   Map<String, dynamic> toMap() {
     return {
@@ -137,6 +142,7 @@ class CustomUser {
       "subscription": subscription.toMap(),
       "notification": notification,
       "isBanned": isBanned,
+      "accessIsAllowed": accessIsAllowed,
     };
   }
 }

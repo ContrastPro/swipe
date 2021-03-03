@@ -69,7 +69,7 @@ class GradientDrawer extends StatelessWidget {
   Widget _buildAccess(UserNotifier userNotifier, BuildContext context) {
     String title;
 
-    switch (userNotifier.accessIsAllowed) {
+    switch (userNotifier.userProfile.accessIsAllowed) {
       case true:
         title = "Доступ получен";
         break;
@@ -96,12 +96,11 @@ class GradientDrawer extends StatelessWidget {
         ),
       ),
       onPressed: () async {
-        if (userNotifier.accessIsAllowed == null) {
+        if (userNotifier.userProfile.accessIsAllowed == null) {
           HomeFirestoreAPI.getAccess(
-            userNotifier: userNotifier,
             userBuilder: userNotifier.userProfile,
           );
-        } else if (userNotifier.accessIsAllowed == true) {
+        } else if (userNotifier.userProfile.accessIsAllowed == true) {
           userNotifier.changeRegularScreen(
             isRegularScreen: false,
           );
@@ -139,8 +138,8 @@ class GradientDrawer extends StatelessWidget {
                             Icons.settings,
                             color: Colors.white,
                           ),
-                          onPressed: () async {
-                            await Navigator.push(
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               FadeRoute(
                                 page: EditProfileScreen(
@@ -148,7 +147,6 @@ class GradientDrawer extends StatelessWidget {
                                 ),
                               ),
                             );
-                            userNotifier.updateUserProfile();
                           },
                         ),
                       ],
@@ -197,14 +195,13 @@ class GradientDrawer extends StatelessWidget {
                   ),
                   _buildListTile(
                     title: "Личный кабинет",
-                    onTap: () async {
-                      await Navigator.push(
+                    onTap: () {
+                      Navigator.push(
                         context,
                         FadeRoute(
                           page: EditProfileScreen(userProfile: userProfile),
                         ),
                       );
-                      userNotifier.updateUserProfile();
                     },
                   ),
                   _buildListTile(

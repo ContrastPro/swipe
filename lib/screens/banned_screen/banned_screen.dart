@@ -1,12 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
-
-import 'api/banned_firestore_api.dart';
+import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 class BannedScreen extends StatelessWidget {
   final String userUID;
@@ -18,11 +19,17 @@ class BannedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: BannedFirestoreApi.isBannedStream(userUID),
+    final UserNotifier userNotifier =
+        Provider.of<UserNotifier>(context, listen: false);
+
+    return StreamBuilder<UserBuilder>(
+      stream: HomeFirestoreAPI.streamUser(
+        userNotifier: userNotifier,
+        userUID: userUID,
+      ),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data["isBanned"] != true) {
+        if (snapshot.hasData && userNotifier.isHomeScreen != null) {
+          if (snapshot.data.isBanned != true) {
             return HomeScreen();
           } else {
             return Scaffold(

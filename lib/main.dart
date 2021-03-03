@@ -51,7 +51,7 @@ class SwipeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Swipe',
       theme: AppTheme.light(),
-      home: FutureBuilder(
+      home: FutureBuilder<FirebaseApp>(
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -66,12 +66,6 @@ class SwipeApp extends StatelessWidget {
             return StreamBuilder<User>(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-                if (snapshot.hasData) {
-                  return BannedScreen(
-                    userUID: snapshot.data.uid,
-                  );
-                }
-
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Scaffold(
                     body: Center(
@@ -79,6 +73,13 @@ class SwipeApp extends StatelessWidget {
                     ),
                   );
                 }
+
+                if (snapshot.hasData) {
+                  return BannedScreen(
+                    userUID: snapshot.data.uid,
+                  );
+                }
+
                 return ChangeNotifierProvider<AuthModeNotifier>(
                   create: (_) => AuthModeNotifier(),
                   child: AuthScreen(),
