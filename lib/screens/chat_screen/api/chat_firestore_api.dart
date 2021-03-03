@@ -37,7 +37,7 @@ class ChatFirestoreAPI {
     final String uuid = Uuid().v1();
     messageBuilder.id = uuid;
     messageBuilder.ownerUID = user.uid;
-    messageBuilder.createAt = Timestamp.now();
+    messageBuilder.createdAt = Timestamp.now();
 
     if (imageFile != null) {
       messageBuilder.attachFile = "loading";
@@ -88,7 +88,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(ownerUID)
           .set({
-        "lastActivity": message.createAt,
+        "lastActivity": message.createdAt,
       });
     });
 
@@ -116,7 +116,7 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(user.uid)
           .set({
-        "lastActivity": message.createAt,
+        "lastActivity": message.createdAt,
       });
     });
     log("$messageBuilder");

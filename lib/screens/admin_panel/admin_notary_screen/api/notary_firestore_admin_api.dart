@@ -33,7 +33,7 @@ class NotaryFirestoreAdminApi {
     }
 
     notaryBuilder.id = uuid;
-    notaryBuilder.createAt = Timestamp.now();
+    notaryBuilder.createdAt = Timestamp.now();
 
     await FirebaseFirestore.instance
         .collection("Swipe")
@@ -54,7 +54,7 @@ class NotaryFirestoreAdminApi {
         uuid: notaryBuilder.id,
       );
     }
-    notaryBuilder.updateAt = Timestamp.now();
+    notaryBuilder.updatedAt = Timestamp.now();
 
     await FirebaseFirestore.instance
         .collection("Swipe")

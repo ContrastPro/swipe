@@ -60,6 +60,7 @@ class AppBarStyle1 extends PreferredSize {
               ),
               onPressed: () => onTapAction(),
             ),
+            SizedBox(width: 16.0),
           ],
         ),
       ),

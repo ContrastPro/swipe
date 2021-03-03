@@ -46,7 +46,7 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
   }
 
   void _addEditNotary() async {
-    if(_formKey.currentState.validate()){
+    if (_formKey.currentState.validate()) {
       setState(() => _startLoading = true);
       if (widget.notaryBuilder.id == null) {
         await NotaryFirestoreAdminApi.addNotary(
@@ -139,11 +139,6 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
               widget.notaryBuilder.email = value;
             },
             validator: (value) {
-              /*if (value.isEmpty ||
-                  !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value)) {
-                return '';
-              }*/
               return null;
             },
           ),

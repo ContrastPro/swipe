@@ -78,6 +78,7 @@ class HomeFirestoreAPI {
         .set({
       "uid": userBuilder.uid,
       "accessIsAllowed": false,
+      "accessIsRequested": Timestamp.now(),
     }).then((value) {
       userNotifier.setAccess(false);
     });

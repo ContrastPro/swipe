@@ -128,7 +128,7 @@ class MassageItem extends StatelessWidget {
               ),
               TextSpan(
                 text: TimeFormat.formatTimeMessage(
-                  messageBuilder.createAt,
+                  messageBuilder.createdAt,
                 ),
                 style: TextStyle(
                   color: Colors.transparent,
@@ -158,7 +158,7 @@ class MassageItem extends StatelessWidget {
               bottom: 4.0,
               child: Text(
                 TimeFormat.formatTimeMessage(
-                  messageBuilder.createAt,
+                  messageBuilder.createdAt,
                 ),
                 style: TextStyle(
                   color: _isNotOwnerMassage()
@@ -195,7 +195,7 @@ class MassageItem extends StatelessWidget {
                 ),
                 child: Text(
                   TimeFormat.formatTimeMessage(
-                    messageBuilder.createAt,
+                    messageBuilder.createdAt,
                   ),
                   style: TextStyle(
                     color: Colors.white,
@@ -221,7 +221,7 @@ class MassageItem extends StatelessWidget {
               bottom: 4.0,
               child: Text(
                 TimeFormat.formatTimeMessage(
-                  messageBuilder.createAt,
+                  messageBuilder.createdAt,
                 ),
                 style: TextStyle(
                   color: _isNotOwnerMassage()

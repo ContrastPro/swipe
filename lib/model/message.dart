@@ -5,8 +5,8 @@ class MessageBuilder {
   String ownerUID;
   String message;
   String attachFile;
-  Timestamp createAt;
-  Timestamp updateAt;
+  Timestamp createdAt;
+  Timestamp updatedAt;
 
   MessageBuilder();
 
@@ -15,8 +15,8 @@ class MessageBuilder {
         ownerUID = map["ownerUID"],
         message = map["message"],
         attachFile = map["attachFile"],
-        updateAt = map["updateAt"],
-        createAt = map["createAt"];
+        createdAt = map["createdAt"],
+        updatedAt = map["updatedAt"];
 
   @override
   String toString() {
@@ -26,8 +26,8 @@ class MessageBuilder {
         '\n>> ownerUID: $ownerUID'
         '\n>> message: $message'
         '\n>> attachFile: $attachFile'
-        '\n>> createAt: ${createAt?.toDate()}'
-        '\n>> updateAt: ${updateAt?.toDate()}'
+        '\n>> createdAt: ${createdAt?.toDate()}'
+        '\n>> updatedAt: ${updatedAt?.toDate()}'
         '\n********************************\n';
   }
 }
@@ -37,16 +37,16 @@ class Message {
   final String ownerUID;
   final String message;
   final String attachFile;
-  final Timestamp createAt;
-  final Timestamp updateAt;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
 
   Message(MessageBuilder messageBuilder)
       : id = messageBuilder.id,
         ownerUID = messageBuilder.ownerUID,
         message = messageBuilder.message?.trim(),
         attachFile = messageBuilder.attachFile,
-        createAt = messageBuilder.createAt,
-        updateAt = messageBuilder.updateAt;
+        createdAt = messageBuilder.createdAt,
+        updatedAt = messageBuilder.updatedAt;
 
   Map<String, dynamic> toMap() {
     return {
@@ -54,8 +54,8 @@ class Message {
       "ownerUID": ownerUID,
       "message": message,
       "attachFile": attachFile,
-      "createAt": createAt,
-      "updateAt": updateAt,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
     };
   }
 }

@@ -22,6 +22,7 @@ class UserBuilder {
   // ets
   List notification;
   Subscription subscription;
+  bool isBanned;
 
   UserBuilder();
 
@@ -42,7 +43,8 @@ class UserBuilder {
         agentEmail = map["agentEmail"],
         //
         notification = map["notification"],
-        subscription = Subscription.fromMap(map["subscription"]);
+        subscription = Subscription.fromMap(map["subscription"]),
+        isBanned = map["isBanned"];
 
   @override
   String toString() {
@@ -66,6 +68,7 @@ class UserBuilder {
         //
         '\n>> subscription: $subscription'
         '\n>> notification: $notification'
+        '\n>> notification: $isBanned'
         '\n********************************\n';
   }
 }
@@ -90,6 +93,7 @@ class CustomUser {
   // ets
   final List notification;
   final Subscription subscription;
+  final bool isBanned;
 
   CustomUser({@required UserBuilder builder})
       : uid = builder.uid,
@@ -109,7 +113,8 @@ class CustomUser {
 
         //
         subscription = builder.subscription ?? Subscription(),
-        notification = builder.notification ?? [true, false, false, false];
+        notification = builder.notification ?? [true, false, false, false],
+        isBanned = builder.isBanned ?? false;
 
   Map<String, dynamic> toMap() {
     return {
@@ -131,6 +136,7 @@ class CustomUser {
       //
       "subscription": subscription.toMap(),
       "notification": notification,
+      "isBanned": isBanned,
     };
   }
 }

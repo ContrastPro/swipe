@@ -7,8 +7,8 @@ class NotaryBuilder {
   String phone;
   String email;
   String photoURL;
-  Timestamp createAt;
-  Timestamp updateAt;
+  Timestamp createdAt;
+  Timestamp updatedAt;
 
   NotaryBuilder();
 
@@ -19,8 +19,8 @@ class NotaryBuilder {
         phone = map["phone"],
         email = map["email"],
         photoURL = map["photoURL"],
-        createAt = map["createAt"],
-        updateAt = map["updateAt"];
+        createdAt = map["createdAt"],
+        updatedAt = map["updatedAt"];
 
   @override
   String toString() {
@@ -32,8 +32,8 @@ class NotaryBuilder {
         '\n>> phone: $phone'
         '\n>> email: $email'
         '\n>> photoURL: $photoURL'
-        '\n>> createAt: ${createAt?.toDate()}'
-        '\n>> updateAt: ${updateAt?.toDate()}'
+        '\n>> createdAt: ${createdAt?.toDate()}'
+        '\n>> updatedAt: ${updatedAt?.toDate()}'
         '\n********************************\n';
   }
 }
@@ -45,8 +45,8 @@ class Notary {
   final String phone;
   final String email;
   final String photoURL;
-  final Timestamp createAt;
-  final Timestamp updateAt;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
 
   Notary(NotaryBuilder notaryBuilder)
       : id = notaryBuilder.id,
@@ -55,8 +55,8 @@ class Notary {
         phone = notaryBuilder.phone,
         email = notaryBuilder.email,
         photoURL = notaryBuilder.photoURL,
-        createAt = notaryBuilder.createAt,
-        updateAt = notaryBuilder.updateAt;
+        createdAt = notaryBuilder.createdAt,
+        updatedAt = notaryBuilder.updatedAt;
 
   Map<String, dynamic> toMap() {
     return {
@@ -66,8 +66,8 @@ class Notary {
       "phone": phone,
       "email": email,
       "photoURL": photoURL,
-      "createAt": createAt,
-      "updateAt": updateAt,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
     };
   }
 }

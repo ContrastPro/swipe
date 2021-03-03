@@ -1,23 +1,25 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe/model/notary.dart';
+import 'package:swipe/model/custom_user.dart';
 
-class NotaryItemAdmin extends StatelessWidget {
-  final NotaryBuilder notaryBuilder;
+class UsersItemAdmin extends StatelessWidget {
+  final UserBuilder userBuilder;
   final VoidCallback onTap;
+  final String ownerUID;
 
-  const NotaryItemAdmin({
+  const UsersItemAdmin({
     Key key,
-    @required this.notaryBuilder,
+    @required this.userBuilder,
     @required this.onTap,
+    @required this.ownerUID,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildImage() {
-      if (notaryBuilder.photoURL != null) {
+    Widget buildImage() {
+      if (userBuilder.photoURL != null) {
         return CachedNetworkImage(
-          imageUrl: notaryBuilder.photoURL,
+          imageUrl: userBuilder.photoURL,
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundImage: imageProvider,
           ),
@@ -35,8 +37,8 @@ class NotaryItemAdmin extends StatelessWidget {
         return CircleAvatar(
           backgroundColor: Colors.black.withAlpha(50),
           child: Text(
-            "${notaryBuilder.name[0].toUpperCase()}"
-            "${notaryBuilder.lastName[0].toUpperCase()}",
+            "${userBuilder.name[0].toUpperCase()}"
+            "${userBuilder.lastName[0].toUpperCase()}",
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -46,12 +48,25 @@ class NotaryItemAdmin extends StatelessWidget {
       }
     }
 
+    Widget buildTrailing() {
+      if (ownerUID != userBuilder.uid) {
+        return IconButton(
+          icon: Icon(
+            Icons.block_rounded,
+            color: Colors.black,
+          ),
+          onPressed: () => onTap(),
+        );
+      }
+      return SizedBox();
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: ListTile(
-        leading: _buildImage(),
+        leading: buildImage(),
         title: Text(
-          "${notaryBuilder.name} ${notaryBuilder.lastName}",
+          "${userBuilder.name} ${userBuilder.lastName}",
           style: TextStyle(
             fontWeight: FontWeight.w500,
           ),
@@ -60,28 +75,20 @@ class NotaryItemAdmin extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              notaryBuilder.phone,
+              userBuilder.phone,
               style: TextStyle(
                 fontSize: 12.0,
               ),
             ),
-            if(notaryBuilder.email != null)...[
-              Text(
-                notaryBuilder.email,
-                style: TextStyle(
-                  fontSize: 12.0,
-                ),
+            Text(
+              userBuilder.email,
+              style: TextStyle(
+                fontSize: 12.0,
               ),
-            ],
+            ),
           ],
         ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.edit_outlined,
-            color: Colors.black,
-          ),
-          onPressed: () => onTap(),
-        ),
+        trailing: buildTrailing(),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/admin_panel/admin_home_screen/custom_widget/list_item_admin.dart';
 import 'package:swipe/screens/admin_panel/admin_notary_screen/admin_notary_screen.dart';
+import 'package:swipe/screens/admin_panel/admin_users_screen/admin_users_screen.dart';
 import 'package:swipe/screens/home_screen/provider/user_provider.dart';
 
 class AdminHomeScreen extends StatelessWidget {
@@ -54,7 +55,14 @@ class AdminHomeScreen extends StatelessWidget {
                     ),
                     ListItemAdmin(
                       title: "Пользователи",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          FadeRoute(
+                            page: AdminUsersScreen(),
+                          ),
+                        );
+                      },
                     ),
                     ListItemAdmin(
                       title: "Blacklist",
