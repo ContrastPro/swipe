@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/global/app_colors.dart';
@@ -14,7 +13,6 @@ import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 
 import 'api/avatar_image_picker.dart';
-import 'api/edit_profile_cloudstore_api.dart';
 import 'api/edit_profile_firestore_api.dart';
 import 'custom_widget/avatar_picker.dart';
 import 'custom_widget/expandable_card_edit_profile.dart';
@@ -38,14 +36,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File _imageFile;
 
   UserBuilder _userBuilder;
-  AvatarImagePicker _imagePicker;
   GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
-    _userBuilder = widget.userProfile;
+    _userBuilder = widget.userProfile.clone();
     _formKey = GlobalKey<FormState>();
-    _imagePicker = AvatarImagePicker();
     super.initState();
   }
 
@@ -55,21 +51,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _userBuilder.lastName.isNotEmpty &&
         _userBuilder.email.isNotEmpty) {
       setState(() => _startLoading = true);
-      if (_userBuilder.phone != widget.userProfile.phone) {
-        // Проверить зарегистрирован ли он в БД
-        // и обновить телефон в профиле FirebaseAuth
-      }
-      if (_imageFile != null) {
-        // Загрузить/Обновить изображение и вернуть ссылку
-        _userBuilder.photoURL =
-            await EditProfileCloudstoreAPI.uploadProfileImage(
-          imageFile: _imageFile,
-          photoURL: widget.userProfile.photoURL,
-        );
-      }
-      _userBuilder.updatedAt = Timestamp.now();
       await EditProfileFirestoreAPI.editUserProfile(
-        customUser: CustomUser(userBuilder: _userBuilder),
+        userBuilder: _userBuilder,
+        imageFile: _imageFile,
       );
       Navigator.pop(context);
     }
@@ -98,6 +82,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  void _getLocalImage() async {
+    File imageFile = await AvatarImagePicker.getLocalImage();
+    setState(() => _imageFile = imageFile);
+  }
+
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 30.0, 22.0, 35.0),
@@ -106,12 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           AvatarPicker(
             photoURL: widget.userProfile.photoURL,
             imageFile: _imageFile,
-            onTap: () async {
-              await _imagePicker.getLocalImage();
-              setState(() {
-                _imageFile = _imagePicker.imageFile;
-              });
-            },
+            onTap: () => _getLocalImage(),
           ),
           SizedBox(width: 22.0),
           Expanded(
@@ -120,13 +104,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${widget.userProfile.name} ${widget.userProfile.lastName}",
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+                  "${_userBuilder.name} "
+                  "${_userBuilder.lastName}",
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 SizedBox(height: 5.0),
                 Text(
-                  widget.userProfile.email,
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400),
+                  _userBuilder.email,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),
@@ -372,7 +363,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
       children: [
         ListView.builder(
-          itemCount: widget.userProfile.notification.length,
+          itemCount: _userBuilder.notification.length,
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 16.0),
@@ -391,9 +382,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black.withAlpha(10),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.0),
-                  ),
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

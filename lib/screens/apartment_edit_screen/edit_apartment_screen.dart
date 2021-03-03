@@ -40,7 +40,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
 
   @override
   void initState() {
-    _apartmentBuilder = widget.apartmentBuilder;
+    _apartmentBuilder = widget.apartmentBuilder.clone();
     _formKey = GlobalKey<FormState>();
     super.initState();
   }

@@ -70,6 +70,7 @@ class AvatarPicker extends StatelessWidget {
       avatar = addPhoto(
         child: CircleAvatar(
           radius: radius / 2,
+          backgroundColor: color,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(radius),
             child: Image.file(
@@ -86,6 +87,7 @@ class AvatarPicker extends StatelessWidget {
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundImage: imageProvider,
             radius: radius / 2,
+            backgroundColor: color,
           ),
           placeholder: (context, url) => Container(
             width: radius,

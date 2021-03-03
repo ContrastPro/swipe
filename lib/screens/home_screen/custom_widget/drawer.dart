@@ -112,7 +112,7 @@ class GradientDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserNotifier>(
       builder: (context, userNotifier, child) {
-        UserBuilder userProfile = userNotifier.userProfile;
+        UserBuilder userBuilder = userNotifier.userProfile;
 
         return Drawer(
           elevation: 0,
@@ -137,12 +137,12 @@ class GradientDrawer extends StatelessWidget {
                             Icons.settings,
                             color: Colors.white,
                           ),
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            await Navigator.push(
                               context,
                               FadeRoute(
                                 page: EditProfileScreen(
-                                  userProfile: userProfile,
+                                  userProfile: userBuilder,
                                 ),
                               ),
                             );
@@ -152,10 +152,10 @@ class GradientDrawer extends StatelessWidget {
                     ),
                   ),
                   UserAccountsDrawerHeader(
-                    currentAccountPicture: _buildProfileImage(userProfile),
+                    currentAccountPicture: _buildProfileImage(userBuilder),
                     arrowColor: Colors.white,
                     accountName: Text(
-                      "${userProfile.name} ${userProfile.lastName}",
+                      "${userBuilder.name} ${userBuilder.lastName}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -163,7 +163,7 @@ class GradientDrawer extends StatelessWidget {
                       ),
                     ),
                     accountEmail: Text(
-                      "${userProfile.email}",
+                      "${userBuilder.email}",
                       style: TextStyle(
                         color: Colors.white70,
                         fontWeight: FontWeight.w400,
@@ -194,12 +194,12 @@ class GradientDrawer extends StatelessWidget {
                   ),
                   _buildListTile(
                     title: "Личный кабинет",
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await Navigator.push(
                         context,
                         FadeRoute(
                           page: EditProfileScreen(
-                            userProfile: userProfile,
+                            userProfile: userBuilder,
                           ),
                         ),
                       );

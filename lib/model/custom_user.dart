@@ -48,6 +48,30 @@ class UserBuilder {
         isBanned = map["isBanned"],
         accessIsAllowed = map["accessIsAllowed"];
 
+  UserBuilder._createClone(UserBuilder userBuilder)
+      : uid = userBuilder.uid,
+        name = userBuilder.name,
+        lastName = userBuilder.lastName,
+        phone = userBuilder.phone,
+        email = userBuilder.email,
+        photoURL = userBuilder.photoURL,
+        createdAt = userBuilder.createdAt,
+        updatedAt = userBuilder.updatedAt,
+
+        //
+        agentName = userBuilder.agentName,
+        agentLastName = userBuilder.agentLastName,
+        agentPhone = userBuilder.agentPhone,
+        agentEmail = userBuilder.agentEmail,
+
+        //
+        notification = userBuilder.notification,
+        subscription = userBuilder.subscription,
+        isBanned = userBuilder.isBanned,
+        accessIsAllowed = userBuilder.accessIsAllowed;
+
+  UserBuilder clone() => UserBuilder._createClone(this);
+
   @override
   String toString() {
     return '\n********************************\n'

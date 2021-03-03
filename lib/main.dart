@@ -17,11 +17,11 @@ void main() {
   return runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => UserNotifier(),
-        ),
         StreamProvider<ConnectivityResult>(
           create: (_) => Connectivity().onConnectivityChanged,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => MapNotifier(),

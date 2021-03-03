@@ -24,6 +24,7 @@ class ApartmentBuilder {
   List<String> images;
   PromotionBuilder promotionBuilder;
 
+  //
   GeoPoint geo;
   Timestamp createdAt;
   Timestamp updatedAt;
@@ -51,9 +52,40 @@ class ApartmentBuilder {
         price = map["price"],
         images = List<String>.from(map["images"]),
         promotionBuilder = PromotionBuilder.fromMap(map["promotion"]),
+
+        //
         geo = map["geo"],
         createdAt = map["createdAt"],
         updatedAt = map["updatedAt"];
+
+  ApartmentBuilder._createClone(ApartmentBuilder apartmentBuilder)
+      : id = apartmentBuilder.id,
+        ownerUID = apartmentBuilder.ownerUID,
+        address = apartmentBuilder.address,
+        apartmentComplex = apartmentBuilder.apartmentComplex,
+        foundingDocument = apartmentBuilder.foundingDocument,
+        appointmentApartment = apartmentBuilder.appointmentApartment,
+        numberOfRooms = apartmentBuilder.numberOfRooms,
+        apartmentLayout = apartmentBuilder.apartmentLayout,
+        apartmentCondition = apartmentBuilder.apartmentCondition,
+        totalArea = apartmentBuilder.totalArea,
+        kitchenArea = apartmentBuilder.kitchenArea,
+        balconyLoggia = apartmentBuilder.balconyLoggia,
+        heatingType = apartmentBuilder.heatingType,
+        typeOfPayment = apartmentBuilder.typeOfPayment,
+        agentCommission = apartmentBuilder.agentCommission,
+        communicationMethod = apartmentBuilder.communicationMethod,
+        description = apartmentBuilder.description?.trim(),
+        price = apartmentBuilder.price,
+        images = apartmentBuilder.images,
+        promotionBuilder = apartmentBuilder.promotionBuilder,
+
+        //
+        geo = apartmentBuilder.geo,
+        createdAt = apartmentBuilder.createdAt,
+        updatedAt = apartmentBuilder.updatedAt;
+
+  ApartmentBuilder clone() => ApartmentBuilder._createClone(this);
 
   @override
   String toString() {
@@ -107,6 +139,8 @@ class Apartment {
   final String price;
   final List<String> images;
   final Promotion promotion;
+
+  //
   final GeoPoint geo;
   final Timestamp createdAt;
   final Timestamp updatedAt;
@@ -134,6 +168,8 @@ class Apartment {
         promotion = Promotion(
           promotionBuilder: apartmentBuilder.promotionBuilder,
         ),
+
+        //
         geo = apartmentBuilder.geo,
         createdAt = apartmentBuilder.createdAt,
         updatedAt = apartmentBuilder.updatedAt;

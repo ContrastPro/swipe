@@ -78,11 +78,9 @@ class _HomeWidgetState extends State<HomeWidget>
                     index: _currentIndex,
                     children: [
                       HomeApartmentListWidget(
-                        documentList: snapshot.data.docs,
                         apartmentList: apartmentList,
                       ),
                       HomeMapWidget(
-                        documentList: snapshot.data.docs,
                         apartmentList: apartmentList,
                       ),
                     ],

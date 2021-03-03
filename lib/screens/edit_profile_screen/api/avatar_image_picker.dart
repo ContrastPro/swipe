@@ -3,30 +3,31 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AvatarImagePicker {
-  File _imageFile;
+  AvatarImagePicker._();
 
-  File get imageFile => _imageFile;
-
-  Future<void> getLocalImage() async {
+  static Future<File> getLocalImage() async {
+    File imageFile;
     final ImagePicker picker = ImagePicker();
 
     // Get Image
-    final PickedFile pickedFile =
-        await picker.getImage(source: ImageSource.gallery);
+    final PickedFile pickedFile = await picker.getImage(
+      source: ImageSource.gallery,
+    );
 
     if (pickedFile != null) {
-      _imageFile = File(pickedFile.path);
+      imageFile = File(pickedFile.path);
 
       // Crop Image
       File cropImage = await ImageCropper.cropImage(
-        sourcePath: _imageFile.path,
+        sourcePath: imageFile.path,
         maxWidth: 165,
         maxHeight: 165,
         compressQuality: 100,
         aspectRatioPresets: [CropAspectRatioPreset.square],
       );
 
-      _imageFile = cropImage ?? null;
+      imageFile = cropImage ?? null;
     }
+    return imageFile;
   }
 }
