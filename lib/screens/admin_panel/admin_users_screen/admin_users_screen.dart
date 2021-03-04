@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
@@ -10,41 +12,84 @@ import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'api/users_firestore_admin_api.dart';
 import 'custom_widget/users_item_admin.dart';
 
-class AdminUsersScreen extends StatelessWidget {
-  final User _user = AuthFirebaseAPI.getCurrentUser();
+class AdminUsersScreen extends StatefulWidget {
+  @override
+  _AdminUsersScreenState createState() => _AdminUsersScreenState();
+}
 
-  void _blockUnblockUser({DocumentSnapshot document}) {
+class _AdminUsersScreenState extends State<AdminUsersScreen> {
+  bool _startLoading = false;
+  User _user;
+
+  @override
+  void initState() {
+    _user = AuthFirebaseAPI.getCurrentUser();
+    super.initState();
+  }
+
+  void _blockUnblockUser({
+    BuildContext context,
+    DocumentSnapshot document,
+  }) async {
     if (document["isBanned"] == true) {
-      UsersFirestoreAdminApi.unblockUser(uid: document.id);
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return ModalBottomSheet(
+            title: "Разблокировать ${document["name"]} ${document["lastName"]}",
+            subtitle: "Этот пользователь снова сможет войти в приложение. "
+                "Продолжить?",
+            onAccept: () async {
+              setState(() => _startLoading = true);
+              await UsersFirestoreAdminApi.unblockUser(uid: document.id);
+              setState(() => _startLoading = false);
+            },
+          );
+        },
+      );
     } else {
-      UsersFirestoreAdminApi.blockUser(uid: document.id);
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return ModalBottomSheet(
+            title: "Заблокировать ${document["name"]} ${document["lastName"]}",
+            subtitle: "Этот пользователь не сможет войти в приложение, "
+                "все объявления будут удалены навсегда. Продолжить?",
+            onAccept: () async {
+              setState(() => _startLoading = true);
+              await UsersFirestoreAdminApi.blockUser(uid: document.id);
+              setState(() => _startLoading = false);
+            },
+          );
+        },
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarStyle1(
-        title: "Пользователи",
-        onTapLeading: () => Navigator.pop(context),
-        onTapAction: () => Navigator.pop(context),
-      ),
-      body: NetworkConnectivity(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: UsersFirestoreAdminApi.getUsers(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong'));
-            }
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBarStyle1(
+            title: "Пользователи",
+            onTapLeading: () => Navigator.pop(context),
+            onTapAction: () => Navigator.pop(context),
+          ),
+          body: NetworkConnectivity(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: UsersFirestoreAdminApi.getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong'));
+                }
 
-            if (!snapshot.hasData) {
-              return ShimmerUsers();
-            }
+                if (!snapshot.hasData) {
+                  return ShimmerUsers();
+                }
 
-            if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-              return Stack(
-                children: [
-                  ListView.builder(
+                if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                  return ListView.builder(
                     itemCount: snapshot.data.docs.length,
                     physics: BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(vertical: 11.0),
@@ -55,21 +100,23 @@ class AdminUsersScreen extends StatelessWidget {
                         ),
                         ownerUID: _user.uid,
                         onTap: () => _blockUnblockUser(
+                          context: context,
                           document: snapshot.data.docs[index],
                         ),
                       );
                     },
-                  ),
-                ],
-              );
-            } else {
-              return Center(
-                child: Text("Здесь пока ничего нет..."),
-              );
-            }
-          },
+                  );
+                } else {
+                  return Center(
+                    child: Text("Здесь пока ничего нет..."),
+                  );
+                }
+              },
+            ),
+          ),
         ),
-      ),
+        if (_startLoading == true) WaveIndicator(),
+      ],
     );
   }
 }

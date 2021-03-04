@@ -62,20 +62,32 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
     }
   }
 
-  void _deleteApartment() async {
-    setState(() => _startLoading = true);
-    // Удаляем все фото
-    await Future.wait(widget.apartmentBuilder.images.map((imageURL) {
-      return ApartmentEditCloudstoreAPI.deleteApartmentImages(
-        imageURL: imageURL,
-      );
-    }));
+  void _deleteApartment() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalBottomSheet(
+          title: "Удалить объявление",
+          subtitle: "Действие нельзя будет отменить. "
+              "Продолжить?",
+          onAccept: () async {
+            setState(() => _startLoading = true);
+            // Удаляем все фото
+            await Future.wait(widget.apartmentBuilder.images.map((imageURL) {
+              return ApartmentEditCloudstoreAPI.deleteApartmentImages(
+                imageURL: imageURL,
+              );
+            }));
 
-    // Удаляем всю информацию
-    await ApartmentEditFirestoreAPI.deleteApartment(
-      apartment: Apartment(apartmentBuilder: widget.apartmentBuilder),
+            // Удаляем всю информацию
+            await ApartmentEditFirestoreAPI.deleteApartment(
+              apartment: Apartment(apartmentBuilder: widget.apartmentBuilder),
+            );
+            _goToHomeScreen();
+          },
+        );
+      },
     );
-    _goToHomeScreen();
   }
 
   Widget _buildAddress() {
@@ -396,19 +408,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
                             ),
                           ),
                           FlatButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return ModalBottomSheet(
-                                    title: "Удалить объявление",
-                                    subtitle: "Действие нельзя будет отменить. "
-                                        "Продолжить?",
-                                    onAccept: () => _deleteApartment(),
-                                  );
-                                },
-                              );
-                            },
+                            onPressed: () => _deleteApartment(),
                             highlightColor: Colors.transparent,
                             child: Text(
                               "Удалить объявление",

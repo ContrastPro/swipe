@@ -7,6 +7,7 @@ import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/model/message.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/chat_screen/api/chat_image_picker.dart';
+import 'package:swipe/screens/chat_screen/custom_widget/blocked_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/massage_item.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/modal_bottom_sheet_chat.dart';
@@ -155,17 +156,21 @@ class _FeedbackScreenState extends State<ChatScreen> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: InputFieldChat(
-                imageFile: _imageFile,
-                onChanged: (String message) {
-                  setState(() => _message = message);
-                },
-                onSend: () => _sendMessage(),
-                onAttach: () => _attachFile(),
-                onDeleteAttach: () {
-                  setState(() => _imageFile = null);
-                },
-              ),
+              child: widget.userBuilder.isBanned == false
+                  ? InputFieldChat(
+                      imageFile: _imageFile,
+                      onChanged: (String message) {
+                        setState(() => _message = message);
+                      },
+                      onSend: () => _sendMessage(),
+                      onAttach: () => _attachFile(),
+                      onDeleteAttach: () {
+                        setState(() => _imageFile = null);
+                      },
+                    )
+                  : BlockedFieldChat(
+                      username: widget.userBuilder.name,
+                    ),
             ),
           ],
         ),
