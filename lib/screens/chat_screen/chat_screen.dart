@@ -54,7 +54,12 @@ class _FeedbackScreenState extends State<ChatScreen> {
         //
         MessageBuilder messageBuilder = MessageBuilder();
         File imageFile = _imageFile;
-        messageBuilder.message = _controller.text;
+
+        if (_controller.text.trim() == "") {
+          messageBuilder.message = null;
+        } else {
+          messageBuilder.message = _controller.text;
+        }
 
         //
         _controller.clear();
@@ -113,14 +118,14 @@ class _FeedbackScreenState extends State<ChatScreen> {
               _editMessageBuilder = messageBuilder;
             });
           },
-          deleteFromMe: () {
-            ChatFirestoreAPI.deleteFromMe(
+          deleteFromMe: () async {
+            await ChatFirestoreAPI.deleteFromMe(
               ownerUID: widget.userBuilder.uid,
               messageBuilder: messageBuilder,
             );
           },
-          deleteEverywhere: () {
-            ChatFirestoreAPI.deleteEverywhere(
+          deleteEverywhere: () async {
+            await ChatFirestoreAPI.deleteEverywhere(
               ownerUID: widget.userBuilder.uid,
               messageBuilder: messageBuilder,
             );
