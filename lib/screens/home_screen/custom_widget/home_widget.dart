@@ -54,10 +54,6 @@ class _HomeWidgetState extends State<HomeWidget>
           );
         }
 
-        if (!snapshot.hasData) {
-          return ShimmerAds();
-        }
-
         if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
           List<ApartmentBuilder> apartmentList =
               _convertList(snapshot.data.docs);
@@ -91,9 +87,7 @@ class _HomeWidgetState extends State<HomeWidget>
             );
           }
         }
-        return Center(
-          child: Text("Здесь пока ничего нет..."),
-        );
+        return ShimmerAds();
       },
     );
   }

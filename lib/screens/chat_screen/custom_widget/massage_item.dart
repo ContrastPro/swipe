@@ -122,7 +122,7 @@ class MassageItem extends StatelessWidget {
                   color: _isNotOwnerMassage()
                       ? Colors.white
                       : Colors.black.withAlpha(180),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   fontSize: 15.0,
                 ),
               ),

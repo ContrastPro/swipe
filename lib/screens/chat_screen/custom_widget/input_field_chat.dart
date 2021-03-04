@@ -99,8 +99,8 @@ class InputFieldChat extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 14.0),
                   child: TextFormField(
                     style: TextStyle(
-                      color: Colors.black.withAlpha(150),
-                      fontWeight: FontWeight.w600,
+                      color: Colors.black.withAlpha(180),
+                      fontWeight: FontWeight.w500,
                     ),
                     controller: controller,
                     minLines: 1,
@@ -134,8 +134,6 @@ class InputFieldChat extends StatelessWidget {
                 onTap: () async {
                   onSend();
                   controller.clear();
-                  await Future.delayed(Duration(milliseconds: 180));
-                  FocusScope.of(context).unfocus();
                 },
                 child: Container(
                   width: 48,

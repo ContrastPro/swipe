@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/model/message.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
@@ -90,6 +92,52 @@ class _FeedbackScreenState extends State<ChatScreen> {
     );
   }
 
+  Widget _buildDate(String date) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 1.5,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Text(
+          date,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader({
+    int index,
+    int itemCount,
+    List<DocumentSnapshot> listDocument,
+  }) {
+    if (index < itemCount - 1) {
+      Timestamp date1 = listDocument[index]["createdAt"];
+      Timestamp date2 = listDocument[index + 1]["createdAt"];
+      if (TimeFormat.compareDates(date1) != TimeFormat.compareDates(date2)) {
+        return _buildDate(TimeFormat.formatDateMessage(date1));
+      } else {
+        return SizedBox();
+      }
+    } else {
+      return _buildDate(TimeFormat.formatDateMessage(
+        listDocument[index]["createdAt"],
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,15 +178,22 @@ class _FeedbackScreenState extends State<ChatScreen> {
                       reverse: true,
                       controller: _scrollController,
                       physics: BouncingScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return MassageItem(
-                          messageBuilder: MessageBuilder.fromMap(
-                            snapshot.data.docs[index].data(),
+                      itemBuilder: (context, index) {
+                        return StickyHeader(
+                          header: _buildHeader(
+                            index: index,
+                            itemCount: snapshot.data.docs.length,
+                            listDocument: snapshot.data.docs,
                           ),
-                          userBuilder: widget.userBuilder,
-                          onLongPress: () => _deleteMessage(
+                          content: MassageItem(
                             messageBuilder: MessageBuilder.fromMap(
                               snapshot.data.docs[index].data(),
+                            ),
+                            userBuilder: widget.userBuilder,
+                            onLongPress: () => _deleteMessage(
+                              messageBuilder: MessageBuilder.fromMap(
+                                snapshot.data.docs[index].data(),
+                              ),
                             ),
                           ),
                         );
