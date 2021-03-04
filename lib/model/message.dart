@@ -18,6 +18,16 @@ class MessageBuilder {
         createdAt = map["createdAt"],
         updatedAt = map["updatedAt"];
 
+  MessageBuilder._createClone(MessageBuilder messageBuilder)
+      : id = messageBuilder.id,
+        ownerUID = messageBuilder.ownerUID,
+        message = messageBuilder.message,
+        attachFile = messageBuilder.attachFile,
+        createdAt = messageBuilder.createdAt,
+        updatedAt = messageBuilder.updatedAt;
+
+  MessageBuilder clone() => MessageBuilder._createClone(this);
+
   @override
   String toString() {
     return '\n********************************\n'

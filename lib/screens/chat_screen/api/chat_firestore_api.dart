@@ -29,7 +29,7 @@ class ChatFirestoreAPI {
         .snapshots();
   }
 
-  static Future<void> sendMassage({
+  static Future<void> sendMessage({
     @required File imageFile,
     @required String ownerUID,
     @required MessageBuilder messageBuilder,
@@ -119,7 +119,41 @@ class ChatFirestoreAPI {
         "lastActivity": message.createdAt,
       });
     });
-    log("$messageBuilder");
+    log("$messageBuilder", name: "Send Message");
+  }
+
+  static Future<void> editMessage({
+    @required String ownerUID,
+    @required MessageBuilder messageBuilder,
+  }) async {
+    messageBuilder.updatedAt = Timestamp.now();
+    final Message message = Message(messageBuilder);
+
+    // Редактируем сообщение у себя
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(user.uid)
+        .collection("Chats")
+        .doc(ownerUID)
+        .collection("Chat")
+        .doc(messageBuilder.id)
+        .update(message.toMap())
+        .then((value) async {
+      // Редактируем сообщение у собеседника
+      await FirebaseFirestore.instance
+          .collection("Swipe")
+          .doc("Database")
+          .collection("Users")
+          .doc(ownerUID)
+          .collection("Chats")
+          .doc(user.uid)
+          .collection("Chat")
+          .doc(messageBuilder.id)
+          .update(message.toMap());
+    });
+    log("$messageBuilder", name: "Edit Message");
   }
 
   static Future<void> deleteFromMe({

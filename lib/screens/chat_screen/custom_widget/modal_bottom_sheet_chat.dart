@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 
 class ModalBottomSheetChat extends StatelessWidget {
   final String username;
-  final VoidCallback deleteFromMe;
+  final VoidCallback onEdit;
   final VoidCallback deleteEverywhere;
+  final VoidCallback deleteFromMe;
+  final bool isNotOwnerMassage;
 
   const ModalBottomSheetChat({
     Key key,
     @required this.username,
-    @required this.deleteFromMe,
+    @required this.onEdit,
     @required this.deleteEverywhere,
+    @required this.deleteFromMe,
+    @required this.isNotOwnerMassage,
   }) : super(key: key);
 
   @override
@@ -23,6 +27,22 @@ class ModalBottomSheetChat extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (isNotOwnerMassage == true) ...[
+          ListTile(
+            leading: Icon(
+              Icons.edit_outlined,
+              color: Colors.black.withAlpha(150),
+            ),
+            title: Text(
+              "Изменить",
+              style: textStyle,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              onEdit();
+            },
+          ),
+        ],
         ListTile(
           leading: Icon(
             Icons.people_outline_rounded,

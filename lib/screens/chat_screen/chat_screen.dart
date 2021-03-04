@@ -30,12 +30,14 @@ class ChatScreen extends StatefulWidget {
 
 class _FeedbackScreenState extends State<ChatScreen> {
   File _imageFile;
-  String _message;
   ScrollController _scrollController;
+  TextEditingController _controller;
+  MessageBuilder _editMessageBuilder;
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    _controller = TextEditingController();
     super.initState();
   }
 
@@ -45,36 +47,72 @@ class _FeedbackScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() async {
-    if (_imageFile != null || _message != null && _message.trim() != "") {
-      MessageBuilder messageBuilder = MessageBuilder();
-      File imageFile = _imageFile;
-      messageBuilder.message = _message;
+    if (_editMessageBuilder != null) {
+      _editMessage();
+    } else {
+      if (_imageFile != null || _controller.text.trim() != "") {
+        //
+        MessageBuilder messageBuilder = MessageBuilder();
+        File imageFile = _imageFile;
+        messageBuilder.message = _controller.text;
 
-      setState(() {
-        _message = null;
-        _imageFile = null;
-      });
-      await ChatFirestoreAPI.sendMassage(
-        imageFile: imageFile,
-        ownerUID: widget.userBuilder.uid,
-        messageBuilder: messageBuilder,
-      );
-      if (_scrollController.position.pixels != 0.0) {
-        _scrollController.animateTo(
-          0.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 1000),
+        //
+        _controller.clear();
+        setState(() => _imageFile = null);
+
+        //
+        await ChatFirestoreAPI.sendMessage(
+          imageFile: imageFile,
+          ownerUID: widget.userBuilder.uid,
+          messageBuilder: messageBuilder,
         );
+        if (_scrollController.position.pixels > 0.5) {
+          _scrollController.animateTo(
+            0.0,
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 1000),
+          );
+        }
       }
     }
   }
 
-  void _deleteMessage({MessageBuilder messageBuilder}) {
+  void _editMessage() async {
+    if (_editMessageBuilder.attachFile != null ||
+        _controller.text.trim() != "") {
+      //
+      MessageBuilder messageBuilder = _editMessageBuilder.clone();
+      if (_controller.text.trim() == "") {
+        messageBuilder.message = null;
+      } else {
+        messageBuilder.message = _controller.text;
+      }
+
+      //
+      _controller.clear();
+      setState(() => _editMessageBuilder = null);
+
+      //
+      await ChatFirestoreAPI.editMessage(
+        ownerUID: widget.userBuilder.uid,
+        messageBuilder: messageBuilder,
+      );
+    }
+  }
+
+  void _actionsMessage({MessageBuilder messageBuilder}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return ModalBottomSheetChat(
           username: widget.userBuilder.name,
+          isNotOwnerMassage: widget.userBuilder.uid != messageBuilder.ownerUID,
+          onEdit: () {
+            setState(() {
+              _controller.text = messageBuilder.message;
+              _editMessageBuilder = messageBuilder;
+            });
+          },
           deleteFromMe: () {
             ChatFirestoreAPI.deleteFromMe(
               ownerUID: widget.userBuilder.uid,
@@ -190,7 +228,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
                               snapshot.data.docs[index].data(),
                             ),
                             userBuilder: widget.userBuilder,
-                            onLongPress: () => _deleteMessage(
+                            onLongPress: () => _actionsMessage(
                               messageBuilder: MessageBuilder.fromMap(
                                 snapshot.data.docs[index].data(),
                               ),
@@ -213,14 +251,19 @@ class _FeedbackScreenState extends State<ChatScreen> {
               alignment: Alignment.bottomCenter,
               child: widget.userBuilder.isBanned == false
                   ? InputFieldChat(
+                      controller: _controller,
                       imageFile: _imageFile,
-                      onChanged: (String message) {
-                        setState(() => _message = message);
-                      },
+                      isEdited: _editMessageBuilder != null,
                       onSend: () => _sendMessage(),
                       onAttach: () => _attachFile(),
                       onDeleteAttach: () {
-                        setState(() => _imageFile = null);
+                        if (_editMessageBuilder != null) {
+                          _controller.clear();
+                        }
+                        setState(() {
+                          _imageFile = null;
+                          _editMessageBuilder = null;
+                        });
                       },
                     )
                   : BlockedFieldChat(

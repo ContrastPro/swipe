@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:path/path.dart' as path;
@@ -8,17 +9,18 @@ class InputFieldChat extends StatelessWidget {
   final File imageFile;
   final VoidCallback onAttach;
   final VoidCallback onDeleteAttach;
-  final ValueChanged<String> onChanged;
   final VoidCallback onSend;
-  static TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
+  final bool isEdited;
 
   const InputFieldChat({
     Key key,
     @required this.imageFile,
     @required this.onAttach,
     @required this.onDeleteAttach,
-    @required this.onChanged,
     @required this.onSend,
+    @required this.controller,
+    @required this.isEdited,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class InputFieldChat extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Colors.black.withAlpha(35),
+              color: Colors.black.withAlpha(40),
               width: 0.5,
             ),
           ),
@@ -44,27 +46,70 @@ class InputFieldChat extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Row(
             children: [
-              Container(
-                width: 35,
-                height: 35,
-                child: Image.file(
-                  imageFile,
-                  fit: BoxFit.cover,
+              if (isEdited == true) ...[
+                Icon(
+                  Icons.edit,
+                  color: AppColors.accentColor,
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text(
-                    "${path.basename(imageFile?.path)}",
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 4.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Редкатирование",
+                          style: TextStyle(
+                            color: AppColors.accentColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          controller.text == ""
+                              ? "Изменить медиа"
+                              : controller.text,
+                          textAlign: TextAlign.start,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () => onDeleteAttach(),
-                child: Icon(Icons.close_rounded),
-              ),
+                GestureDetector(
+                  onTap: () => onDeleteAttach(),
+                  child: Icon(Icons.close_rounded),
+                ),
+              ],
+              if (imageFile != null) ...[
+                Container(
+                  width: 35,
+                  height: 35,
+                  child: Image.file(
+                    imageFile,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text(
+                      "${path.basename(imageFile?.path)}",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => onDeleteAttach(),
+                  child: Icon(
+                    Icons.close_rounded,
+                  ),
+                ),
+              ]
             ],
           ),
         ),
@@ -74,21 +119,28 @@ class InputFieldChat extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (imageFile != null) buildAttachFile(),
+        if (imageFile != null || isEdited == true) buildAttachFile(),
         Container(
           color: AppColors.primaryColor,
           child: Row(
             children: [
-              IconButton(
-                icon: Transform.rotate(
-                  angle: 3 / 4,
-                  child: Icon(
-                    Icons.attach_file_rounded,
-                    color: Colors.black54,
-                    size: 30.0,
+              Opacity(
+                opacity: isEdited == true ? 0 : 1,
+                child: IconButton(
+                  icon: Transform.rotate(
+                    angle: 3 / 4,
+                    child: Icon(
+                      Icons.attach_file_rounded,
+                      color: Colors.black54,
+                      size: 30.0,
+                    ),
                   ),
+                  onPressed: () {
+                    if (isEdited != true) {
+                      onAttach();
+                    }
+                  },
                 ),
-                onPressed: () => onAttach(),
               ),
               Expanded(
                 child: Container(
@@ -126,15 +178,11 @@ class InputFieldChat extends StatelessWidget {
                       ),
                       errorStyle: TextStyle(height: 0),
                     ),
-                    onChanged: (String massage) => onChanged(massage),
                   ),
                 ),
               ),
               GestureDetector(
-                onTap: () async {
-                  onSend();
-                  controller.clear();
-                },
+                onTap: () => onSend(),
                 child: Container(
                   width: 48,
                   height: 48,
@@ -143,7 +191,7 @@ class InputFieldChat extends StatelessWidget {
                       borderRadius: BorderRadius.circular(45.0),
                       gradient: AppColors.buttonGradient),
                   child: Icon(
-                    Icons.send_rounded,
+                    isEdited == true ? Icons.done_rounded : Icons.send_rounded,
                     color: Colors.white,
                   ),
                 ),

@@ -22,6 +22,21 @@ class MassageItem extends StatelessWidget {
       return userBuilder.uid != messageBuilder.ownerUID;
     }
 
+    String buildTimeString() {
+      String result;
+
+      if (messageBuilder.updatedAt == null) {
+        result = TimeFormat.formatTimeMessage(
+          messageBuilder.createdAt,
+        );
+      } else {
+        result = "изменено  ${TimeFormat.formatTimeMessage(
+          messageBuilder.createdAt,
+        )}";
+      }
+      return result;
+    }
+
     void showFullSizeImage() {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -127,9 +142,7 @@ class MassageItem extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: TimeFormat.formatTimeMessage(
-                  messageBuilder.createdAt,
-                ),
+                text: buildTimeString(),
                 style: TextStyle(
                   color: Colors.transparent,
                   fontWeight: FontWeight.w500,
@@ -157,9 +170,7 @@ class MassageItem extends StatelessWidget {
               right: 8.0,
               bottom: 4.0,
               child: Text(
-                TimeFormat.formatTimeMessage(
-                  messageBuilder.createdAt,
-                ),
+                buildTimeString(),
                 style: TextStyle(
                   color: _isNotOwnerMassage()
                       ? Colors.white
@@ -194,9 +205,7 @@ class MassageItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(3.0),
                 ),
                 child: Text(
-                  TimeFormat.formatTimeMessage(
-                    messageBuilder.createdAt,
-                  ),
+                  buildTimeString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -220,9 +229,7 @@ class MassageItem extends StatelessWidget {
               right: 8.0,
               bottom: 4.0,
               child: Text(
-                TimeFormat.formatTimeMessage(
-                  messageBuilder.createdAt,
-                ),
+                buildTimeString(),
                 style: TextStyle(
                   color: _isNotOwnerMassage()
                       ? Colors.white
@@ -252,7 +259,7 @@ class MassageItem extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: 70.0,
-                maxWidth: MediaQuery.of(context).size.width * 0.80,
+                maxWidth: MediaQuery.of(context).size.width * 0.85,
               ),
               child: Container(
                 margin: const EdgeInsets.symmetric(
