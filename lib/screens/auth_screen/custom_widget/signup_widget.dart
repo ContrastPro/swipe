@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/expandeble_page_view.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/gradient_text_field.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/one_time_password_widget.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/switch_auth_widget.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_signup_provider.dart';
 import 'package:swipe/custom_app_widget/app_logo.dart';
@@ -265,7 +263,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 "на указанный вами номер телефона",
           ),
           SizedBox(height: 20.0),
-          OTPField(
+          /*OTPField(
             length: 6,
             width: 280.0,
             fieldWidth: 35.0,
@@ -280,7 +278,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               print("Completed: " + pin);
               _signUpNotifier.smsPin = pin;
             },
-          ),
+          ),*/
           SizedBox(height: 40.0),
           GradientButton(
             title: "Регистрация",
@@ -307,7 +305,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           children: [
             AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
             SizedBox(height: 40.0),
-            ExpandablePageView(
+            /*ExpandablePageView(
               pageController: _pageController,
               physics: NeverScrollableScrollPhysics(),
               onPageChanged: (int index) {
@@ -318,7 +316,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 _buildSecondPage(),
                 _buildThirdPage(),
               ],
-            ),
+            ),*/
           ],
         ),
         if (_signUpNotifier.startLoading == true) WaveIndicator(),

@@ -9,34 +9,37 @@ class SwitchAuthWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthModeNotifier>(
       builder: (context, authNotifier, child) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              authNotifier.authMode == AuthMode.SIGNIN
-                  ? "Впервые у нас?"
-                  : "Уже есть аккаунт?",
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.w400,
-                color: Colors.white70,
-              ),
-            ),
-            SizedBox(width: 10.0),
-            GestureDetector(
-              onTap: () => authNotifier.changeAuthMode(),
-              child: Text(
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
                 authNotifier.authMode == AuthMode.SIGNIN
-                    ? "Регистрация"
-                    : "Войти",
+                    ? "Впервые у нас?"
+                    : "Уже есть аккаунт?",
                 style: TextStyle(
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white70,
                 ),
               ),
-            ),
-          ],
+              SizedBox(width: 10.0),
+              InkWell(
+                onTap: () => authNotifier.changeAuthMode(),
+                child: Text(
+                  authNotifier.authMode == AuthMode.SIGNIN
+                      ? "Регистрация"
+                      : "Войти",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

@@ -3,11 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/network_connectivity/network_connectivity.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/signin_widget.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/signup_widget.dart';
-import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
-import 'package:swipe/screens/auth_screen/provider/auth_signin_provider.dart';
-import 'package:swipe/screens/auth_screen/provider/auth_signup_provider.dart';
+
+import 'provider/auth_mode_provider.dart';
+import 'signin_widget_auth_screen/signin_widget_auth_screen.dart';
+import 'signup_widget_auth_screen/signup_widget_auth_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -24,17 +23,13 @@ class AuthScreen extends StatelessWidget {
             ),
             child: Consumer<AuthModeNotifier>(
               builder: (context, authNotifier, child) {
-                return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: authNotifier.authMode == AuthMode.SIGNIN
-                      ? ChangeNotifierProvider<AuthSignInNotifier>(
-                          create: (_) => AuthSignInNotifier(),
-                          child: SignInWidget(),
-                        )
-                      : ChangeNotifierProvider<AuthSignUpNotifier>(
-                          create: (_) => AuthSignUpNotifier(),
-                          child: SignUpWidget(),
-                        ),
+                return PageView(
+                  controller: authNotifier.pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    SignInWidgetAuthScreen(),
+                    SignUpWidgetAuthScreen(),
+                  ],
                 );
               },
             ),

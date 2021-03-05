@@ -8,6 +8,9 @@ class ChatImagePicker {
     // Get Image
     final PickedFile pickedFile = await picker.getImage(
       source: ImageSource.gallery,
+      maxWidth: 1920,
+      maxHeight: 1080,
+      imageQuality: 40,
     );
 
     return pickedFile != null ? File(pickedFile.path) : null;

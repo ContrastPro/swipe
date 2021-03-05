@@ -8,9 +8,9 @@ class UserNotifier with ChangeNotifier {
 
   UserBuilder get userProfile => _userBuilder;
 
-  void setUserProfile({@required UserBuilder userBuilder}) async {
+  void setUserProfile({@required UserBuilder userBuilder}) {
     _userBuilder = userBuilder;
-    log("$_userBuilder");
+    log("$_userBuilder", name: "User Profile");
     notifyListeners();
   }
 }

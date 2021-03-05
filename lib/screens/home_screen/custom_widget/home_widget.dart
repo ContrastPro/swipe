@@ -58,34 +58,32 @@ class _HomeWidgetState extends State<HomeWidget>
           List<ApartmentBuilder> apartmentList =
               _convertList(snapshot.data.docs);
 
-          if (apartmentList.isNotEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                await Future.delayed(
-                  Duration(milliseconds: 800),
-                ).then((value) {
-                  return Navigator.pushAndRemoveUntil(
-                      context, FadeRoute(page: HomeScreen()), (route) => false);
-                });
-              },
-              child: Stack(
-                children: [
-                  IndexedStack(
-                    index: _currentIndex,
-                    children: [
-                      HomeApartmentListWidget(
-                        apartmentList: apartmentList,
-                      ),
-                      HomeMapWidget(
-                        apartmentList: apartmentList,
-                      ),
-                    ],
-                  ),
-                  FilterList(),
-                ],
-              ),
-            );
-          }
+          return RefreshIndicator(
+            onRefresh: () async {
+              await Future.delayed(
+                Duration(milliseconds: 800),
+              ).then((value) {
+                return Navigator.pushAndRemoveUntil(
+                    context, FadeRoute(page: HomeScreen()), (route) => false);
+              });
+            },
+            child: Stack(
+              children: [
+                IndexedStack(
+                  index: _currentIndex,
+                  children: [
+                    HomeApartmentListWidget(
+                      apartmentList: apartmentList,
+                    ),
+                    HomeMapWidget(
+                      apartmentList: apartmentList,
+                    ),
+                  ],
+                ),
+                FilterList(),
+              ],
+            ),
+          );
         }
         return ShimmerAds();
       },

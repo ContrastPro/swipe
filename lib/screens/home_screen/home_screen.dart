@@ -8,19 +8,12 @@ import 'api/home_firestore_api.dart';
 import 'provider/user_provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String userUID;
-
-  const HomeScreen({
-    Key key,
-    this.userUID,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<UserBuilder>(
       stream: HomeFirestoreAPI.streamUser(
         userNotifier: Provider.of<UserNotifier>(context, listen: false),
-        userUID: userUID ?? AuthFirebaseAPI.getCurrentUser().uid,
+        userUID: AuthFirebaseAPI.getCurrentUser().uid,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {

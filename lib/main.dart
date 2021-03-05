@@ -67,9 +67,7 @@ class SwipeApp extends StatelessWidget {
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
                 if (snapshot.hasData) {
-                  return HomeScreen(
-                    userUID: snapshot.data.uid,
-                  );
+                  return HomeScreen();
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
