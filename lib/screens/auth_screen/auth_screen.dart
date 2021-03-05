@@ -27,8 +27,9 @@ class AuthScreen extends StatelessWidget {
                   controller: authNotifier.pageController,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    SignInWidgetAuthScreen(),
                     SignUpWidgetAuthScreen(),
+                    SignInWidgetAuthScreen(),
+                    //SignUpWidgetAuthScreen(),
                   ],
                 );
               },

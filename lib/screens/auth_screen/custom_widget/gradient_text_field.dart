@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:swipe/global/app_colors.dart';
 
 class GradientTextField extends StatelessWidget {
-  final double width;
-  final double height;
   final String hintText;
   final TextInputType keyboardType;
   final List<TextInputFormatter> formatter;
@@ -14,8 +12,6 @@ class GradientTextField extends StatelessWidget {
 
   const GradientTextField({
     Key key,
-    this.width,
-    this.height,
     this.hintText,
     this.keyboardType,
     this.formatter,
@@ -31,14 +27,14 @@ class GradientTextField extends StatelessWidget {
       borderSide: BorderSide(color: Colors.transparent),
     );
 
-    final InputBorder errorBorder = OutlineInputBorder(
+    final InputBorder focusedErrorBorder = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      borderSide: BorderSide(color: Colors.white54),
+      borderSide: BorderSide(color: Colors.red),
     );
 
     return Container(
-      width: width ?? 280.0,
-      height: height ?? 50.0,
+      width: 280.0,
+      height: 48.0,
       decoration: BoxDecoration(
         gradient: AppColors.textFieldGradient,
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -53,7 +49,7 @@ class GradientTextField extends StatelessWidget {
             enabledBorder: border,
             disabledBorder: border,
             focusedBorder: border,
-            errorBorder: errorBorder,
+            focusedErrorBorder: focusedErrorBorder,
             border: border,
             hintText: hintText ?? "TextField",
             hintStyle: TextStyle(color: Colors.white54),

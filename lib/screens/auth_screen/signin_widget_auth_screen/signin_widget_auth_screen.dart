@@ -12,6 +12,13 @@ class SignInWidgetAuthScreen extends StatefulWidget {
 }
 
 class _SignInWidgetAuthScreenState extends State<SignInWidgetAuthScreen> {
+
+
+  /*@override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }*/
   Widget _firstPage() {
     return Consumer<AuthModeNotifier>(
       builder: (context, authNotifier, child) {
