@@ -143,7 +143,7 @@ class _OTPFieldState extends State<OTPField> {
           ),
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.redAccent,
+              color: AppColors.accentColor,
               width: 2.5,
             ),
           ),

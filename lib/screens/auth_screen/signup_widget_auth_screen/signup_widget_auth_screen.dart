@@ -23,7 +23,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
   final Duration _duration = Duration(milliseconds: 1000);
   final Curve _curve = Curves.easeInOutQuint;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final PageController _controller = PageController();
+  final PageController _controller = PageController(keepPage: false);
 
   bool _startLoading = false;
 
@@ -48,14 +48,14 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
   }
 
   // Sign Up Developer user
-  void _signUpDeveloperUser() {}
+  void _verifyPhoneDeveloperUser() {}
 
-  void _enterOTPDeveloperUser({
+  void _signInDeveloperUser({
     @required String smsCode,
   }) {}
 
   // Sign Up Custom user
-  void _signUpCustomUser({
+  void _verifyPhoneCustomUser({
     @required AuthModeNotifier authNotifier,
     @required UserBuilder userBuilder,
   }) async {
@@ -101,7 +101,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
     }
   }
 
-  void _enterOTPCustomUser({
+  void _signInCustomUser({
     @required String smsCode,
   }) async {
     setState(() => _startLoading = true);
@@ -137,7 +137,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
           physics: NeverScrollableScrollPhysics(),
           controller: _controller,
           children: [
-            /*FirstPageSignUp(
+            FirstPageSignUp(
               onTap: () => _nextPage(),
             ),
             SecondPageSignUp(
@@ -149,15 +149,17 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
               },
             ),
             // Developer User Pages
-            DeveloperUserPageSignUp(),
+            DeveloperUserPageSignUp(
+              onSubmit: (){},
+            ),
             OTPPageSignUp(
-              onSubmit: (String otp) {},
-            ),*/
+              onCompleted: (String otp) {},
+            ),
 
             // Custom User Pages
             CustomUserPageSignUp(
               onSubmit: (UserBuilder userBuilder) {
-                _signUpCustomUser(
+                _verifyPhoneCustomUser(
                   authNotifier: authNotifier,
                   userBuilder: userBuilder,
                 );
@@ -165,7 +167,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             OTPPageSignUp(
               onCompleted: (String smsCode) {
-                _enterOTPCustomUser(smsCode: smsCode);
+                _signInCustomUser(smsCode: smsCode);
               },
             ),
           ],

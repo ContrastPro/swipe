@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 enum AuthMode { SIGNUP, SIGNIN }
 
 class AuthModeNotifier with ChangeNotifier {
-  final PageController _controller = PageController();
+  final PageController _controller = PageController(keepPage: false);
   final Duration _duration = Duration(milliseconds: 1000);
   final Curve _curve = Curves.easeInOutQuint;
 

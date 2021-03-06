@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/otp_field_auth.dart';
+import 'package:swipe/screens/auth_screen/custom_widget/text_info_auth.dart';
 
 class OTPPageSignUp extends StatelessWidget {
   final ValueChanged<String> onCompleted;
@@ -20,7 +21,11 @@ class OTPPageSignUp extends StatelessWidget {
         child: Column(
           children: [
             AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
-            SizedBox(height: 40.0),
+            SizedBox(height: 10.0),
+            TextInfoAuth(
+              title: "Введите код который мы отправили "
+                  "на указаный вами номер телефона",
+            ),
             Container(
               width: 280.0,
               child: OTPField(
@@ -45,6 +50,7 @@ class OTPPageSignUp extends StatelessWidget {
               borderRadius: 10.0,
               onTap: () {},
             ),
+            SizedBox(height: 16.0),
           ],
         ),
       ),

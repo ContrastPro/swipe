@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/model/custom_user.dart';
 
-enum SignUpStatus { EXIST, NOTEXIST, SUCCESS, ERROR }
+enum SignUpStatus { EXIST, NOTEXIST }
 
 class SignUpFirestoreAPI {
   SignUpFirestoreAPI._();
@@ -45,10 +43,16 @@ class SignUpFirestoreAPI {
   static addCustomUser(String uid) async {
     _userBuilder.uid = uid;
     _userBuilder.createdAt = Timestamp.now();
-    log("$_userBuilder");
-    /*await AuthFirestoreAPI.addUser(
-      customUser: CustomUser(userBuilder: userBuilder),
-      user: user,
-    );*/
+
+    final CustomUser customUser = CustomUser(
+      userBuilder: _userBuilder,
+    );
+
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(uid)
+        .set(customUser.toMap());
   }
 }

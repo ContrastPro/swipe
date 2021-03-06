@@ -85,11 +85,11 @@ class CustomUserPageSignUp extends StatelessWidget {
                   FilteringTextInputFormatter.deny(RegExp(' ')),
                 ],
                 validator: (value) {
-                  /*if (value.isEmpty ||
+                  if (value.isEmpty ||
                       !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(value)) {
                     return '';
-                  }*/
+                  }
                   return null;
                 },
               ),
