@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'users_cloudstore_admin_api.dart';
 
-class UsersFirestoreAdminApi {
-  UsersFirestoreAdminApi._();
+class UsersFirestoreAdminAPI {
+  UsersFirestoreAdminAPI._();
 
   static Stream<QuerySnapshot> getUsers() {
     return FirebaseFirestore.instance
@@ -40,7 +40,7 @@ class UsersFirestoreAdminApi {
           // Удаляем все фото в объявлении
           List<String> images = List<String>.from(doc["images"]);
           await Future.wait(images.map((imageURL) {
-            return UsersCloudstoreAdminApi.deleteUserAdsImages(
+            return UsersCloudstoreAdminAPI.deleteUserAdsImages(
               imageURL: imageURL,
             );
           }));

@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
     return StreamBuilder<UserBuilder>(
       stream: HomeFirestoreAPI.streamUser(
         userNotifier: Provider.of<UserNotifier>(context, listen: false),
-        userUID: AuthFirebaseAPI.getCurrentUser().uid,
+        userUID: FirebaseAPI.currentUser().uid,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {

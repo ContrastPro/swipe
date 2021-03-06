@@ -264,7 +264,7 @@ class GradientDrawer extends StatelessWidget {
                   _buildListTile(
                     title: "Выход",
                     onTap: () {
-                      AuthFirebaseAPI.signOut();
+                      FirebaseAPI.signOut();
                     },
                   ),
                   SizedBox(height: 32.0),

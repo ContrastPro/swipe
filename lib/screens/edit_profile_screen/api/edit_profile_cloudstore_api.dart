@@ -11,7 +11,7 @@ class EditProfileCloudstoreAPI {
     String photoURL,
   }) async {
     String newPhotoURL;
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    final User user = FirebaseAPI.currentUser();
 
     if (photoURL != null) {
       // Удаляем старое изображение

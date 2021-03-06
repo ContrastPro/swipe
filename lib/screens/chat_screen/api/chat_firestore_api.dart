@@ -12,7 +12,7 @@ import 'package:uuid/uuid.dart';
 class ChatFirestoreAPI {
   ChatFirestoreAPI._();
 
-  static User user = AuthFirebaseAPI.getCurrentUser();
+  static User user = FirebaseAPI.currentUser();
 
   static Stream<QuerySnapshot> getChat({
     @required String ownerUID,

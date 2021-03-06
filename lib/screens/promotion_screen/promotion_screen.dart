@@ -6,7 +6,6 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
 
 import 'api/make_payment.dart';
@@ -35,7 +34,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
   bool _addColor = false;
   bool _addPhrase = false;
   bool _startLoading = false;
-  List<int> _complexPrice = List<int>();
+  List<int> _complexPrice = <int>[];
 
   ApartmentBuilder _apartmentBuilder;
   List<PromotionCard> _promotionList;
@@ -64,7 +63,7 @@ class _PromotionScreenState extends State<PromotionScreen> {
       _addColor = false;
       _currentIndex = index;
       _totalPrice = _promotionList[index + 2].price;
-      _complexPrice = List<int>();
+      _complexPrice = <int>[];
     });
   }
 
@@ -205,11 +204,9 @@ class _PromotionScreenState extends State<PromotionScreen> {
             onTapLeading: () => Navigator.pop(context),
             onTapAction: () => Navigator.pop(context),
           ),
-          body: NetworkConnectivity(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: _buildScreen(),
-            ),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: _buildScreen(),
           ),
         ),
         if (_startLoading == true) WaveIndicator(),

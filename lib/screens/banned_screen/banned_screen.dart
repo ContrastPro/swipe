@@ -36,7 +36,7 @@ class BannedScreen extends StatelessWidget {
               maxWidth: 280.0,
               minHeight: 50.0,
               borderRadius: 10.0,
-              onTap: () => AuthFirebaseAPI.signOut(),
+              onTap: () => FirebaseAPI.signOut(),
             ),
           ],
         ),

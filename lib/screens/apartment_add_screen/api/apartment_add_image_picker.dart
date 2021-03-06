@@ -4,7 +4,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ApartmentAddImagePicker with ChangeNotifier {
-  List<File> _imageFileList = List<File>();
+  List<File> _imageFileList = <File>[];
 
   List<File> get imageList => _imageFileList;
 

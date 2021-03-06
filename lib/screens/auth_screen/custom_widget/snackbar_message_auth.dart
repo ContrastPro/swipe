@@ -9,8 +9,8 @@ class SnackBarMessageAuth {
     String action,
     VoidCallback onPressed,
   }) {
-    if(onPressed != null){
-      Scaffold.of(context).showSnackBar(
+    if (onPressed != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(content),
           duration: Duration(seconds: 5),
@@ -21,7 +21,7 @@ class SnackBarMessageAuth {
         ),
       );
     } else {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(content),
           backgroundColor: Colors.redAccent,
@@ -29,6 +29,5 @@ class SnackBarMessageAuth {
         ),
       );
     }
-
   }
 }

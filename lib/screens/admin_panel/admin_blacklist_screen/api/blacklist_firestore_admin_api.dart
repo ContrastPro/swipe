@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class BlacklistFirestoreAdminApi {
-  BlacklistFirestoreAdminApi._();
+class BlacklistFirestoreAdminAPI {
+  BlacklistFirestoreAdminAPI._();
 
   static Stream<QuerySnapshot> getBlacklist() {
     return FirebaseFirestore.instance

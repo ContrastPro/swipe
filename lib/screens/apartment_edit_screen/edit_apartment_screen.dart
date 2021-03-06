@@ -9,7 +9,6 @@ import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/format/price_format.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/screens/home_screen/home_screen.dart';
@@ -367,61 +366,59 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
               onTapLeading: () => Navigator.pop(context),
               onTapAction: () => Navigator.pop(context),
             ),
-            body: NetworkConnectivity(
-              child: Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-                  physics: BouncingScrollPhysics(),
-                  child: Consumer<ApartmentEditImagePicker>(
-                    builder: (context, imagePicker, child) {
-                      return Column(
-                        children: [
-                          _buildAddress(),
-                          _buildFoundingDocument(),
-                          _buildAppointmentApartment(),
-                          _buildNumberOfRooms(),
-                          _buildApartmentLayout(),
-                          _buildApartmentCondition(),
-                          _buildTotalArea(),
-                          _buildKitchenArea(),
-                          _buildBalconyLoggia(),
-                          _buildHeatingType(),
-                          _buildTypeOfPayment(),
-                          _buildAgentCommission(),
-                          _buildCommunicationMethod(),
-                          _buildDescription(),
-                          _buildPrice(),
-                          _buildImagePicker(imagePicker),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 25.0,
-                            ),
-                            child: GradientButton(
-                              title: "Сохранить",
-                              maxWidth: double.infinity,
-                              minHeight: 50.0,
-                              borderRadius: 10.0,
-                              onTap: () => _saveApartment(imagePicker),
+            body: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+                physics: BouncingScrollPhysics(),
+                child: Consumer<ApartmentEditImagePicker>(
+                  builder: (context, imagePicker, child) {
+                    return Column(
+                      children: [
+                        _buildAddress(),
+                        _buildFoundingDocument(),
+                        _buildAppointmentApartment(),
+                        _buildNumberOfRooms(),
+                        _buildApartmentLayout(),
+                        _buildApartmentCondition(),
+                        _buildTotalArea(),
+                        _buildKitchenArea(),
+                        _buildBalconyLoggia(),
+                        _buildHeatingType(),
+                        _buildTypeOfPayment(),
+                        _buildAgentCommission(),
+                        _buildCommunicationMethod(),
+                        _buildDescription(),
+                        _buildPrice(),
+                        _buildImagePicker(imagePicker),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 25.0,
+                          ),
+                          child: GradientButton(
+                            title: "Сохранить",
+                            maxWidth: double.infinity,
+                            minHeight: 50.0,
+                            borderRadius: 10.0,
+                            onTap: () => _saveApartment(imagePicker),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () => _deleteApartment(),
+                          highlightColor: Colors.transparent,
+                          child: Text(
+                            "Удалить объявление",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 15.0,
                             ),
                           ),
-                          FlatButton(
-                            onPressed: () => _deleteApartment(),
-                            highlightColor: Colors.transparent,
-                            child: Text(
-                              "Удалить объявление",
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    },
-                  ),
+                        )
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

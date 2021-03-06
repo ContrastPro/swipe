@@ -16,7 +16,7 @@ class _MFCScreenState extends State<MFCScreen> {
 
   MapNotifier _mapNotifier;
   GoogleMapController _mapController;
-  List<Marker> _markerList = List<Marker>();
+  List<Marker> _markerList = <Marker>[];
 
   @override
   void initState() {

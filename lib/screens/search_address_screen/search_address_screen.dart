@@ -21,7 +21,7 @@ class _SearchAddressScreenState extends State<SearchAddressScreen> {
   double _longitude;
   MapNotifier _mapNotifier;
   AddressBuilder _addressBuilder;
-  List<Marker> _markerList = List<Marker>();
+  List<Marker> _markerList = <Marker>[];
 
   @override
   void initState() {

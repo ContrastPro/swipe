@@ -13,7 +13,7 @@ class PromotionCloudstoreAPI {
     @required File imageFile,
   }) async {
     String photoURL;
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    final User user = FirebaseAPI.currentUser();
 
     Reference newReference = FirebaseStorage.instance
         .ref("Swipe/Users/${user.uid}/Ads")

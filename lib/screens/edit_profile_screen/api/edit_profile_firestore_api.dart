@@ -15,7 +15,7 @@ class EditProfileFirestoreAPI {
     @required UserBuilder userBuilder,
     @required File imageFile,
   }) async {
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    final User user = FirebaseAPI.currentUser();
     if (imageFile != null) {
       // Загрузить/Обновить изображение и вернуть ссылку
       userBuilder.photoURL = await EditProfileCloudstoreAPI.uploadProfileImage(

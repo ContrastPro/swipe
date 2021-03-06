@@ -6,7 +6,6 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_ads.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/filter_screen/filter_list.dart';
 import 'package:swipe/screens/home_screen/api/home_firestore_api.dart';
 
@@ -142,9 +141,7 @@ class _HomeWidgetState extends State<HomeWidget>
           SizedBox(width: 20.0),
         ],
       ),
-      body: NetworkConnectivity(
-        child: _buildScreen(),
-      ),
+      body: _buildScreen(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: HomeGradientFAB(
         value: _isMapWidget,

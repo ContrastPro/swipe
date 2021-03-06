@@ -4,7 +4,6 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fab/apartment_fab_edit.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/model/notary.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 
 import 'api/notary_firestore_admin_api.dart';
 import 'custom_widget/add_edit_notary_admin.dart';
@@ -62,55 +61,53 @@ class _AdminNotaryScreenState extends State<AdminNotaryScreen> {
         onTapLeading: () => Navigator.pop(context),
         onTapAction: () => Navigator.pop(context),
       ),
-      body: NetworkConnectivity(
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: NotaryFirestoreAdminApi.getNotary(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Something went wrong'));
-                }
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          StreamBuilder<QuerySnapshot>(
+            stream: NotaryFirestoreAdminAPI.getNotary(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Something went wrong'));
+              }
 
-                if (!snapshot.hasData) {
-                  return ShimmerUsers();
-                }
+              if (!snapshot.hasData) {
+                return ShimmerUsers();
+              }
 
-                if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                  return Stack(
-                    children: [
-                      ListView.builder(
-                        itemCount: snapshot.data.docs.length,
-                        physics: BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(vertical: 11.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          return NotaryItemAdmin(
-                            notaryBuilder: NotaryBuilder.fromMap(
-                              snapshot.data.docs[index].data(),
-                            ),
-                            onTap: () {
-                              _addEditNotary(
-                                notaryBuilder: NotaryBuilder.fromMap(
-                                  snapshot.data.docs[index].data(),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  return Center(
-                    child: Text("Здесь пока ничего нет..."),
-                  );
-                }
-              },
-            ),
-            _buildAddEditNotary(),
-          ],
-        ),
+              if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                return Stack(
+                  children: [
+                    ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 11.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        return NotaryItemAdmin(
+                          notaryBuilder: NotaryBuilder.fromMap(
+                            snapshot.data.docs[index].data(),
+                          ),
+                          onTap: () {
+                            _addEditNotary(
+                              notaryBuilder: NotaryBuilder.fromMap(
+                                snapshot.data.docs[index].data(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Text("Здесь пока ничего нет..."),
+                );
+              }
+            },
+          ),
+          _buildAddEditNotary(),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AnimatedSwitcher(

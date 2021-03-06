@@ -76,7 +76,7 @@ class MakePayment {
   }
 
   static void _setCommonValue({@required ApartmentBuilder apartmentBuilder}) {
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    final User user = FirebaseAPI.currentUser();
     apartmentBuilder.id = Uuid().v1();
     apartmentBuilder.ownerUID = user.uid;
     apartmentBuilder.createdAt = Timestamp.now();

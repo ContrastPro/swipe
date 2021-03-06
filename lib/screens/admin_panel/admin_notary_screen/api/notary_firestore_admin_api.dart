@@ -7,8 +7,8 @@ import 'package:uuid/uuid.dart';
 
 import 'notary_cloudstore_admin_api.dart';
 
-class NotaryFirestoreAdminApi {
-  NotaryFirestoreAdminApi._();
+class NotaryFirestoreAdminAPI {
+  NotaryFirestoreAdminAPI._();
 
   static Stream<QuerySnapshot> getNotary() {
     return FirebaseFirestore.instance

@@ -49,12 +49,12 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
     if (_formKey.currentState.validate()) {
       setState(() => _startLoading = true);
       if (widget.notaryBuilder.id == null) {
-        await NotaryFirestoreAdminApi.addNotary(
+        await NotaryFirestoreAdminAPI.addNotary(
           notaryBuilder: widget.notaryBuilder,
           imageFile: _imageFile,
         );
       } else {
-        await NotaryFirestoreAdminApi.editNotary(
+        await NotaryFirestoreAdminAPI.editNotary(
           notaryBuilder: widget.notaryBuilder,
           imageFile: _imageFile,
         );
@@ -66,7 +66,7 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
   }
 
   void _deleteNotary() {
-    NotaryFirestoreAdminApi.deleteNotary(
+    NotaryFirestoreAdminAPI.deleteNotary(
       notaryBuilder: widget.notaryBuilder,
     );
     widget.switchState();

@@ -6,7 +6,7 @@ class FeedbackFirestoreAPI {
   FeedbackFirestoreAPI._();
 
   static Stream<QuerySnapshot> getChats() {
-    final User user = AuthFirebaseAPI.getCurrentUser();
+    final User user = FirebaseAPI.currentUser();
     return FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")

@@ -1,8 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-class UsersCloudstoreAdminApi{
-  UsersCloudstoreAdminApi._();
+class UsersCloudstoreAdminAPI{
+  UsersCloudstoreAdminAPI._();
 
   static Future<void> deleteUserAdsImages({
     @required String imageURL,

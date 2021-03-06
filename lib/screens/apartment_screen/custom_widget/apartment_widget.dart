@@ -11,7 +11,6 @@ import 'package:swipe/custom_app_widget/page_indicator.dart';
 import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/apartment_edit_screen/edit_apartment_screen.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 import 'package:swipe/screens/chat_screen/chat_screen.dart';
@@ -43,7 +42,7 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
 
   @override
   void initState() {
-    _user = AuthFirebaseAPI.getCurrentUser();
+    _user = FirebaseAPI.currentUser();
     super.initState();
   }
 
@@ -465,27 +464,25 @@ class _ApartmentWidgetState extends State<ApartmentWidget> {
           ]
         ],
       ),
-      body: NetworkConnectivity(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              _buildImageList(),
-              _buildHeader(),
-              _buildBody(),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    OwnerInfoField(userBuilder: widget.userBuilder),
-                    SizedBox(height: 35.0),
-                    _buildButton(),
-                  ],
-                ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            _buildImageList(),
+            _buildHeader(),
+            _buildBody(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  OwnerInfoField(userBuilder: widget.userBuilder),
+                  SizedBox(height: 35.0),
+                  _buildButton(),
+                ],
               ),
-              SizedBox(height: 120),
-            ],
-          ),
+            ),
+            SizedBox(height: 120),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

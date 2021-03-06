@@ -9,7 +9,6 @@ import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/address.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/promotion.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
@@ -495,51 +494,49 @@ class _ApartmentAddScreenState extends State<ApartmentAddScreen> {
           onTapLeading: () => Navigator.pop(context),
           onTapAction: () => Navigator.pop(context),
         ),
-        body: NetworkConnectivity(
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
-              physics: BouncingScrollPhysics(),
-              child: Consumer<ApartmentAddImagePicker>(
-                builder: (context, imagePicker, child) {
-                  return Column(
-                    children: [
-                      _buildAddress(),
-                      _buildApartmentComplex(),
-                      _buildFoundingDocument(),
-                      _buildAppointmentApartment(),
-                      _buildNumberOfRooms(),
-                      _buildApartmentLayout(),
-                      _buildApartmentCondition(),
-                      _buildTotalArea(),
-                      _buildKitchenArea(),
-                      _buildBalconyLoggia(),
-                      _buildHeatingType(),
-                      _buildTypeOfPayment(),
-                      _buildAgentCommission(),
-                      _buildCommunicationMethod(),
-                      _buildDescription(),
-                      _buildPrice(),
-                      _buildImagePicker(imagePicker),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 25.0,
-                        ),
-                        child: GradientButton(
-                          title: "Продолжить",
-                          maxWidth: double.infinity,
-                          minHeight: 50.0,
-                          borderRadius: 10.0,
-                          onTap: () => _goToPromotionScreen(imagePicker),
-                        ),
+        body: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 30.0, bottom: 60.0),
+            physics: BouncingScrollPhysics(),
+            child: Consumer<ApartmentAddImagePicker>(
+              builder: (context, imagePicker, child) {
+                return Column(
+                  children: [
+                    _buildAddress(),
+                    _buildApartmentComplex(),
+                    _buildFoundingDocument(),
+                    _buildAppointmentApartment(),
+                    _buildNumberOfRooms(),
+                    _buildApartmentLayout(),
+                    _buildApartmentCondition(),
+                    _buildTotalArea(),
+                    _buildKitchenArea(),
+                    _buildBalconyLoggia(),
+                    _buildHeatingType(),
+                    _buildTypeOfPayment(),
+                    _buildAgentCommission(),
+                    _buildCommunicationMethod(),
+                    _buildDescription(),
+                    _buildPrice(),
+                    _buildImagePicker(imagePicker),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 25.0,
                       ),
-                    ],
-                  );
-                },
-              ),
+                      child: GradientButton(
+                        title: "Продолжить",
+                        maxWidth: double.infinity,
+                        minHeight: 50.0,
+                        borderRadius: 10.0,
+                        onTap: () => _goToPromotionScreen(imagePicker),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

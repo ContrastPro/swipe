@@ -6,7 +6,6 @@ import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
 
 import 'api/users_firestore_admin_api.dart';
@@ -23,7 +22,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
   @override
   void initState() {
-    _user = AuthFirebaseAPI.getCurrentUser();
+    _user = FirebaseAPI.currentUser();
     super.initState();
   }
 
@@ -41,7 +40,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                 "Продолжить?",
             onAccept: () async {
               setState(() => _startLoading = true);
-              await UsersFirestoreAdminApi.unblockUser(uid: document.id);
+              await UsersFirestoreAdminAPI.unblockUser(uid: document.id);
               setState(() => _startLoading = false);
             },
           );
@@ -57,7 +56,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                 "все объявления будут удалены навсегда. Продолжить?",
             onAccept: () async {
               setState(() => _startLoading = true);
-              await UsersFirestoreAdminApi.blockUser(uid: document.id);
+              await UsersFirestoreAdminAPI.blockUser(uid: document.id);
               setState(() => _startLoading = false);
             },
           );
@@ -76,43 +75,41 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             onTapLeading: () => Navigator.pop(context),
             onTapAction: () => Navigator.pop(context),
           ),
-          body: NetworkConnectivity(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: UsersFirestoreAdminApi.getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Something went wrong'));
-                }
+          body: StreamBuilder<QuerySnapshot>(
+            stream: UsersFirestoreAdminAPI.getUsers(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Something went wrong'));
+              }
 
-                if (!snapshot.hasData) {
-                  return ShimmerUsers();
-                }
+              if (!snapshot.hasData) {
+                return ShimmerUsers();
+              }
 
-                if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                  return ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    physics: BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(vertical: 11.0),
-                    itemBuilder: (BuildContext context, int index) {
-                      return UsersItemAdmin(
-                        userBuilder: UserBuilder.fromMap(
-                          snapshot.data.docs[index].data(),
-                        ),
-                        ownerUID: _user.uid,
-                        onTap: () => _blockUnblockUser(
-                          context: context,
-                          document: snapshot.data.docs[index],
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: Text("Здесь пока ничего нет..."),
-                  );
-                }
-              },
-            ),
+              if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: snapshot.data.docs.length,
+                  physics: BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(vertical: 11.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    return UsersItemAdmin(
+                      userBuilder: UserBuilder.fromMap(
+                        snapshot.data.docs[index].data(),
+                      ),
+                      ownerUID: _user.uid,
+                      onTap: () => _blockUnblockUser(
+                        context: context,
+                        document: snapshot.data.docs[index],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text("Здесь пока ничего нет..."),
+                );
+              }
+            },
           ),
         ),
         if (_startLoading == true) WaveIndicator(),

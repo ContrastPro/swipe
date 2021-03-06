@@ -24,11 +24,11 @@ class _ShowOnMapScreenState extends State<ShowOnMapScreen> {
   User _user;
   MapNotifier _mapNotifier;
   GoogleMapController _mapController;
-  List<Marker> _markerList = List<Marker>();
+  List<Marker> _markerList = <Marker>[];
 
   @override
   void initState() {
-    _user = AuthFirebaseAPI.getCurrentUser();
+    _user = FirebaseAPI.currentUser();
     _loadMarkers();
     super.initState();
   }

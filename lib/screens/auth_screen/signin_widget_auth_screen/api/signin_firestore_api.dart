@@ -1,0 +1,3 @@
+class SighInFirestoreAPI {
+  SighInFirestoreAPI._();
+}

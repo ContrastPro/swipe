@@ -1,10 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:swipe/custom_app_widget/app_logo.dart';
-import 'package:swipe/custom_app_widget/gradient_button.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/switch_auth_widget.dart';
-import 'package:swipe/screens/auth_screen/custom_widget/text_info_auth.dart';
-import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
+import 'package:swipe/custom_app_widget/loading_indicator.dart';
+
+import 'custom_widget/first_page_signin.dart';
 
 class SignInWidgetAuthScreen extends StatefulWidget {
   @override
@@ -12,53 +10,66 @@ class SignInWidgetAuthScreen extends StatefulWidget {
 }
 
 class _SignInWidgetAuthScreenState extends State<SignInWidgetAuthScreen> {
+  final Duration _duration = Duration(milliseconds: 1000);
+  final Curve _curve = Curves.easeInOutQuint;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final PageController _controller = PageController(keepPage: false);
 
+  bool _startLoading = false;
 
-  /*@override
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }*/
-  Widget _firstPage() {
-    return Consumer<AuthModeNotifier>(
-      builder: (context, authNotifier, child) {
-        return Center(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
-                TextInfoAuth(
-                  title: "Открой доступ к самой полной "
-                      "базе рынка квартир в Сочи!",
-                ),
-                GradientButton(
-                  title: "Войти",
-                  maxWidth: 280.0,
-                  minHeight: 50.0,
-                  borderRadius: 10.0,
-                  onTap: () {},
-                ),
-                SwitchAuthWidget(),
-              ],
+  }
+
+  void _nextPage() {
+    _controller.nextPage(
+      duration: _duration,
+      curve: _curve,
+    );
+  }
+
+  void _previousPage() {
+    _controller.previousPage(
+      duration: _duration,
+      curve: _curve,
+    );
+  }
+
+  Widget _buildScreen() {
+    return Stack(
+      children: [
+        PageView(
+          scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
+          controller: _controller,
+          children: [
+            FirstPageSignIn(
+              onTap: () => _nextPage(),
             ),
-          ),
-        );
-      },
+            Container(color: Colors.blue),
+            Container(color: Colors.green),
+          ],
+        ),
+        if (_startLoading == true) WaveIndicator(),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      scrollDirection: Axis.vertical,
-      physics: BouncingScrollPhysics(),
-      children: [
-        _firstPage(),
-        Container(color: Colors.blue),
-        Container(color: Colors.green),
-      ],
+    return WillPopScope(
+      onWillPop: () async {
+        switch (_controller.page.toInt()) {
+          case 1:
+            _previousPage();
+            return false;
+          default:
+            return false;
+        }
+      },
+      child: _buildScreen(),
     );
   }
 }

@@ -193,7 +193,9 @@ class _OTPFieldState extends State<OTPField> {
           }
 
           // Call the `onChanged` callback function
-          widget.onChanged(currentPin);
+          if(widget.onChanged != null){
+            widget.onChanged(currentPin);
+          }
         },
       ),
     );

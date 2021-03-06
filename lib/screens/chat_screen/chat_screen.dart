@@ -7,7 +7,6 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/model/message.dart';
-import 'package:swipe/network_connectivity/network_connectivity.dart';
 import 'package:swipe/screens/chat_screen/api/chat_image_picker.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/blocked_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
@@ -189,94 +188,92 @@ class _FeedbackScreenState extends State<ChatScreen> {
         onTapLeading: () => Navigator.pop(context),
         onTapAction: () => Navigator.pop(context),
       ),
-      body: NetworkConnectivity(
-        child: Column(
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: ChatFirestoreAPI.getChat(
-                ownerUID: widget.userBuilder.uid,
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Expanded(
-                    child: Center(
-                      child: Text('Something went wrong'),
-                    ),
-                  );
-                }
+      body: Column(
+        children: [
+          StreamBuilder<QuerySnapshot>(
+            stream: ChatFirestoreAPI.getChat(
+              ownerUID: widget.userBuilder.uid,
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Expanded(
+                  child: Center(
+                    child: Text('Something went wrong'),
+                  ),
+                );
+              }
 
-                if (!snapshot.hasData) {
-                  return Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
+              if (!snapshot.hasData) {
+                return Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
 
-                if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                  return Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      itemCount: snapshot.data.docs.length,
-                      reverse: true,
-                      controller: _scrollController,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return StickyHeader(
-                          header: _buildHeader(
-                            index: index,
-                            itemCount: snapshot.data.docs.length,
-                            listDocument: snapshot.data.docs,
+              if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                return Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    itemCount: snapshot.data.docs.length,
+                    reverse: true,
+                    controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return StickyHeader(
+                        header: _buildHeader(
+                          index: index,
+                          itemCount: snapshot.data.docs.length,
+                          listDocument: snapshot.data.docs,
+                        ),
+                        content: MassageItem(
+                          messageBuilder: MessageBuilder.fromMap(
+                            snapshot.data.docs[index].data(),
                           ),
-                          content: MassageItem(
+                          userBuilder: widget.userBuilder,
+                          onLongPress: () => _actionsMessage(
                             messageBuilder: MessageBuilder.fromMap(
                               snapshot.data.docs[index].data(),
                             ),
-                            userBuilder: widget.userBuilder,
-                            onLongPress: () => _actionsMessage(
-                              messageBuilder: MessageBuilder.fromMap(
-                                snapshot.data.docs[index].data(),
-                              ),
-                            ),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return Expanded(
-                    child: Center(
-                      child: Text("Здесь пока ничего нет..."),
-                    ),
-                  );
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Expanded(
+                  child: Center(
+                    child: Text("Здесь пока ничего нет..."),
+                  ),
+                );
+              }
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: widget.userBuilder.isBanned == false
+                ? InputFieldChat(
+              controller: _controller,
+              imageFile: _imageFile,
+              isEdited: _editMessageBuilder != null,
+              onSend: () => _sendMessage(),
+              onAttach: () => _attachFile(),
+              onDeleteAttach: () {
+                if (_editMessageBuilder != null) {
+                  _controller.clear();
                 }
+                setState(() {
+                  _imageFile = null;
+                  _editMessageBuilder = null;
+                });
               },
+            )
+                : BlockedFieldChat(
+              username: widget.userBuilder.name,
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: widget.userBuilder.isBanned == false
-                  ? InputFieldChat(
-                      controller: _controller,
-                      imageFile: _imageFile,
-                      isEdited: _editMessageBuilder != null,
-                      onSend: () => _sendMessage(),
-                      onAttach: () => _attachFile(),
-                      onDeleteAttach: () {
-                        if (_editMessageBuilder != null) {
-                          _controller.clear();
-                        }
-                        setState(() {
-                          _imageFile = null;
-                          _editMessageBuilder = null;
-                        });
-                      },
-                    )
-                  : BlockedFieldChat(
-                      username: widget.userBuilder.name,
-                    ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
