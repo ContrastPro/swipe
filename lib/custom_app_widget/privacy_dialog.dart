@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+class PrivacyDialog {
+  PrivacyDialog._();
 
-class PrivacyDialog extends StatelessWidget {
-  final String textButton;
-  final double radius;
-  final String fileName;
+  static showPrivacyDialog({
+    @required BuildContext context,
+    VoidCallback onPressed,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _PrivacyDialog(
+          onPressed: () {
+            if (onPressed != null) {
+              onPressed();
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class _PrivacyDialog extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const PrivacyDialog({
+  const _PrivacyDialog({
     Key key,
-    this.textButton,
-    this.radius = 8,
-    this.fileName = "privacy_policy.md",
     this.onPressed,
   }) : super(key: key);
 
@@ -22,8 +38,9 @@ class PrivacyDialog extends StatelessWidget {
         future: Future.delayed(
           Duration(milliseconds: 250),
         ).then((value) {
-          return DefaultAssetBundle.of(context)
-              .loadString("assets/privacy/$fileName");
+          return DefaultAssetBundle.of(context).loadString(
+            "assets/privacy/privacy_policy.md",
+          );
         }),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -42,7 +59,7 @@ class PrivacyDialog extends StatelessWidget {
     return Dialog(
       insetPadding: EdgeInsets.all(16.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -55,22 +72,22 @@ class PrivacyDialog extends StatelessWidget {
             color: Colors.pink[600],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(radius),
-                bottomRight: Radius.circular(radius),
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
               ),
             ),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(radius),
-                  bottomRight: Radius.circular(radius),
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
                 ),
               ),
               alignment: Alignment.center,
               height: 50,
               width: double.infinity,
               child: Text(
-                textButton?.toUpperCase() ?? "ПРИНЯТЬ",
+                "ПРИНЯТЬ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,
@@ -80,7 +97,7 @@ class PrivacyDialog extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              if(onPressed != null){
+              if (onPressed != null) {
                 onPressed();
               }
             },

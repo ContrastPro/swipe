@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/snackbar_message_auth.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
@@ -92,7 +91,10 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
               verificationId: verificationId,
             );
             setState(() => _startLoading = false);
-            _nextPage();
+            PrivacyDialog.showPrivacyDialog(
+              context: context,
+              onPressed: () => _nextPage(),
+            );
           },
         );
         break;
@@ -162,7 +164,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
               },
             ),
             OTPPageSignUp(
-              onSubmit: (String smsCode) {
+              onCompleted: (String smsCode) {
                 _enterOTPCustomUser(smsCode: smsCode);
               },
             ),

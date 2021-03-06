@@ -451,17 +451,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 22.0, 16.0, 45.0),
       child: GestureDetector(
-        onTap: () {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return PrivacyDialog(
-                textButton: "ЗАКРЫТЬ",
-              );
-            },
-          );
-        },
+        onTap: () => PrivacyDialog.showPrivacyDialog(context: context),
         child: Text(
           "Политика конфеденциальности",
           style: TextStyle(

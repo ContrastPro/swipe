@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swipe/model/custom_user.dart';
 
@@ -43,6 +45,7 @@ class SignUpFirestoreAPI {
   static addCustomUser(String uid) async {
     _userBuilder.uid = uid;
     _userBuilder.createdAt = Timestamp.now();
+    log("$_userBuilder");
     /*await AuthFirestoreAPI.addUser(
       customUser: CustomUser(userBuilder: userBuilder),
       user: user,
