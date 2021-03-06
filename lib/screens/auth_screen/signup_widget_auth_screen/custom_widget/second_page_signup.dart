@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/switch_auth_widget.dart';
 
-import 'signup_icon_auth.dart';
+import 'signup_icon_signup.dart';
 
 class SecondPageSignUp extends StatelessWidget {
   final VoidCallback onDeveloperUserTap;
@@ -23,7 +23,7 @@ class SecondPageSignUp extends StatelessWidget {
           children: [
             AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
             SizedBox(height: 50.0),
-            SignUpIconAuth(
+            SignUpIconSignUp(
               iconPath: "assets/images/building.png",
               width: 100.0,
               height: 100.0,
@@ -31,7 +31,7 @@ class SecondPageSignUp extends StatelessWidget {
               onTap: () => onDeveloperUserTap(),
             ),
             SizedBox(height: 40.0),
-            SignUpIconAuth(
+            SignUpIconSignUp(
               iconPath: "assets/images/neighborhood.png",
               width: 130.0,
               height: 65.0,

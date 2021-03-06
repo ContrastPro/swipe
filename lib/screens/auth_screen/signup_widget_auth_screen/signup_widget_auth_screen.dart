@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
@@ -11,6 +12,7 @@ import 'api/signup_firestore_api.dart';
 import 'custom_widget/custom_user_page_signup.dart';
 import 'custom_widget/developer_user_page_signup.dart';
 import 'custom_widget/first_page_signup.dart';
+import 'custom_widget/otp_page_signup.dart';
 import 'custom_widget/second_page_signup.dart';
 
 class SignUpWidgetAuthScreen extends StatefulWidget {
@@ -21,14 +23,10 @@ class SignUpWidgetAuthScreen extends StatefulWidget {
 class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
   final Duration _duration = Duration(milliseconds: 1000);
   final Curve _curve = Curves.easeInOutQuint;
-  PageController _controller;
-  bool _startLoading = false;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final PageController _controller = PageController();
 
-  @override
-  void initState() {
-    _controller = PageController();
-    super.initState();
-  }
+  bool _startLoading = false;
 
   @override
   void dispose() {
@@ -50,13 +48,21 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
     );
   }
 
+  // Sign Up Developer user
+  void _signUpDeveloperUser() {}
+
+  void _enterOTPDeveloperUser({
+    @required String smsCode,
+  }) {}
+
+  // Sign Up Custom user
   void _signUpCustomUser({
     @required AuthModeNotifier authNotifier,
     @required UserBuilder userBuilder,
   }) async {
-    //log("$userBuilder");
     setState(() => _startLoading = true);
-    switch (await SignUpFirestoreAPI.signUpCustomUser(userBuilder)) {
+    await _firebaseAuth.setLanguageCode("ru");
+    switch (await SignUpFirestoreAPI.alreadyRegistered(userBuilder.phone)) {
       case SignUpStatus.EXIST:
         setState(() => _startLoading = false);
         SnackBarMessageAuth.showSnackBar(
@@ -69,14 +75,55 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
         );
         break;
       default:
-        // Начинаем проходить регистрацию и если возникает ошибка выводим
-
-        setState(() => _startLoading = false);
-        SnackBarMessageAuth.showSnackBar(
-          context: context,
-          content: "Указаный вами номер неверного формата.",
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: userBuilder.phone,
+          verificationCompleted: (PhoneAuthCredential credential) {},
+          codeAutoRetrievalTimeout: (String verificationId) {},
+          verificationFailed: (FirebaseAuthException e) {
+            setState(() => _startLoading = false);
+            SnackBarMessageAuth.showSnackBar(
+              context: context,
+              content: "Указаный вами номер неверного формата.",
+            );
+          },
+          codeSent: (String verificationId, int resendToken) {
+            SignUpFirestoreAPI.codeSentCustomUser(
+              userBuilder: userBuilder,
+              verificationId: verificationId,
+            );
+            setState(() => _startLoading = false);
+            _nextPage();
+          },
         );
         break;
+    }
+  }
+
+  void _enterOTPCustomUser({
+    @required String smsCode,
+  }) async {
+    setState(() => _startLoading = true);
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: SignUpFirestoreAPI.verificationId,
+      smsCode: smsCode,
+    );
+
+    try {
+      await _firebaseAuth
+          .signInWithCredential(phoneAuthCredential)
+          .then((value) async {
+        if (value.user != null) {
+          await SignUpFirestoreAPI.addCustomUser(
+            value.user.uid,
+          );
+        }
+      });
+    } catch (e) {
+      setState(() => _startLoading = false);
+      SnackBarMessageAuth.showSnackBar(
+        context: context,
+        content: "Вы ввели неверный код.",
+      );
     }
   }
 
@@ -93,26 +140,31 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             SecondPageSignUp(
               onDeveloperUserTap: () {
-                _controller.animateToPage(
-                  2,
-                  duration: _duration,
-                  curve: _curve,
-                );
+                _controller.jumpToPage(2);
               },
               onCustomUserTap: () {
-                _controller.animateToPage(
-                  3,
-                  duration: _duration,
-                  curve: _curve,
+                _controller.jumpToPage(4);
+              },
+            ),
+            // Developer User Pages
+            DeveloperUserPageSignUp(),
+            OTPPageSignUp(
+              onSubmit: (String otp) {},
+            ),*/
+
+            // Custom User Pages
+            CustomUserPageSignUp(
+              onSubmit: (UserBuilder userBuilder) {
+                _signUpCustomUser(
+                  authNotifier: authNotifier,
+                  userBuilder: userBuilder,
                 );
               },
             ),
-            DeveloperUserPageSignUp(),*/
-            CustomUserPageSignUp(
-              onSubmit: (UserBuilder userBuilder) => _signUpCustomUser(
-                authNotifier: authNotifier,
-                userBuilder: userBuilder,
-              ),
+            OTPPageSignUp(
+              onSubmit: (String smsCode) {
+                _enterOTPCustomUser(smsCode: smsCode);
+              },
             ),
           ],
         ),
@@ -133,16 +185,6 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
                 return false;
               case 1:
                 _previousPage();
-                return false;
-              case 2:
-                _previousPage();
-                return false;
-              case 3:
-                _controller.animateToPage(
-                  1,
-                  duration: _duration,
-                  curve: _curve,
-                );
                 return false;
               default:
                 return false;

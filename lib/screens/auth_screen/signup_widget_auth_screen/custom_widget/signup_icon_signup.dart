@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SignUpIconAuth extends StatelessWidget {
+class SignUpIconSignUp extends StatelessWidget {
   final String iconPath;
   final String title;
   final double width;
   final double height;
   final VoidCallback onTap;
 
-  const SignUpIconAuth({
+  const SignUpIconSignUp({
     Key key,
     @required this.iconPath,
     @required this.title,
