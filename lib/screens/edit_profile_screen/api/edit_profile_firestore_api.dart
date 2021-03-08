@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 
 import 'edit_profile_cloudstore_api.dart';
 

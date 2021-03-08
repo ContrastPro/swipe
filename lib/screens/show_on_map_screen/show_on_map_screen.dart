@@ -6,7 +6,7 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/current_location.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 
 class ShowOnMapScreen extends StatefulWidget {
   final ApartmentBuilder apartmentBuilder;

@@ -5,13 +5,13 @@ import 'package:swipe/screens/auth_screen/custom_widget/switch_auth_widget.dart'
 import 'package:swipe/screens/auth_screen/custom_widget/text_info_auth.dart';
 
 class FirstPageSignIn extends StatelessWidget {
-
   final VoidCallback onTap;
 
   const FirstPageSignIn({
     Key key,
     @required this.onTap,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(

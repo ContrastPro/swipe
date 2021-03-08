@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_logo.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
-import 'package:swipe/global/app_colors.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/style/app_colors.dart';
+import 'package:swipe/global/firebase_api.dart';
 
 class BannedScreen extends StatelessWidget {
   @override

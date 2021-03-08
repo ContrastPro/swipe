@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
+
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/admin_panel/admin_blacklist_screen/admin_blacklist_screen.dart';
 import 'package:swipe/screens/admin_panel/admin_home_screen/custom_widget/list_item_admin.dart';

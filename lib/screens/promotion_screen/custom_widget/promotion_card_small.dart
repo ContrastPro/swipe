@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/screens/promotion_screen/model/promotion_card.dart';
 
 class PromotionCardSmall extends StatelessWidget {

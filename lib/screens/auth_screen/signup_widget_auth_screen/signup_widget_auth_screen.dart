@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/model/custom_user.dart';
@@ -15,13 +14,18 @@ import 'custom_widget/otp_page_signup.dart';
 import 'custom_widget/second_page_signup.dart';
 
 class SignUpWidgetAuthScreen extends StatefulWidget {
+  final AuthModeNotifier authNotifier;
+
+  const SignUpWidgetAuthScreen({
+    Key key,
+    @required this.authNotifier,
+  }) : super(key: key);
+
   @override
   _SignUpWidgetAuthScreenState createState() => _SignUpWidgetAuthScreenState();
 }
 
 class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
-  final Duration _duration = Duration(milliseconds: 1000);
-  final Curve _curve = Curves.easeInOutQuint;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final PageController _controller = PageController(keepPage: false);
 
@@ -35,28 +39,31 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
 
   void _nextPage() {
     _controller.nextPage(
-      duration: _duration,
-      curve: _curve,
+      duration: widget.authNotifier.duration,
+      curve: widget.authNotifier.curve,
     );
   }
 
   void _previousPage() {
     _controller.previousPage(
-      duration: _duration,
-      curve: _curve,
+      duration: widget.authNotifier.duration,
+      curve: widget.authNotifier.curve,
     );
   }
 
   // Sign Up Developer user
-  void _verifyPhoneDeveloperUser() {}
+  void _verifyPhoneDeveloperUser() async {
+    //
+  }
 
   void _signInDeveloperUser({
     @required String smsCode,
-  }) {}
+  }) async {
+    //
+  }
 
   // Sign Up Custom user
   void _verifyPhoneCustomUser({
-    @required AuthModeNotifier authNotifier,
     @required UserBuilder userBuilder,
   }) async {
     setState(() => _startLoading = true);
@@ -69,12 +76,12 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
           content: "Аккаунт с таким номером телефона уже существует.",
           action: "Войти",
           onPressed: () {
-            authNotifier.changeAuthMode();
+            widget.authNotifier.changeAuthMode();
           },
         );
         break;
       default:
-        await FirebaseAuth.instance.verifyPhoneNumber(
+        await _firebaseAuth.verifyPhoneNumber(
           phoneNumber: userBuilder.phone,
           verificationCompleted: (PhoneAuthCredential credential) {},
           codeAutoRetrievalTimeout: (String verificationId) {},
@@ -86,11 +93,11 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             );
           },
           codeSent: (String verificationId, int resendToken) {
+            setState(() => _startLoading = false);
             SignUpFirestoreAPI.codeSentCustomUser(
               userBuilder: userBuilder,
               verificationId: verificationId,
             );
-            setState(() => _startLoading = false);
             PrivacyDialog.showPrivacyDialog(
               context: context,
               onPressed: () => _nextPage(),
@@ -129,7 +136,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
     }
   }
 
-  Widget _buildScreen(AuthModeNotifier authNotifier) {
+  Widget _buildScreen() {
     return Stack(
       children: [
         PageView(
@@ -150,17 +157,16 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             // Developer User Pages
             DeveloperUserPageSignUp(
-              onSubmit: (){},
+              onSubmit: () {},
             ),
             OTPPageSignUp(
-              onCompleted: (String otp) {},
+              onCompleted: (String smsCode) {},
             ),
 
             // Custom User Pages
             CustomUserPageSignUp(
               onSubmit: (UserBuilder userBuilder) {
                 _verifyPhoneCustomUser(
-                  authNotifier: authNotifier,
                   userBuilder: userBuilder,
                 );
               },
@@ -179,24 +185,24 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthModeNotifier>(
-      builder: (context, authNotifier, child) {
-        return WillPopScope(
-          onWillPop: () async {
-            switch (_controller.page.toInt()) {
-              case 0:
-                authNotifier.changeAuthMode();
-                return false;
-              case 1:
-                _previousPage();
-                return false;
-              default:
-                return false;
-            }
-          },
-          child: _buildScreen(authNotifier),
-        );
+    return WillPopScope(
+      onWillPop: () async {
+        switch (_controller.page.toInt()) {
+          case 0:
+            widget.authNotifier.changeAuthMode();
+            return false;
+          case 2:
+            _controller.jumpToPage(1);
+            return false;
+          case 4:
+            _controller.jumpToPage(1);
+            return false;
+          default:
+            _previousPage();
+            return false;
+        }
       },
+      child: _buildScreen(),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/modal_bottom_sheet.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 
 import 'api/users_firestore_admin_api.dart';
 import 'custom_widget/users_item_admin.dart';

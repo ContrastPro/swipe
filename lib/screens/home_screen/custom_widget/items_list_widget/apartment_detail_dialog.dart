@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/page_indicator.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 
 class ApartmentDetailDialog extends StatefulWidget {
@@ -19,6 +19,10 @@ class ApartmentDetailDialog extends StatefulWidget {
 }
 
 class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
+
+  final Duration _duration = Duration(milliseconds: 400);
+  final Curve _curves = Curves.easeIn;
+
   int _currentIndex = 0;
   PageController _pageController;
 
@@ -35,19 +39,21 @@ class _ApartmentDetailDialogState extends State<ApartmentDetailDialog> {
   }
 
   void _nextImage() {
-    _pageController.animateToPage(
-      _pageController.page.toInt() + 1,
-      duration: Duration(milliseconds: 400),
-      curve: Curves.easeIn,
-    );
+    if(widget.apartmentBuilder.images.length > 1){
+      _pageController.nextPage(
+        duration: _duration,
+        curve: _curves,
+      );
+    }
   }
 
   void _previousImage() {
-    _pageController.animateToPage(
-      _pageController.page.toInt() - 1,
-      duration: Duration(milliseconds: 400),
-      curve: Curves.easeIn,
-    );
+    if(widget.apartmentBuilder.images.length > 1){
+      _pageController.previousPage(
+        duration: _duration,
+        curve: _curves,
+      );
+    }
   }
 
   @override

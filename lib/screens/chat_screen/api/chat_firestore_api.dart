@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/model/message.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 import 'package:swipe/screens/chat_screen/api/chat_cloudstore_api.dart';
 import 'package:uuid/uuid.dart';
 

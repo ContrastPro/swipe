@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:swipe/format/price_format.dart';
-import 'package:swipe/global/app_colors.dart';
 import 'package:swipe/model/address.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/promotion.dart';
@@ -14,6 +13,7 @@ import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/screens/search_address_screen/search_address_screen.dart';
+import 'package:swipe/global/style/app_colors.dart';
 
 import 'api/apartment_add_image_picker.dart';
 import 'custom_widget/expandable_card_apartment_add.dart';

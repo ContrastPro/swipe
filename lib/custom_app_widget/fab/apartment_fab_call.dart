@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 
 class ApartmentFABCall extends StatelessWidget {
   static const double width = 160.0;

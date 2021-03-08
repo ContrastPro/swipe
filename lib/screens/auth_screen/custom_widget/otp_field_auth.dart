@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 
 enum FieldStyle { underline, box }
 
@@ -64,33 +64,39 @@ class _OTPFieldState extends State<OTPField> {
 
   @override
   void initState() {
-    _focusNodes = List<FocusNode>(widget.length);
-    _textControllers = List<TextEditingController>(widget.length);
+    _focusNodes = List<FocusNode>.generate(
+      widget.length,
+      (index) => FocusNode(),
+    );
+    _textControllers = List<TextEditingController>.generate(
+      widget.length,
+      (index) => TextEditingController(),
+    );
 
     _pin = List.generate(widget.length, (int i) {
       return '';
     });
     _textFields = List.generate(widget.length, (int i) {
-      Widget textField;
       // i % 2 == 0 && i != 0
-      if (i == 3) {
+      /*if (i == 3) {
         textField = Padding(
           padding: const EdgeInsets.only(left: 20),
           child: buildTextField(context, i),
         );
       } else {
         textField = buildTextField(context, i);
-      }
+      }*/
 
-      return textField;
+      return buildTextField(context, i);
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    _textControllers
-        .forEach((TextEditingController controller) => controller.dispose());
+    _textControllers.forEach((controller) {
+      controller.dispose();
+    });
     super.dispose();
   }
 
@@ -111,10 +117,10 @@ class _OTPFieldState extends State<OTPField> {
   /// * Requires a build context
   /// * Requires Int position of the field
   Widget buildTextField(BuildContext context, int i) {
-    if (_focusNodes[i] == null) _focusNodes[i] = FocusNode();
+    /*if (_focusNodes[i] == null) _focusNodes[i] = FocusNode();
 
     if (_textControllers[i] == null)
-      _textControllers[i] = TextEditingController();
+      _textControllers[i] = TextEditingController();*/
 
     return Container(
       width: widget.fieldWidth,
@@ -149,15 +155,15 @@ class _OTPFieldState extends State<OTPField> {
           ),
           border: widget.fieldStyle == FieldStyle.box
               ? OutlineInputBorder(
-            borderSide: BorderSide(
-              width: widget.fieldWidth,
-            ),
-          )
+                  borderSide: BorderSide(
+                    width: widget.fieldWidth,
+                  ),
+                )
               : UnderlineInputBorder(
-            borderSide: BorderSide(
-              width: widget.fieldWidth,
-            ),
-          ),
+                  borderSide: BorderSide(
+                    width: widget.fieldWidth,
+                  ),
+                ),
         ),
         onChanged: (String str) {
           // Check if the current value at this position is empty
@@ -193,7 +199,7 @@ class _OTPFieldState extends State<OTPField> {
           }
 
           // Call the `onChanged` callback function
-          if(widget.onChanged != null){
+          if (widget.onChanged != null) {
             widget.onChanged(currentPin);
           }
         },

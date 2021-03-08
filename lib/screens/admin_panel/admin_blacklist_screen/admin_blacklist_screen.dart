@@ -3,9 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
+import 'package:swipe/global/firebase_api.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/admin_panel/admin_users_screen/custom_widget/users_item_admin.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+
 
 import 'api/blacklist_firestore_admin_api.dart';
 

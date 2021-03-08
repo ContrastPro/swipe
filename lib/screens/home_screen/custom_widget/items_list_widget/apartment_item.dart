@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/format/time_format.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
 

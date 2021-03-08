@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/promotion.dart';
 
 class PromotionPhrasePicker extends StatelessWidget {

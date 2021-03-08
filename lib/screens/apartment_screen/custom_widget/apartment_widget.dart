@@ -8,11 +8,11 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/image_slider.dart';
 import 'package:swipe/custom_app_widget/page_indicator.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/screens/apartment_edit_screen/edit_apartment_screen.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 import 'package:swipe/screens/chat_screen/chat_screen.dart';
 
 import 'package:swipe/screens/promotion_screen/promotion_screen.dart';

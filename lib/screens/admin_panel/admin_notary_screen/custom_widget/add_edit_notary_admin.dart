@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/screens/admin_panel/admin_notary_screen/api/avatar_image_picker_admin.dart';
 import 'package:swipe/screens/admin_panel/admin_notary_screen/api/notary_firestore_admin_api.dart';

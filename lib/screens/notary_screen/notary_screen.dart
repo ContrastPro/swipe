@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/shimmer/shimmer_users.dart';
-import 'package:swipe/global/app_colors.dart';
+import 'package:swipe/global/style/app_colors.dart';
+
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/screens/notary_screen/api/notary_firestore_api.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,7 +71,7 @@ class NotaryScreen extends StatelessWidget {
                 fontSize: 12.0,
               ),
             ),
-            if(notaryBuilder.email != null)...[
+            if (notaryBuilder.email != null) ...[
               Text(
                 notaryBuilder.email,
                 style: TextStyle(

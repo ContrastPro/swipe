@@ -7,7 +7,7 @@ import 'package:swipe/custom_app_widget/fade_route.dart';
 import 'package:swipe/global/map_notifier.dart';
 import 'package:swipe/model/apartment.dart';
 import 'package:swipe/screens/apartment_screen/apartment_screen.dart';
-import 'package:swipe/screens/auth_screen/api/firebase_auth_api.dart';
+import 'package:swipe/global/firebase_api.dart';
 
 import 'items_list_widget/apartment_detail_dialog.dart';
 
