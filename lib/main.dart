@@ -36,6 +36,7 @@ class SwipeApp extends StatelessWidget {
       statusBarColor: Colors.transparent,
     ));
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -44,7 +45,6 @@ class SwipeApp extends StatelessWidget {
       supportedLocales: [
         const Locale('ru', 'RU'),
       ],
-      debugShowCheckedModeBanner: false,
       title: 'Swipe',
       theme: AppTheme.light(),
       home: FutureBuilder<FirebaseApp>(

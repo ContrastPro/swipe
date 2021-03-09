@@ -69,17 +69,17 @@ class ChatFirestoreAPI {
     await referenceUser.set(message.toMap()).then((value) async {
       // Публикуем изображение для себя
       if (imageFile != null) {
-        String image = await ChatCloudstoreAPI.uploadChatImage(
+        String photoURL = await ChatCloudstoreAPI.uploadChatImage(
           userUID: user.uid,
           imageFile: imageFile,
         );
 
         await referenceUser.update({
-          "attachFile": image,
+          "attachFile": photoURL,
         });
       }
 
-      // Обновляем информацию чата
+      // Обновляем информацию чата у себя
       await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
@@ -97,17 +97,17 @@ class ChatFirestoreAPI {
       if (imageFile != null) {
         // Публикуем изображение для собеседника
         if (imageFile != null) {
-          String image = await ChatCloudstoreAPI.uploadChatImage(
+          String photoURL = await ChatCloudstoreAPI.uploadChatImage(
             userUID: ownerUID,
             imageFile: imageFile,
           );
 
           await referenceOwner.update({
-            "attachFile": image,
+            "attachFile": photoURL,
           });
         }
       }
-      // Обновляем информацию чата
+      // Обновляем информацию чата у собеседника
       await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
@@ -141,8 +141,7 @@ class ChatFirestoreAPI {
         .update(Message(messageBuilder).toMap())
         .then((value) async {
       // Редактируем сообщение у собеседника
-      // Клонируем всё кроме ссылки на изображение её надо загрузить отдельно
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      DocumentReference referenceOwner = FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
@@ -150,16 +149,17 @@ class ChatFirestoreAPI {
           .collection("Chats")
           .doc(user.uid)
           .collection("Chat")
-          .doc(messageBuilder.id)
-          .get();
+          .doc(messageBuilder.id);
 
-
-          /*.then((DocumentSnapshot documentSnapshot) async {
+      // Ссылку на изображение у собеседника надо загрузить и обновить отдельно
+      await referenceOwner
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
           messageBuilder.attachFile = documentSnapshot["attachFile"];
+          await referenceOwner.update(Message(messageBuilder).toMap());
         }
-      });*/
-      //.update(message.toMap());
+      });
     });
     log("$messageBuilder", name: "Edit Message");
   }
