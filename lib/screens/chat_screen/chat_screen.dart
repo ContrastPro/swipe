@@ -30,14 +30,21 @@ class ChatScreen extends StatefulWidget {
 class _FeedbackScreenState extends State<ChatScreen> {
   File _imageFile;
   ScrollController _scrollController;
-  TextEditingController _controller;
+  TextEditingController _textController;
   MessageBuilder _editMessageBuilder;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _controller = TextEditingController();
+    _textController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _textController.dispose();
+    super.dispose();
   }
 
   void _attachFile() async {
@@ -49,19 +56,19 @@ class _FeedbackScreenState extends State<ChatScreen> {
     if (_editMessageBuilder != null) {
       _editMessage();
     } else {
-      if (_imageFile != null || _controller.text.trim() != "") {
+      if (_imageFile != null || _textController.text.trim() != "") {
         //
         MessageBuilder messageBuilder = MessageBuilder();
         File imageFile = _imageFile;
 
-        if (_controller.text.trim() == "") {
+        if (_textController.text.trim() == "") {
           messageBuilder.message = null;
         } else {
-          messageBuilder.message = _controller.text;
+          messageBuilder.message = _textController.text;
         }
 
         //
-        _controller.clear();
+        _textController.clear();
         setState(() => _imageFile = null);
 
         //
@@ -83,17 +90,16 @@ class _FeedbackScreenState extends State<ChatScreen> {
 
   void _editMessage() async {
     if (_editMessageBuilder.attachFile != null ||
-        _controller.text.trim() != "") {
-      //
+        _textController.text.trim() != "") {
       MessageBuilder messageBuilder = _editMessageBuilder.clone();
-      if (_controller.text.trim() == "") {
+      if (_textController.text.trim() == "") {
         messageBuilder.message = null;
       } else {
-        messageBuilder.message = _controller.text;
+        messageBuilder.message = _textController.text;
       }
 
       //
-      _controller.clear();
+      _textController.clear();
       setState(() => _editMessageBuilder = null);
 
       //
@@ -113,7 +119,7 @@ class _FeedbackScreenState extends State<ChatScreen> {
           isNotOwnerMassage: widget.userBuilder.uid != messageBuilder.ownerUID,
           onEdit: () {
             setState(() {
-              _controller.text = messageBuilder.message;
+              _textController.text = messageBuilder.message;
               _editMessageBuilder = messageBuilder;
             });
           },
@@ -254,14 +260,14 @@ class _FeedbackScreenState extends State<ChatScreen> {
             alignment: Alignment.bottomCenter,
             child: widget.userBuilder.isBanned == false
                 ? InputFieldChat(
-              controller: _controller,
+              controller: _textController,
               imageFile: _imageFile,
               isEdited: _editMessageBuilder != null,
               onSend: () => _sendMessage(),
               onAttach: () => _attachFile(),
               onDeleteAttach: () {
                 if (_editMessageBuilder != null) {
-                  _controller.clear();
+                  _textController.clear();
                 }
                 setState(() {
                   _imageFile = null;

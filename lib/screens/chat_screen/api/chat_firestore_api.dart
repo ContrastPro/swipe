@@ -127,7 +127,6 @@ class ChatFirestoreAPI {
     @required MessageBuilder messageBuilder,
   }) async {
     messageBuilder.updatedAt = Timestamp.now();
-    final Message message = Message(messageBuilder);
 
     // Редактируем сообщение у себя
     await FirebaseFirestore.instance
@@ -139,10 +138,11 @@ class ChatFirestoreAPI {
         .doc(ownerUID)
         .collection("Chat")
         .doc(messageBuilder.id)
-        .update(message.toMap())
+        .update(Message(messageBuilder).toMap())
         .then((value) async {
       // Редактируем сообщение у собеседника
-      await FirebaseFirestore.instance
+      // Клонируем всё кроме ссылки на изображение её надо загрузить отдельно
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
           .collection("Users")
@@ -151,7 +151,15 @@ class ChatFirestoreAPI {
           .doc(user.uid)
           .collection("Chat")
           .doc(messageBuilder.id)
-          .update(message.toMap());
+          .get();
+
+
+          /*.then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          messageBuilder.attachFile = documentSnapshot["attachFile"];
+        }
+      });*/
+      //.update(message.toMap());
     });
     log("$messageBuilder", name: "Edit Message");
   }
@@ -188,18 +196,7 @@ class ChatFirestoreAPI {
         attachFile: messageBuilder.attachFile,
       );
 
-      // Удаляем сообщение у себя
-      await FirebaseFirestore.instance
-          .collection("Swipe")
-          .doc("Database")
-          .collection("Users")
-          .doc(user.uid)
-          .collection("Chats")
-          .doc(ownerUID)
-          .collection("Chat")
-          .doc(messageBuilder.id)
-          .delete();
-
+      // Удаляем изображение у собеседника
       await FirebaseFirestore.instance
           .collection("Swipe")
           .doc("Database")
@@ -212,48 +209,35 @@ class ChatFirestoreAPI {
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          // Удаляем изображение у собеседника
           await ChatCloudstoreAPI.deleteChatImage(
             attachFile: documentSnapshot["attachFile"],
           );
-
-          // Удаляем сообщение у собеседника
-          await FirebaseFirestore.instance
-              .collection("Swipe")
-              .doc("Database")
-              .collection("Users")
-              .doc(ownerUID)
-              .collection("Chats")
-              .doc(user.uid)
-              .collection("Chat")
-              .doc(messageBuilder.id)
-              .delete();
         }
       });
-    } else {
-      // Удаляем сообщение у себя
-      await FirebaseFirestore.instance
-          .collection("Swipe")
-          .doc("Database")
-          .collection("Users")
-          .doc(user.uid)
-          .collection("Chats")
-          .doc(ownerUID)
-          .collection("Chat")
-          .doc(messageBuilder.id)
-          .delete();
-
-      // Удаляем сообщение у собеседника
-      await FirebaseFirestore.instance
-          .collection("Swipe")
-          .doc("Database")
-          .collection("Users")
-          .doc(ownerUID)
-          .collection("Chats")
-          .doc(user.uid)
-          .collection("Chat")
-          .doc(messageBuilder.id)
-          .delete();
     }
+
+    // Удаляем сообщение у себя
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(user.uid)
+        .collection("Chats")
+        .doc(ownerUID)
+        .collection("Chat")
+        .doc(messageBuilder.id)
+        .delete();
+
+    // Удаляем сообщение у собеседника
+    await FirebaseFirestore.instance
+        .collection("Swipe")
+        .doc("Database")
+        .collection("Users")
+        .doc(ownerUID)
+        .collection("Chats")
+        .doc(user.uid)
+        .collection("Chat")
+        .doc(messageBuilder.id)
+        .delete();
   }
 }
