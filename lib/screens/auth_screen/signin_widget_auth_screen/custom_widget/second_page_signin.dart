@@ -55,6 +55,7 @@ class SecondPageSignIn extends StatelessWidget {
                       phone: phone,
                     );
                     onCompleted(phone);
+                    FocusScope.of(context).unfocus();
                   }
                 },
               ),

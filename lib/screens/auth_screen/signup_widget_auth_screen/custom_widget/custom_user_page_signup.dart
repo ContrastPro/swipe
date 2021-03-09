@@ -105,6 +105,7 @@ class CustomUserPageSignUp extends StatelessWidget {
                       phone: userBuilder.phone,
                     );
                     onSubmit(userBuilder);
+                    FocusScope.of(context).unfocus();
                   }
                 },
               ),
