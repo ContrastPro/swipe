@@ -42,11 +42,11 @@ class MakePayment {
       // Загружаем данные в БД
       _setCommonValue(apartmentBuilder: apartmentBuilder);
       await PromotionFirestoreAPI.uploadApartment(
-        apartment: Apartment(apartmentBuilder: apartmentBuilder),
+        apartment: Apartment(apartmentBuilder),
       );
     } else {
       await PromotionFirestoreAPI.updateApartment(
-        apartment: Apartment(apartmentBuilder: apartmentBuilder),
+        apartment: Apartment(apartmentBuilder),
       );
     }
 
@@ -69,7 +69,7 @@ class MakePayment {
     // Загружаем данные в БД
     _setCommonValue(apartmentBuilder: apartmentBuilder);
     await PromotionFirestoreAPI.uploadApartment(
-      apartment: Apartment(apartmentBuilder: apartmentBuilder),
+      apartment: Apartment(apartmentBuilder),
     );
 
     log("$apartmentBuilder");

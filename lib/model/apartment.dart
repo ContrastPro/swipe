@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:swipe/model/promotion.dart';
 
 class ApartmentBuilder {
@@ -145,7 +144,7 @@ class Apartment {
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
-  Apartment({@required ApartmentBuilder apartmentBuilder})
+  Apartment(ApartmentBuilder apartmentBuilder)
       : id = apartmentBuilder.id,
         ownerUID = apartmentBuilder.ownerUID,
         address = apartmentBuilder.address,
@@ -165,9 +164,7 @@ class Apartment {
         description = apartmentBuilder.description?.trim(),
         price = apartmentBuilder.price,
         images = apartmentBuilder.images,
-        promotion = Promotion(
-          promotionBuilder: apartmentBuilder.promotionBuilder,
-        ),
+        promotion = Promotion(apartmentBuilder.promotionBuilder),
 
         //
         geo = apartmentBuilder.geo,

@@ -11,6 +11,7 @@ class PrivacyDialog {
     showDialog(
       context: context,
       barrierDismissible: false,
+
       builder: (context) {
         return _PrivacyDialog(
           onPressed: () {
@@ -99,7 +100,7 @@ class _PrivacyDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: Text(
-                "ПРИНЯТЬ",
+                onPressed == null ? "ПРИНЯТЬ" : "ЗАКРЫТЬ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,

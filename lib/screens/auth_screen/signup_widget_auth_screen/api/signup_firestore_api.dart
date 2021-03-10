@@ -26,12 +26,6 @@ class SignUpFirestoreAPI {
     return SignUpStatus.NOTEXIST;
   }
 
-  // Sign Up Developer user
-  static codeSentDeveloperUser() {}
-
-  static addDeveloperUser() {}
-
-  // Sign Up Custom user
   static codeSentCustomUser({
     UserBuilder userBuilder,
     String verificationId,
@@ -44,15 +38,11 @@ class SignUpFirestoreAPI {
     _userBuilder.uid = uid;
     _userBuilder.createdAt = Timestamp.now();
 
-    final CustomUser customUser = CustomUser(
-      userBuilder: _userBuilder,
-    );
-
     await FirebaseFirestore.instance
         .collection("Swipe")
         .doc("Database")
         .collection("Users")
         .doc(uid)
-        .set(customUser.toMap());
+        .set(CustomUser(_userBuilder).toMap());
   }
 }

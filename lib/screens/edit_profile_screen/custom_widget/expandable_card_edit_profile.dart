@@ -3,25 +3,21 @@ import 'package:flutter/material.dart';
 class ExpandableCardEditProfile extends StatelessWidget {
   final String title;
   final List<Widget> children;
-  final EdgeInsetsGeometry margin;
   final ValueChanged<bool> onExpansionChanged;
 
   const ExpandableCardEditProfile({
     Key key,
     this.title,
     this.children,
-    this.margin,
     this.onExpansionChanged,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: margin,
+      margin: const EdgeInsets.all(8.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
+        borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(
           color: Colors.grey[200],
           width: 1.0,
@@ -36,10 +32,7 @@ class ExpandableCardEditProfile extends StatelessWidget {
           accentColor: Colors.black,
         ),
         child: ExpansionTile(
-          title: Text(
-            title,
-            style: TextStyle(),
-          ),
+          title: Text(title),
           children: children,
           onExpansionChanged: (bool value) {
             if (onExpansionChanged != null) {

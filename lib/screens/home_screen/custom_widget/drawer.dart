@@ -214,17 +214,18 @@ class GradientDrawer extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildListTile(
-                    title: "Мое объявление",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        FadeRoute(
-                          page: ApartmentAddScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                  if (userBuilder.buildingBuilder == null)
+                    _buildListTile(
+                      title: "Мое объявление",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          FadeRoute(
+                            page: ApartmentAddScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   _buildListTile(
                     title: "Избранное",
                     onTap: () {

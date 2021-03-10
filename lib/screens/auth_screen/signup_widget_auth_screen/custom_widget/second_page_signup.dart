@@ -22,14 +22,14 @@ class SecondPageSignUp extends StatelessWidget {
         child: Column(
           children: [
             AppLogo(width: 65.0, height: 40.0, fontSize: 50.0),
-            /*SizedBox(height: 50.0),
+            SizedBox(height: 50.0),
             SignUpIconSignUp(
               iconPath: "assets/images/building.png",
               width: 100.0,
               height: 100.0,
               title: "Я застройщик",
               onTap: () => onDeveloperUserTap(),
-            ),*/
+            ),
             SizedBox(height: 40.0),
             SignUpIconSignUp(
               iconPath: "assets/images/neighborhood.png",

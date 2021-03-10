@@ -55,7 +55,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
       setState(() => _startLoading = true);
       _apartmentBuilder.updatedAt = Timestamp.now();
       await ApartmentEditFirestoreAPI.updateApartment(
-        apartment: Apartment(apartmentBuilder: _apartmentBuilder),
+        apartment: Apartment(_apartmentBuilder),
       );
       _goToHomeScreen();
     }
@@ -80,7 +80,7 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
 
             // Удаляем всю информацию
             await ApartmentEditFirestoreAPI.deleteApartment(
-              apartment: Apartment(apartmentBuilder: widget.apartmentBuilder),
+              apartment: Apartment(widget.apartmentBuilder),
             );
             _goToHomeScreen();
           },

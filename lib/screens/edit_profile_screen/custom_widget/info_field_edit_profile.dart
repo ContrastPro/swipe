@@ -6,6 +6,7 @@ class InfoFieldEditProfile extends StatelessWidget {
   final String initialValue;
   final String title;
   final String hintText;
+  final int maxLines;
   final bool readOnly;
   final TextInputType keyboardType;
   final List<TextInputFormatter> formatter;
@@ -18,6 +19,7 @@ class InfoFieldEditProfile extends StatelessWidget {
     this.initialValue,
     this.title,
     this.hintText,
+    this.maxLines,
     this.readOnly,
     this.keyboardType,
     this.formatter,
@@ -65,10 +67,13 @@ class InfoFieldEditProfile extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               readOnly: readOnly ?? false,
+              maxLines: maxLines ?? 1,
               initialValue: initialValue ?? "",
+              scrollPhysics: BouncingScrollPhysics(),
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 15.0,
+                  vertical: 12.0,
                 ),
                 enabledBorder: border,
                 disabledBorder: border,
@@ -79,8 +84,8 @@ class InfoFieldEditProfile extends StatelessWidget {
                 hintStyle: TextStyle(color: Colors.black38),
                 errorStyle: TextStyle(height: 0),
               ),
-              keyboardType: keyboardType ?? TextInputType.phone,
-              inputFormatters: formatter ?? <TextInputFormatter>[],
+              keyboardType: keyboardType,
+              inputFormatters: formatter,
               controller: controller,
               onChanged: (String value) => onChanged(value),
               validator: (String value) => validator(value),

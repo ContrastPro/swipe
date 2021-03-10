@@ -33,7 +33,7 @@ class EditProfileFirestoreAPI {
         .doc(user.uid);
 
     return users
-        .update(CustomUser(userBuilder: userBuilder).toMap())
+        .update(CustomUser(userBuilder).toMap())
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
   }

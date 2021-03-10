@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:swipe/model/subscription.dart';
+import 'package:swipe/model/building.dart';
 
 class UserBuilder {
   // Personal User information
@@ -10,6 +9,7 @@ class UserBuilder {
   String phone;
   String email;
   String photoURL;
+  List notification;
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -20,10 +20,9 @@ class UserBuilder {
   String agentEmail;
 
   // ets
-  List notification;
-  Subscription subscription;
   bool isBanned;
   bool accessIsAllowed;
+  BuildingBuilder buildingBuilder;
 
   UserBuilder();
 
@@ -34,6 +33,7 @@ class UserBuilder {
         phone = map["phone"],
         email = map["email"],
         photoURL = map["photoURL"],
+        notification = map["notification"],
         createdAt = map["createdAt"],
         updatedAt = map["updatedAt"],
 
@@ -43,10 +43,11 @@ class UserBuilder {
         agentPhone = map["agentPhone"],
         agentEmail = map["agentEmail"],
         //
-        notification = map["notification"],
-        subscription = Subscription.fromMap(map["subscription"]),
         isBanned = map["isBanned"],
-        accessIsAllowed = map["accessIsAllowed"];
+        accessIsAllowed = map["accessIsAllowed"],
+        buildingBuilder = map["building"] != null
+            ? BuildingBuilder.fromMap(map["building"])
+            : null;
 
   UserBuilder._createClone(UserBuilder userBuilder)
       : uid = userBuilder.uid,
@@ -55,6 +56,7 @@ class UserBuilder {
         phone = userBuilder.phone,
         email = userBuilder.email,
         photoURL = userBuilder.photoURL,
+        notification = userBuilder.notification,
         createdAt = userBuilder.createdAt,
         updatedAt = userBuilder.updatedAt,
 
@@ -65,10 +67,9 @@ class UserBuilder {
         agentEmail = userBuilder.agentEmail,
 
         //
-        notification = userBuilder.notification,
-        subscription = userBuilder.subscription,
         isBanned = userBuilder.isBanned,
-        accessIsAllowed = userBuilder.accessIsAllowed;
+        accessIsAllowed = userBuilder.accessIsAllowed,
+        buildingBuilder = userBuilder.buildingBuilder;
 
   UserBuilder clone() => UserBuilder._createClone(this);
 
@@ -82,6 +83,7 @@ class UserBuilder {
         '\n>> phone: $phone'
         '\n>> email: $email'
         '\n>> photoURL: $photoURL'
+        '\n>> notification: $notification'
         '\n>> createdAt: ${createdAt?.toDate()}'
         '\n>> updatedAt: ${updatedAt?.toDate()}'
 
@@ -92,10 +94,9 @@ class UserBuilder {
         '\n>> agentEmail: $agentEmail'
 
         //
-        '\n>> subscription: $subscription'
-        '\n>> notification: $notification'
         '\n>> isBanned: $isBanned'
         '\n>> accessIsAllowed: $accessIsAllowed'
+        '\n>> buildingBuilder: ${buildingBuilder != null}'
         '\n********************************\n';
   }
 }
@@ -108,6 +109,7 @@ class CustomUser {
   final String phone;
   final String email;
   final String photoURL;
+  final List notification;
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
@@ -118,18 +120,20 @@ class CustomUser {
   final String agentEmail;
 
   // ets
-  final List notification;
-  final Subscription subscription;
   final bool isBanned;
   final bool accessIsAllowed;
+  final Building building;
 
-  CustomUser({@required UserBuilder userBuilder})
+  CustomUser(UserBuilder userBuilder)
       : uid = userBuilder.uid,
         name = userBuilder.name,
         lastName = userBuilder.lastName,
         phone = userBuilder.phone,
         email = userBuilder.email?.toLowerCase(),
         photoURL = userBuilder.photoURL,
+        notification = userBuilder.buildingBuilder == null
+            ? userBuilder.notification ?? [true, false, false, false]
+            : null,
         createdAt = userBuilder.createdAt,
         updatedAt = userBuilder.updatedAt,
 
@@ -140,10 +144,11 @@ class CustomUser {
         agentEmail = userBuilder.agentEmail?.toLowerCase(),
 
         //
-        subscription = userBuilder.subscription ?? Subscription(),
-        notification = userBuilder.notification ?? [true, false, false, false],
         isBanned = userBuilder.isBanned ?? false,
-        accessIsAllowed = userBuilder.accessIsAllowed;
+        accessIsAllowed = userBuilder.accessIsAllowed,
+        building = userBuilder.buildingBuilder != null
+            ? Building(userBuilder.buildingBuilder)
+            : null;
 
   Map<String, dynamic> toMap() {
     return {
@@ -153,6 +158,7 @@ class CustomUser {
       "phone": phone,
       "email": email,
       "photoURL": photoURL,
+      "notification": notification,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
 
@@ -163,10 +169,9 @@ class CustomUser {
       "agentEmail": agentEmail,
 
       //
-      "subscription": subscription.toMap(),
-      "notification": notification,
       "isBanned": isBanned,
       "accessIsAllowed": accessIsAllowed,
+      "building": building?.toMap(),
     };
   }
 }

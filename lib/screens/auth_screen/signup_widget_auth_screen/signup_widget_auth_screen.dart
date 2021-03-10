@@ -4,14 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/privacy_dialog.dart';
+import 'package:swipe/model/building.dart';
 import 'package:swipe/model/custom_user.dart';
-import 'package:swipe/model/developer.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/snackbar_message_auth.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
 
 import 'api/signup_firestore_api.dart';
 import 'custom_widget/custom_user_page_signup.dart';
-import 'custom_widget/developer_user_page_signup.dart';
 import 'custom_widget/first_page_signup.dart';
 import 'custom_widget/otp_page_signup.dart';
 import 'custom_widget/second_page_signup.dart';
@@ -32,6 +31,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final PageController _controller = PageController(keepPage: false);
 
+  BuildingBuilder _buildingBuilder;
   bool _startLoading = false;
 
   @override
@@ -54,22 +54,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
     );
   }
 
-  // Sign Up Developer user
-  void _verifyPhoneDeveloperUser({
-    @required DeveloperBuilder developerBuilder,
-  }) async {
-    //
-    log("$developerBuilder");
-  }
-
-  void _signInDeveloperUser({
-    @required String smsCode,
-  }) async {
-    //
-  }
-
-  // Sign Up Custom user
-  void _verifyPhoneCustomUser({
+  void _verifyPhoneNumber({
     @required UserBuilder userBuilder,
   }) async {
     setState(() => _startLoading = true);
@@ -100,6 +85,7 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
           },
           codeSent: (String verificationId, int resendToken) {
             setState(() => _startLoading = false);
+            userBuilder.buildingBuilder = _buildingBuilder;
             SignUpFirestoreAPI.codeSentCustomUser(
               userBuilder: userBuilder,
               verificationId: verificationId,
@@ -108,13 +94,14 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
               context: context,
               onPressed: () => _nextPage(),
             );
+            log("$userBuilder");
           },
         );
         break;
     }
   }
 
-  void _signInCustomUser({
+  void _signInWithCredential({
     @required String smsCode,
   }) async {
     setState(() => _startLoading = true);
@@ -155,37 +142,24 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             SecondPageSignUp(
               onDeveloperUserTap: () {
-                _controller.jumpToPage(2);
+                _buildingBuilder = BuildingBuilder();
+                _nextPage();
               },
               onCustomUserTap: () {
-                _controller.jumpToPage(4);
+                _buildingBuilder = null;
+                _nextPage();
               },
             ),
-            // Developer User Pages
-            DeveloperUserPageSignUp(
-              onSubmit: (DeveloperBuilder developerBuilder) {
-                _verifyPhoneDeveloperUser(
-                  developerBuilder: developerBuilder,
-                );
-              },
-            ),
-            OTPPageSignUp(
-              onCompleted: (String smsCode) {
-                _signInDeveloperUser(smsCode: smsCode);
-              },
-            ),
-
-            // Custom User Pages
             CustomUserPageSignUp(
               onSubmit: (UserBuilder userBuilder) {
-                _verifyPhoneCustomUser(
+                _verifyPhoneNumber(
                   userBuilder: userBuilder,
                 );
               },
             ),
             OTPPageSignUp(
               onCompleted: (String smsCode) {
-                _signInCustomUser(smsCode: smsCode);
+                _signInWithCredential(smsCode: smsCode);
               },
             ),
           ],
@@ -202,12 +176,6 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
         switch (_controller.page.toInt()) {
           case 0:
             widget.authNotifier.changeAuthMode();
-            return false;
-          case 2:
-            _controller.jumpToPage(1);
-            return false;
-          case 4:
-            _controller.jumpToPage(1);
             return false;
           default:
             _previousPage();

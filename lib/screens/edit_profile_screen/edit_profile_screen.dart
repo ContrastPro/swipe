@@ -129,11 +129,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildMyContact() {
     return ExpandableCardEditProfile(
       title: "Мои контакты",
-      margin: const EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        bottom: 15.0,
-      ),
       children: [
         SizedBox(height: 20.0),
         InfoFieldEditProfile(
@@ -209,13 +204,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildAgentContact() {
+  Widget _buildAgentContact(String title) {
     return ExpandableCardEditProfile(
-      title: "Контакты агента",
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 15.0,
-      ),
+      title: title,
       children: [
         SizedBox(height: 20.0),
         InfoFieldEditProfile(
@@ -290,13 +281,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  // Custom
   Widget _buildSubscriptionManagement() {
     return ExpandableCardEditProfile(
       title: "Управление подпиской",
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 15.0,
-      ),
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 25.0),
@@ -312,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   SizedBox(width: 10.0),
                   Text(
-                    "${_userBuilder.subscription.isActiveUntil}",
+                    "13.12.2021",
                     style: TextStyle(
                       color: AppColors.accentColor,
                       fontWeight: FontWeight.w500,
@@ -326,7 +314,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 minHeight: 50.0,
                 borderRadius: 10.0,
                 elevation: 0,
-                highlightElevation: 0,
                 title: "Продлить",
                 onTap: () {},
               ),
@@ -352,11 +339,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return ExpandableCardEditProfile(
       title: "Уведомления",
-      margin: const EdgeInsets.only(
-        left: 8.0,
-        top: 15.0,
-        right: 8.0,
-      ),
       onExpansionChanged: (bool value) {
         setState(() => _isOpened = value);
       },
@@ -461,6 +443,105 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  // Developer
+  Widget _buildBookApartment() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+      child: Column(
+        children: [
+          GradientButton(
+            maxWidth: double.infinity,
+            minHeight: 55.0,
+            borderRadius: 10.0,
+            elevation: 0,
+            title: "Забронировать квартиру",
+            onTap: () {},
+          ),
+          SizedBox(height: 32.0),
+          OutlinedButton(
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(
+                Size(double.infinity, 55),
+              ),
+              padding: MaterialStateProperty.all(
+                EdgeInsets.all(20.0),
+              ),
+              side: MaterialStateProperty.all(
+                BorderSide(color: Colors.black45),
+              ),
+              overlayColor: MaterialStateProperty.all(
+                Colors.black12,
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+            child: Text(
+              "Запросы на добавление в шахматку",
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateApartmentComplexInfo() {
+    return ExpandableCardEditProfile(
+      title: "Обновить информацию о ЖК",
+      children: [
+        SizedBox(height: 20.0),
+        InfoFieldEditProfile(
+          title: "Описание",
+          hintText: "Описание",
+          //initialValue: _userBuilder.agentName,
+          maxLines: 8,
+          keyboardType: TextInputType.multiline,
+          onChanged: (String value) {
+            //_userBuilder.agentName = value;
+          },
+          validator: (String value) {
+            if (value.isEmpty) return '';
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfrastructureApartmentComplex() {
+    return ExpandableCardEditProfile(
+      title: "Инфраструктура ЖК",
+      children: [
+        SizedBox(height: 20.0),
+      ],
+    );
+  }
+
+  Widget _buildTypeOfPayment() {
+    return ExpandableCardEditProfile(
+      title: "Оформление и оплата",
+      children: [
+        SizedBox(height: 20.0),
+      ],
+    );
+  }
+
+  Widget _buildAddNews() {
+    return ExpandableCardEditProfile(
+      title: "Добавить новость",
+      children: [
+        SizedBox(height: 20.0),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -479,11 +560,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 children: [
                   _buildHeader(),
-                  _buildMyContact(),
-                  _buildAgentContact(),
-                  _buildSubscriptionManagement(),
-                  _buildNotification(),
-                  _buildCallSwitcher(),
+                  if (_userBuilder.buildingBuilder == null) ...[
+                    _buildAgentContact("Контакты агента"),
+                    _buildSubscriptionManagement(),
+                    _buildNotification(),
+                    _buildCallSwitcher(),
+                  ],
+                  if (_userBuilder.buildingBuilder != null) ...[
+                    _buildBookApartment(),
+                    _buildMyContact(),
+                    _buildUpdateApartmentComplexInfo(),
+                    _buildInfrastructureApartmentComplex(),
+                    _buildTypeOfPayment(),
+                    _buildAgentContact("Отдел продаж"),
+                    _buildAddNews(),
+                  ],
                   _buildPrivacyPolicy(),
                 ],
               ),

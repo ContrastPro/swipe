@@ -15,7 +15,7 @@ class SnackBarMessageAuth {
           content: Text(content),
           duration: Duration(seconds: 5),
           action: SnackBarAction(
-            label: action,
+            label: action ?? "Action",
             onPressed: () => onPressed(),
           ),
         ),

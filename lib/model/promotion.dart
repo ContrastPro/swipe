@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class PromotionBuilder {
   int color;
   String phrase;
@@ -26,7 +24,7 @@ class Promotion {
   final bool isBigAd;
   final int adWeight;
 
-  Promotion({@required PromotionBuilder promotionBuilder})
+  Promotion(PromotionBuilder promotionBuilder)
       : color = promotionBuilder.color,
         phrase = promotionBuilder.phrase,
         isBigAd = promotionBuilder.isBigAd,

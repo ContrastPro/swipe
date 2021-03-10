@@ -7,7 +7,6 @@ class GradientButton extends StatelessWidget {
   final double minHeight;
   final double borderRadius;
   final double elevation;
-  final double highlightElevation;
   final TextStyle style;
   final VoidCallback onTap;
 
@@ -18,7 +17,6 @@ class GradientButton extends StatelessWidget {
     this.minHeight,
     this.borderRadius,
     this.elevation,
-    this.highlightElevation,
     this.style,
     @required this.onTap,
   }) : assert(onTap != null);
