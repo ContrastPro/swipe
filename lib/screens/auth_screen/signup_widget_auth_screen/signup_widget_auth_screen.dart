@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/privacy_dialog.dart';
 import 'package:swipe/model/custom_user.dart';
+import 'package:swipe/model/developer.dart';
 import 'package:swipe/screens/auth_screen/custom_widget/snackbar_message_auth.dart';
 import 'package:swipe/screens/auth_screen/provider/auth_mode_provider.dart';
 
@@ -52,8 +55,11 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
   }
 
   // Sign Up Developer user
-  void _verifyPhoneDeveloperUser() async {
+  void _verifyPhoneDeveloperUser({
+    @required DeveloperBuilder developerBuilder,
+  }) async {
     //
+    log("$developerBuilder");
   }
 
   void _signInDeveloperUser({
@@ -157,8 +163,10 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             // Developer User Pages
             DeveloperUserPageSignUp(
-              onSubmit: () {
-                _verifyPhoneDeveloperUser();
+              onSubmit: (DeveloperBuilder developerBuilder) {
+                _verifyPhoneDeveloperUser(
+                  developerBuilder: developerBuilder,
+                );
               },
             ),
             OTPPageSignUp(

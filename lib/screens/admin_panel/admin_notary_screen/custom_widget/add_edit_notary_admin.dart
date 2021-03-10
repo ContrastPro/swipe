@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
+import 'package:swipe/format/phone_format.dart';
 import 'package:swipe/global/style/app_colors.dart';
 import 'package:swipe/model/notary.dart';
 import 'package:swipe/screens/admin_panel/admin_notary_screen/api/avatar_image_picker_admin.dart';
@@ -48,6 +49,9 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
   void _addEditNotary() async {
     if (_formKey.currentState.validate()) {
       setState(() => _startLoading = true);
+      widget.notaryBuilder.phone = PhoneFormat.formatPhone(
+        phone: widget.notaryBuilder.phone,
+      );
       if (widget.notaryBuilder.id == null) {
         await NotaryFirestoreAdminAPI.addNotary(
           notaryBuilder: widget.notaryBuilder,
