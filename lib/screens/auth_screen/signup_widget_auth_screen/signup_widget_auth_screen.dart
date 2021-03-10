@@ -157,10 +157,14 @@ class _SignUpWidgetAuthScreenState extends State<SignUpWidgetAuthScreen> {
             ),
             // Developer User Pages
             DeveloperUserPageSignUp(
-              onSubmit: () {},
+              onSubmit: () {
+                _verifyPhoneDeveloperUser();
+              },
             ),
             OTPPageSignUp(
-              onCompleted: (String smsCode) {},
+              onCompleted: (String smsCode) {
+                _signInDeveloperUser(smsCode: smsCode);
+              },
             ),
 
             // Custom User Pages

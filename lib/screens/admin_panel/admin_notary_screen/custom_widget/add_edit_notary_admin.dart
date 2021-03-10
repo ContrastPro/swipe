@@ -179,10 +179,13 @@ class _AddEditNotaryAdminState extends State<AddEditNotaryAdmin> {
                       SizedBox(height: 35.0),
                       _buildContent(),
                       if (widget.notaryBuilder.id != null) ...[
-                        FlatButton(
+                        TextButton(
                           onPressed: () => _deleteNotary(),
-                          highlightColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          ),
                           child: Text(
                             "Удалить",
                             style: TextStyle(

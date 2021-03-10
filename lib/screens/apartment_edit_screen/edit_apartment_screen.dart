@@ -405,9 +405,13 @@ class _ApartmentEditScreenState extends State<ApartmentEditScreen> {
                             onTap: () => _saveApartment(imagePicker),
                           ),
                         ),
-                        FlatButton(
+                        TextButton(
                           onPressed: () => _deleteApartment(),
-                          highlightColor: Colors.transparent,
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          ),
                           child: Text(
                             "Удалить объявление",
                             style: TextStyle(

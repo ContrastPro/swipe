@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
 class PrivacyDialog {
   PrivacyDialog._();
 
@@ -67,13 +68,24 @@ class _PrivacyDialog extends StatelessWidget {
           Expanded(
             child: _buildPrivacy(),
           ),
-          FlatButton(
-            padding: EdgeInsets.all(0),
-            color: Colors.pink[600],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
+          TextButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(
+                EdgeInsets.all(0),
+              ),
+              overlayColor: MaterialStateProperty.all(
+                Colors.pink[300],
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                Colors.pink[600],
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                ),
               ),
             ),
             child: Container(

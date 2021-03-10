@@ -81,14 +81,23 @@ class GradientDrawer extends StatelessWidget {
         title = "Получить доступ";
     }
 
-    return OutlineButton(
-      padding: EdgeInsets.all(20.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+    return OutlinedButton(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(
+          EdgeInsets.all(20.0),
+        ),
+        side: MaterialStateProperty.all(
+          BorderSide(color: Colors.white70),
+        ),
+        overlayColor: MaterialStateProperty.all(
+          Colors.white12,
+        ),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ),
       ),
-      highlightElevation: 0.0,
-      borderSide: BorderSide(color: Colors.white70),
-      highlightedBorderColor: Colors.white,
       child: Text(
         title,
         style: TextStyle(

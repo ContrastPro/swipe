@@ -25,13 +25,16 @@ class GradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      elevation: elevation ?? 1.0,
-      highlightElevation: highlightElevation ?? 1.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
+    return ElevatedButton(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+        elevation: MaterialStateProperty.all(elevation ?? 1.0),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
+          ),
+        ),
       ),
-      padding: EdgeInsets.all(0.0),
       onPressed: () => onTap(),
       child: Ink(
         decoration: BoxDecoration(

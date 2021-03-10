@@ -45,7 +45,8 @@ class ModalBottomSheet extends StatelessWidget {
           SizedBox(height: 12.0),
           ButtonBar(
             children: [
-              FlatButton(
+              TextButton(
+                onPressed: () => Navigator.pop(context),
                 child: Text(
                   reject?.toUpperCase() ?? 'ОТМЕНА',
                   style: TextStyle(
@@ -53,9 +54,12 @@ class ModalBottomSheet extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onPressed: () => Navigator.pop(context),
               ),
-              FlatButton(
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onAccept();
+                },
                 child: Text(
                   accept?.toUpperCase() ?? 'ПРОДОЛЖИТЬ',
                   style: TextStyle(
@@ -63,10 +67,6 @@ class ModalBottomSheet extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  onAccept();
-                },
               ),
             ],
           ),
