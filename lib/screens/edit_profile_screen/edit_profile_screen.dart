@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swipe/global/style/app_colors.dart';
+import 'package:swipe/model/building.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
 import 'package:swipe/custom_app_widget/gradient_button.dart';
@@ -36,11 +37,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File _imageFile;
 
   UserBuilder _userBuilder;
+  BuildingBuilder _buildingBuilder;
   GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _userBuilder = widget.userProfile.clone();
+    _buildingBuilder = _userBuilder.buildingBuilder;
     _formKey = GlobalKey<FormState>();
     super.initState();
   }
@@ -51,6 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _userBuilder.lastName.isNotEmpty &&
         _userBuilder.email.isNotEmpty) {
       setState(() => _startLoading = true);
+      _userBuilder.buildingBuilder = _buildingBuilder;
       await EditProfileFirestoreAPI.editUserProfile(
         userBuilder: _userBuilder,
         imageFile: _imageFile,
@@ -85,6 +89,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _getLocalImage() async {
     File imageFile = await AvatarImagePicker.getLocalImage();
     setState(() => _imageFile = imageFile);
+  }
+
+  void _addNews(String title, String description) async {
+    if (title.isNotEmpty && description.isNotEmpty) {
+      setState(() => _startLoading = true);
+      await Future.delayed(Duration(seconds: 2));
+      Navigator.pop(context);
+    }
   }
 
   Widget _buildHeader() {
@@ -429,21 +441,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildPrivacyPolicy() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 22.0, 16.0, 45.0),
-      child: GestureDetector(
-        onTap: () => PrivacyDialog.showPrivacyDialog(context: context),
-        child: Text(
-          "Политика конфеденциальности",
-          style: TextStyle(
-            color: AppColors.accentColor,
-          ),
-        ),
-      ),
-    );
-  }
-
   // Developer
   Widget _buildBookApartment() {
     return Padding(
@@ -455,39 +452,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             minHeight: 55.0,
             borderRadius: 10.0,
             elevation: 0,
-            title: "Забронировать квартиру",
+            title: _buildingBuilder.id != null
+                ? "Забронировать квартиру"
+                : "Опубликовать ЖК",
             onTap: () {},
           ),
-          SizedBox(height: 32.0),
-          OutlinedButton(
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(
-                Size(double.infinity, 55),
-              ),
-              padding: MaterialStateProperty.all(
-                EdgeInsets.all(20.0),
-              ),
-              side: MaterialStateProperty.all(
-                BorderSide(color: Colors.black45),
-              ),
-              overlayColor: MaterialStateProperty.all(
-                Colors.black12,
-              ),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          if (_buildingBuilder.id != null) ...[
+            SizedBox(height: 32.0),
+            OutlinedButton(
+              style: ButtonStyle(
+                minimumSize: MaterialStateProperty.all(
+                  Size(double.infinity, 55),
+                ),
+                padding: MaterialStateProperty.all(
+                  EdgeInsets.all(20.0),
+                ),
+                side: MaterialStateProperty.all(
+                  BorderSide(color: Colors.black45),
+                ),
+                overlayColor: MaterialStateProperty.all(
+                  Colors.black12,
+                ),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
               ),
-            ),
-            child: Text(
-              "Запросы на добавление в шахматку",
-              style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.w500,
+              child: Text(
+                "Запросы на добавление в шахматку",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
+          ],
         ],
       ),
     );
@@ -501,11 +502,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         InfoFieldEditProfile(
           title: "Описание",
           hintText: "Описание",
-          initialValue: _userBuilder.buildingBuilder.description,
+          initialValue: _buildingBuilder.description,
           maxLines: 8,
           keyboardType: TextInputType.multiline,
           onChanged: (String value) {
-            _userBuilder.buildingBuilder.description = value;
+            _buildingBuilder.description = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -528,7 +529,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: 10.0,
             elevation: 0,
             title: "Преимущества ЖК",
-            onTap: () {},
+            onTap: () {
+              // Открываем окно с выбором преимущества передаём список
+              // преимуществ, ждём выбора, возвращаем и присваиваем этот
+              // список в билдер
+            },
           ),
         ),
         ExpandableCardOptionsEditProfile(
@@ -689,15 +694,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAddNews() {
+    String title = "";
+    String description = "";
+
     return ExpandableCardEditProfile(
       title: "Добавить новость",
       children: [
         InfoFieldEditProfile(
           title: "Заголовок",
           hintText: "Заголовок",
-          //initialValue: _userBuilder.agentPhone,
           onChanged: (String value) {
-            //_userBuilder.agentPhone = value;
+            title = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -707,11 +714,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         InfoFieldEditProfile(
           title: "Описание",
           hintText: "Описание",
-          initialValue: _userBuilder.buildingBuilder.description,
           maxLines: 8,
           keyboardType: TextInputType.multiline,
           onChanged: (String value) {
-            _userBuilder.buildingBuilder.description = value;
+            description = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -729,10 +735,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: 10.0,
             elevation: 0,
             title: "Опубликовать",
-            onTap: () {},
+            onTap: () => _addNews(
+              title,
+              description,
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPrivacyPolicy() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 22.0, 16.0, 45.0),
+      child: GestureDetector(
+        onTap: () => PrivacyDialog.showPrivacyDialog(context: context),
+        child: Text(
+          "Политика конфеденциальности",
+          style: TextStyle(
+            color: AppColors.accentColor,
+          ),
+        ),
+      ),
     );
   }
 
@@ -748,30 +772,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  if (_userBuilder.buildingBuilder == null) ...[
-                    _buildAgentContact("Контакты агента"),
-                    _buildSubscriptionManagement(),
-                    _buildNotification(),
-                    _buildCallSwitcher(),
-                  ],
-                  if (_userBuilder.buildingBuilder != null) ...[
-                    _buildBookApartment(),
-                    _buildMyContact(),
-                    _buildUpdateApartmentComplexInfo(),
-                    _buildInfrastructureApartmentComplex(),
-                    _buildTypeOfPayment(),
-                    _buildAgentContact("Отдел продаж"),
-                    _buildAddNews(),
-                  ],
-                  _buildPrivacyPolicy(),
+            child: Column(
+              children: [
+                _buildHeader(),
+                if (_buildingBuilder == null) ...[
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        _buildAgentContact("Контакты агента"),
+                        _buildSubscriptionManagement(),
+                        _buildNotification(),
+                        _buildCallSwitcher(),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+                if (_buildingBuilder != null) ...[
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        _buildBookApartment(),
+                        _buildMyContact(),
+                        _buildUpdateApartmentComplexInfo(),
+                        _buildInfrastructureApartmentComplex(),
+                        _buildTypeOfPayment(),
+                        _buildAgentContact("Отдел продаж"),
+                      ],
+                    ),
+                  ),
+                  _buildAddNews(),
+                ],
+                _buildPrivacyPolicy(),
+              ],
             ),
           ),
         ),
