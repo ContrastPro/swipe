@@ -11,6 +11,7 @@ import 'package:swipe/custom_app_widget/gradient_button.dart';
 import 'package:swipe/custom_app_widget/gradient_switch.dart';
 import 'package:swipe/custom_app_widget/loading_indicator.dart';
 import 'package:swipe/custom_app_widget/privacy_dialog.dart';
+import 'package:swipe/model/news.dart';
 
 import 'api/avatar_image_picker.dart';
 import 'api/edit_profile_firestore_api.dart';
@@ -48,19 +49,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
   }
 
-  void _editProfile() async {
-    if (_formKey.currentState.validate() &&
-        _userBuilder.name.isNotEmpty &&
-        _userBuilder.lastName.isNotEmpty &&
-        _userBuilder.email.isNotEmpty) {
-      setState(() => _startLoading = true);
-      _userBuilder.buildingBuilder = _buildingBuilder;
-      await EditProfileFirestoreAPI.editUserProfile(
-        userBuilder: _userBuilder,
-        imageFile: _imageFile,
-      );
-      Navigator.pop(context);
-    }
+  void _getLocalImage() async {
+    File imageFile = await AvatarImagePicker.getLocalImage();
+    setState(() => _imageFile = imageFile);
   }
 
   void _changeNotification(int newIndex) {
@@ -86,15 +77,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  void _getLocalImage() async {
-    File imageFile = await AvatarImagePicker.getLocalImage();
-    setState(() => _imageFile = imageFile);
+  void _updateProfile() async {
+    if (_formKey.currentState.validate() &&
+        _userBuilder.name.isNotEmpty &&
+        _userBuilder.lastName.isNotEmpty &&
+        _userBuilder.email.isNotEmpty) {
+      //
+      setState(() => _startLoading = true);
+      _userBuilder.buildingBuilder = _buildingBuilder;
+      //
+      await EditProfileFirestoreAPI.updateUserProfile(
+        userBuilder: _userBuilder,
+        imageFile: _imageFile,
+      );
+
+      //
+      if (_buildingBuilder != null && _buildingBuilder.id != null) {
+        await EditProfileFirestoreAPI.updateBuilding(
+          buildingBuilder: _buildingBuilder,
+        );
+      }
+      Navigator.pop(context);
+    }
   }
 
-  void _addNews(String title, String description) async {
-    if (title.isNotEmpty && description.isNotEmpty) {
+  void _uploadBuilding() async {
+    setState(() => _startLoading = true);
+    await EditProfileFirestoreAPI.uploadBuilding(
+      buildingBuilder: _buildingBuilder,
+    );
+    Navigator.pop(context);
+  }
+
+  void _uploadNews(NewsBuilder newsBuilder) async {
+    if (newsBuilder.title.isNotEmpty && newsBuilder.description.isNotEmpty) {
       setState(() => _startLoading = true);
-      await Future.delayed(Duration(seconds: 2));
+      await EditProfileFirestoreAPI.uploadNews(
+        newsBuilder: newsBuilder,
+      );
       Navigator.pop(context);
     }
   }
@@ -455,7 +475,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             title: _buildingBuilder.id != null
                 ? "Забронировать квартиру"
                 : "Опубликовать ЖК",
-            onTap: () {},
+            onTap: () {
+              if (_buildingBuilder.id == null) {
+                _uploadBuilding();
+              } else {
+                //
+              }
+            },
           ),
           if (_buildingBuilder.id != null) ...[
             SizedBox(height: 32.0),
@@ -694,8 +720,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAddNews() {
-    String title = "";
-    String description = "";
+    NewsBuilder newsBuilder = NewsBuilder();
 
     return ExpandableCardEditProfile(
       title: "Добавить новость",
@@ -704,7 +729,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           title: "Заголовок",
           hintText: "Заголовок",
           onChanged: (String value) {
-            title = value;
+            newsBuilder.title = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -717,7 +742,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           maxLines: 8,
           keyboardType: TextInputType.multiline,
           onChanged: (String value) {
-            description = value;
+            newsBuilder.description = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -735,10 +760,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: 10.0,
             elevation: 0,
             title: "Опубликовать",
-            onTap: () => _addNews(
-              title,
-              description,
-            ),
+            onTap: () => _uploadNews(newsBuilder),
           ),
         ),
       ],
@@ -767,7 +789,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Scaffold(
           appBar: AppBarStyle1(
             title: "Личный кабинет",
-            onTapLeading: () => _editProfile(),
+            onTapLeading: () => _updateProfile(),
             onTapAction: () => Navigator.pop(context),
           ),
           body: SingleChildScrollView(
@@ -781,6 +803,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       children: [
+                        _buildMyContact(),
                         _buildAgentContact("Контакты агента"),
                         _buildSubscriptionManagement(),
                         _buildNotification(),
