@@ -1,5 +1,8 @@
 class BuildingBuilder {
+  String id;
+  String ownerUID;
   String address;
+  String description;
 
   BuildingBuilder();
 
@@ -15,9 +18,16 @@ class BuildingBuilder {
 }
 
 class Building {
+  final String id;
+  final String ownerUID;
   final String address;
+  final String description;
 
-  Building(BuildingBuilder buildingBuilder) : address = buildingBuilder.address;
+  Building(BuildingBuilder buildingBuilder)
+      : id = buildingBuilder.id,
+        ownerUID = buildingBuilder.ownerUID,
+        address = buildingBuilder.address,
+        description = buildingBuilder.description;
 
   Map<String, dynamic> toMap() {
     return {

@@ -29,7 +29,7 @@ class ExpandableCardEditProfile extends StatelessWidget {
           dividerColor: Colors.transparent,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          accentColor: Colors.black,
+          //accentColor: Colors.black,
         ),
         child: ExpansionTile(
           title: Text(title),

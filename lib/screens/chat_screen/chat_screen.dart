@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import 'package:swipe/custom_app_widget/app_bars/app_bar_style_1.dart';
+import 'package:swipe/custom_app_widget/app_bars/app_bar_style_3.dart';
 import 'package:swipe/format/time_format.dart';
 import 'package:swipe/model/custom_user.dart';
 import 'package:swipe/model/message.dart';
@@ -12,6 +12,7 @@ import 'package:swipe/screens/chat_screen/custom_widget/blocked_field_chat.dart'
 import 'package:swipe/screens/chat_screen/custom_widget/input_field_chat.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/massage_item.dart';
 import 'package:swipe/screens/chat_screen/custom_widget/modal_bottom_sheet_chat.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'api/chat_firestore_api.dart';
 
@@ -45,6 +46,15 @@ class _FeedbackScreenState extends State<ChatScreen> {
     _scrollController.dispose();
     _textController.dispose();
     super.dispose();
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    String phone = "tel:$phoneNumber";
+    if (await canLaunch(phone)) {
+      await launch(phone);
+    } else {
+      throw 'Could not launch $phone';
+    }
   }
 
   void _attachFile() async {
@@ -189,10 +199,10 @@ class _FeedbackScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarStyle1(
+      appBar: AppBarStyle3(
         title: "${widget.userBuilder.name} ${widget.userBuilder.lastName}",
         onTapLeading: () => Navigator.pop(context),
-        onTapAction: () => Navigator.pop(context),
+        onTapAction: () => _makePhoneCall(widget.userBuilder.phone),
       ),
       body: Column(
         children: [
@@ -260,24 +270,24 @@ class _FeedbackScreenState extends State<ChatScreen> {
             alignment: Alignment.bottomCenter,
             child: widget.userBuilder.isBanned == false
                 ? InputFieldChat(
-              controller: _textController,
-              imageFile: _imageFile,
-              isEdited: _editMessageBuilder != null,
-              onSend: () => _sendMessage(),
-              onAttach: () => _attachFile(),
-              onDeleteAttach: () {
-                if (_editMessageBuilder != null) {
-                  _textController.clear();
-                }
-                setState(() {
-                  _imageFile = null;
-                  _editMessageBuilder = null;
-                });
-              },
-            )
+                    controller: _textController,
+                    imageFile: _imageFile,
+                    isEdited: _editMessageBuilder != null,
+                    onSend: () => _sendMessage(),
+                    onAttach: () => _attachFile(),
+                    onDeleteAttach: () {
+                      if (_editMessageBuilder != null) {
+                        _textController.clear();
+                      }
+                      setState(() {
+                        _imageFile = null;
+                        _editMessageBuilder = null;
+                      });
+                    },
+                  )
                 : BlockedFieldChat(
-              username: widget.userBuilder.name,
-            ),
+                    username: widget.userBuilder.name,
+                  ),
           ),
         ],
       ),

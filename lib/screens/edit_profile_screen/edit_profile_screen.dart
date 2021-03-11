@@ -15,6 +15,7 @@ import 'api/avatar_image_picker.dart';
 import 'api/edit_profile_firestore_api.dart';
 import 'custom_widget/avatar_picker.dart';
 import 'custom_widget/expandable_card_edit_profile.dart';
+import 'custom_widget/expandable_card_options_edit_profile.dart';
 import 'custom_widget/info_field_edit_profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -500,11 +501,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         InfoFieldEditProfile(
           title: "Описание",
           hintText: "Описание",
-          //initialValue: _userBuilder.agentName,
+          initialValue: _userBuilder.buildingBuilder.description,
           maxLines: 8,
           keyboardType: TextInputType.multiline,
           onChanged: (String value) {
-            //_userBuilder.agentName = value;
+            _userBuilder.buildingBuilder.description = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -519,7 +520,129 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return ExpandableCardEditProfile(
       title: "Инфраструктура ЖК",
       children: [
-        SizedBox(height: 20.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12.0, 22.0, 12.0, 42.0),
+          child: GradientButton(
+            maxWidth: double.infinity,
+            minHeight: 55.0,
+            borderRadius: 10.0,
+            elevation: 0,
+            title: "Преимущества ЖК",
+            onTap: () {},
+          ),
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Статус ЖК",
+          hintText: "Выбрать статус ЖК",
+          children: ["Квартиры"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Вид дома",
+          hintText: "Выбрать вид дома",
+          children: ["Многоквартирный"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Класс дома",
+          hintText: "Выбрать класс дома",
+          children: ["Элитный"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Технология строительства",
+          hintText: "Выбрать технологию строительства",
+          children: ["Монолитный каркас с керомзитным утеплением"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Территория",
+          hintText: "Выбрать территорию",
+          children: ["Закрытая, охраняемая"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        InfoFieldEditProfile(
+          title: "Растояние до моря (м)",
+          hintText: "2 000",
+          //initialValue: _userBuilder.agentPhone,
+          keyboardType: TextInputType.number,
+          formatter: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
+          onChanged: (String value) {
+            //_userBuilder.agentPhone = value;
+          },
+          validator: (String value) {
+            if (value.isEmpty) return '';
+            return null;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Коммунальные платежи",
+          hintText: "Выбрать платежи",
+          children: ["Платежи"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        InfoFieldEditProfile(
+          title: "Высота потолков (м)",
+          hintText: "3.5",
+          //initialValue: _userBuilder.agentPhone,
+          keyboardType: TextInputType.number,
+          formatter: [
+            FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
+          ],
+          onChanged: (String value) {
+            //_userBuilder.agentPhone = value;
+          },
+          validator: (String value) {
+            if (value.isEmpty) return '';
+            return null;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Газ",
+          hintText: "Присутствует газ",
+          children: ["Нет", "Да"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Отопление",
+          hintText: "Выбрать тип отопления",
+          children: ["Центральное"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Канализация",
+          hintText: "Выбрать тип канализации",
+          children: ["Центральная"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Водоснабжение",
+          hintText: "Выбрать тип водоснабжения",
+          children: ["Центральное"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
       ],
     );
   }
@@ -529,6 +652,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       title: "Оформление и оплата",
       children: [
         SizedBox(height: 20.0),
+        ExpandableCardOptionsEditProfile(
+          title: "Оформление",
+          hintText: "Выбрать тип оформления",
+          children: ["Юстиция"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Варианты расчета",
+          hintText: "Выбрать тип расчета",
+          children: ["Ипотека"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Назначение",
+          hintText: "Выбрать назначение",
+          children: ["Жилое помещение"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
+        ExpandableCardOptionsEditProfile(
+          title: "Сумма в договоре",
+          hintText: "Выбрать сумму",
+          children: ["Неполная"],
+          onChange: (String value) {
+            //_apartmentBuilder.numberOfRooms = value;
+          },
+        ),
       ],
     );
   }
@@ -537,7 +692,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return ExpandableCardEditProfile(
       title: "Добавить новость",
       children: [
-        SizedBox(height: 20.0),
+        InfoFieldEditProfile(
+          title: "Заголовок",
+          hintText: "Заголовок",
+          //initialValue: _userBuilder.agentPhone,
+          onChanged: (String value) {
+            //_userBuilder.agentPhone = value;
+          },
+          validator: (String value) {
+            if (value.isEmpty) return '';
+            return null;
+          },
+        ),
+        InfoFieldEditProfile(
+          title: "Описание",
+          hintText: "Описание",
+          initialValue: _userBuilder.buildingBuilder.description,
+          maxLines: 8,
+          keyboardType: TextInputType.multiline,
+          onChanged: (String value) {
+            _userBuilder.buildingBuilder.description = value;
+          },
+          validator: (String value) {
+            if (value.isEmpty) return '';
+            return null;
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: 16.0,
+          ),
+          child: GradientButton(
+            maxWidth: double.infinity,
+            minHeight: 55.0,
+            borderRadius: 10.0,
+            elevation: 0,
+            title: "Опубликовать",
+            onTap: () {},
+          ),
+        ),
       ],
     );
   }
