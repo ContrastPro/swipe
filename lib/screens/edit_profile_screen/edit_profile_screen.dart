@@ -102,6 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _uploadBuilding() async {
+    // Перед добавлением здания открывать карту, чтобы выбрать адрес
     setState(() => _startLoading = true);
     await EditProfileFirestoreAPI.uploadBuilding(
       buildingBuilder: _buildingBuilder,
@@ -564,54 +565,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         ExpandableCardOptionsEditProfile(
           title: "Статус ЖК",
-          hintText: "Выбрать статус ЖК",
+          hintText: _buildingBuilder.status ?? "Выбрать статус ЖК",
           children: ["Квартиры"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.status = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Вид дома",
-          hintText: "Выбрать вид дома",
+          hintText: _buildingBuilder.type ?? "Выбрать вид дома",
           children: ["Многоквартирный"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.type = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Класс дома",
-          hintText: "Выбрать класс дома",
+          hintText: _buildingBuilder.buildingClass ?? "Выбрать класс дома",
           children: ["Элитный"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.buildingClass = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Технология строительства",
-          hintText: "Выбрать технологию строительства",
+          hintText:
+              _buildingBuilder.technology ?? "Выбрать технологию строительства",
           children: ["Монолитный каркас с керомзитным утеплением"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.technology = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Территория",
-          hintText: "Выбрать территорию",
+          hintText: _buildingBuilder.territory ?? "Выбрать территорию",
           children: ["Закрытая, охраняемая"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.territory = value;
           },
         ),
         InfoFieldEditProfile(
-          title: "Растояние до моря (м)",
+          title: "Расстояние до моря (м)",
           hintText: "2 000",
-          //initialValue: _userBuilder.agentPhone,
+          initialValue: _buildingBuilder.distanceToSea,
           keyboardType: TextInputType.number,
           formatter: [
             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
           ],
           onChanged: (String value) {
-            //_userBuilder.agentPhone = value;
+            _buildingBuilder.distanceToSea = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -620,22 +622,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         ExpandableCardOptionsEditProfile(
           title: "Коммунальные платежи",
-          hintText: "Выбрать платежи",
+          hintText: _buildingBuilder.payments ?? "Выбрать платежи",
           children: ["Платежи"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.payments = value;
           },
         ),
         InfoFieldEditProfile(
           title: "Высота потолков (м)",
           hintText: "3.5",
-          //initialValue: _userBuilder.agentPhone,
+          initialValue: _buildingBuilder.ceilingHeight,
           keyboardType: TextInputType.number,
           formatter: [
             FilteringTextInputFormatter.allow(RegExp(r'[.0-9]')),
           ],
           onChanged: (String value) {
-            //_userBuilder.agentPhone = value;
+            _buildingBuilder.ceilingHeight = value;
           },
           validator: (String value) {
             if (value.isEmpty) return '';
@@ -644,34 +646,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         ExpandableCardOptionsEditProfile(
           title: "Газ",
-          hintText: "Присутствует газ",
+          hintText: _buildingBuilder.gas ?? "Присутствует газ",
           children: ["Нет", "Да"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.gas = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Отопление",
-          hintText: "Выбрать тип отопления",
+          hintText: _buildingBuilder.heating ?? "Выбрать тип отопления",
           children: ["Центральное"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.heating = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Канализация",
-          hintText: "Выбрать тип канализации",
+          hintText: _buildingBuilder.sewerage ?? "Выбрать тип канализации",
           children: ["Центральная"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.sewerage = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Водоснабжение",
-          hintText: "Выбрать тип водоснабжения",
+          hintText: _buildingBuilder.waterSupply ?? "Выбрать тип водоснабжения",
           children: ["Центральное"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.waterSupply = value;
           },
         ),
       ],
@@ -685,34 +687,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         SizedBox(height: 20.0),
         ExpandableCardOptionsEditProfile(
           title: "Оформление",
-          hintText: "Выбрать тип оформления",
+          hintText: _buildingBuilder.registration ?? "Выбрать тип оформления",
           children: ["Юстиция"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.registration = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Варианты расчета",
-          hintText: "Выбрать тип расчета",
+          hintText: _buildingBuilder.typeOfPayment ?? "Выбрать тип расчета",
           children: ["Ипотека"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.typeOfPayment = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Назначение",
-          hintText: "Выбрать назначение",
+          hintText:
+              _buildingBuilder.appointmentApartment ?? "Выбрать назначение",
           children: ["Жилое помещение"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.appointmentApartment = value;
           },
         ),
         ExpandableCardOptionsEditProfile(
           title: "Сумма в договоре",
-          hintText: "Выбрать сумму",
+          hintText: _buildingBuilder.amountContract ?? "Выбрать сумму",
           children: ["Неполная"],
           onChange: (String value) {
-            //_apartmentBuilder.numberOfRooms = value;
+            _buildingBuilder.amountContract = value;
           },
         ),
       ],

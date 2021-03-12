@@ -42,7 +42,9 @@ class EditProfileFirestoreAPI {
 
   static Future<void> uploadBuilding({
     @required BuildingBuilder buildingBuilder,
-  }) async {}
+  }) async {
+    //
+  }
 
   static Future<void> updateBuilding({
     @required BuildingBuilder buildingBuilder,
